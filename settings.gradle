@@ -1,23 +1,6 @@
-pluginManagement {
-    repositories {
-        google {
-            content {
-                includeGroupByRegex("com\\.android.*")
-                includeGroupByRegex("com\\.google.*")
-                includeGroupByRegex("androidx.*")
-            }
-        }
-        mavenCentral()
-        gradlePluginPortal()
-    }
-}
-dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
-    repositories {
-        google()
-        mavenCentral()
-    }
-}
+rootProject.name = 'com.myscript.interactive-ink'
 
-rootProject.name = "CS_423_project"
-include ':app'
+include ':Demo', ':GetStarted', ':UIReferenceImplementation'
+project(':Demo').dir = new File(settingsDir, 'Demo')
+project(':GetStarted').dir = new File(settingsDir, 'GetStarted')
+project(':UIReferenceImplementation').dir = new File(settingsDir, 'UIReferenceImplementation')
