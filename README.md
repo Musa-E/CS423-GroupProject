@@ -1,23 +1,17 @@
-## What is it about?
+# From Polly:
+### Quick Note:
 
-Interactive Ink SDK is the best way to integrate handwriting recognition capabilities into your Android application. Interactive Ink extends digital ink to allow users to more intuitively create, interact with, and share content in digital form. Handwritten text, mathematical equations or even diagrams are interpreted in real-time to be editable via simple gestures, responsive and easy to convert to a neat output.
+I had to integrate the SDK in order to actually get the API calls, so sorry...
 
-This repository contains a "get started" example, a complete example and a reference implementation of the Android integration part that developers using Interactive Ink SDK can reuse inside their projects.
+## To get git and this repo set up
 
-## Getting started
+First, open any project window. Then, click VCS on the top task bar, then "Enable Version Control Integration". "Git" is what you want, and click okay.
 
-### Prerequisites
+Now, click Git in the taskbar, clone, and paste our group github URL (you can also sign in here; hint: you should do that). When you click clone, it will open our project.
 
-This getting started section has been tested with Android Studio 2022.3+ and supports Android SDK version 21+.
+You can create new branches and add and merge and pull or whatever from the git tab whenever.
 
-### Installation
-
-1. Clone the examples repository  `git clone https://github.com/MyScript/interactive-ink-examples-android.git`
-
-2. Claim a certificate to receive the free license to start develop your application by following the first steps of [Getting Started](https://developer.myscript.com/getting-started)
-
-3. Copy this certificate to `GetStarted/src/main/java/com/myscript/certificate/MyCertificate.java` and `Demo/src/main/java/com/myscript/certificate/MyCertificate.java`
-
+# From myScript: 
 ## Building your own integration
 
 This repository provides you with a ready-to-use reference implementation of the Android integration part, covering aspects like ink capture and rendering. It is located in `UIReferenceImplementation` directory and can be simply added to your project by referencing it in your `settings.gradle`.
