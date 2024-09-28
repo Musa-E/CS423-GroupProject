@@ -402,18 +402,6 @@ class EditorViewModel(
         return ContextualActionState.Export(x, y, actions)
     }
 
-    fun zoomOut() {
-        partEditor.zoomOut()
-    }
-
-    fun zoomIn() {
-        partEditor.zoomIn()
-    }
-
-    fun resetView() {
-        partEditor.resetView()
-    }
-
     fun undo() {
         partEditor.undo()
     }

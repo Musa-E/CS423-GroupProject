@@ -35,7 +35,6 @@ import com.myscript.iink.demo.databinding.MainActivityBinding
 import com.myscript.iink.demo.di.EditorViewModelFactory
 import com.myscript.iink.demo.domain.BlockType
 import com.myscript.iink.demo.domain.MenuAction
-import com.myscript.iink.demo.domain.PartType
 import com.myscript.iink.demo.domain.PenBrush
 import com.myscript.iink.demo.ui.ColorState
 import com.myscript.iink.demo.ui.ColorsAdapter
@@ -65,6 +64,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 import kotlin.math.roundToInt
+
 
 suspend fun Context.processUriFile(uri: Uri, file: File, logic: (File) -> Unit) {
     withContext(Dispatchers.IO) {
@@ -194,43 +194,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private val importImageRequest = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-        if (uri == null) return@registerForActivityResult
-        val mimeType = DocumentFile.fromSingleUri(this@MainActivity, uri)?.type ?: contentResolver.getType(uri)
-        when (mimeType) {
-            "image/png",
-            "image/jpeg" -> lifecycle.coroutineScope.launch {
-                val extension = MimeType.fromTypeName(mimeType).primaryFileExtension
-                processUriFile(uri, File(cacheDir, "image$extension")) { image ->
-                    val pos = addImagePosition
-                    addImagePosition = null
-                    try {
-                        if (pos != null) {
-                            viewModel.addImage(pos.x, pos.y, image, mimeType)
-                        } else {
-                            viewModel.addImage(image, mimeType)
-                        }
-                    } catch (e: Exception) {
-                        // might be an unsupported mime type despite the checks made, if the image
-                        // is seen as a PNG but under the hood the file format is WebP which happens
-                        // quite easily when importing image from the web for instance
-                        onError(Error(
-                            Error.Severity.ERROR,
-                            getString(R.string.app_error_add_image_title),
-                            e.message ?: "Unknown error",
-                            e
-                        ))
-                    }
-                }
-            }
-            else -> onError(Error(
-                Error.Severity.ERROR,
-                getString(R.string.app_error_unsupported_file_type_title),
-                getString(R.string.app_error_unsupported_image_type_message, mimeType)
-            ))
-        }
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
@@ -255,7 +218,6 @@ class MainActivity : AppCompatActivity() {
 
         // extra brushes (if any) must be set prior to editor binding
         editorView?.extraBrushConfigs = IInkApplication.DemoModule.extraBrushes
-
         val editorData = editorBinding.openEditor(editorView)
         editorData.inputController?.listener = onEditorLongPress
         editorData.inputController?.setViewListener(editorView)
@@ -288,6 +250,12 @@ class MainActivity : AppCompatActivity() {
                 getString(R.string.app_error_invalid_certificate_title),
                 getString(R.string.app_error_invalid_certificate_message)
             ))
+        }
+
+        //creates new part when clicked from main menu, instead of list
+        val bundle = intent.extras
+        if (bundle != null) {
+            viewModel.requestNewPart()
         }
     }
 
@@ -328,7 +296,6 @@ class MainActivity : AppCompatActivity() {
                                 viewModel.insertText(actionState.x, actionState.y, text)
                             }
                         }
-                        else ->viewModel.addBlock(actionState.x, actionState.y, blockType)
                     }
                 }
             }
@@ -365,9 +332,6 @@ class MainActivity : AppCompatActivity() {
             }
             editorUndo.setOnClickListener { viewModel.undo() }
             editorRedo.setOnClickListener { viewModel.redo() }
-            editorZoomIn.setOnClickListener { viewModel.zoomIn() }
-            editorZoomOut.setOnClickListener { viewModel.zoomOut() }
-            editorResetView.setOnClickListener { viewModel.resetView() }
             editorClearContent.setOnClickListener { viewModel.clearContent() }
         }
 
@@ -384,9 +348,6 @@ class MainActivity : AppCompatActivity() {
             switchActivePen.setOnCheckedChangeListener(null)
             editorUndo.setOnClickListener(null)
             editorRedo.setOnClickListener(null)
-            editorZoomIn.setOnClickListener(null)
-            editorZoomOut.setOnClickListener(null)
-            editorResetView.setOnClickListener(null)
             editorClearContent.setOnClickListener(null)
         }
 
@@ -492,7 +453,6 @@ class MainActivity : AppCompatActivity() {
             R.id.editor_menu_prediction -> showPredictionSettingsDialog()
             R.id.editor_menu_export -> onExport(viewModel.getExportMimeTypes())
             R.id.editor_menu_save -> (partState as? PartState.Loaded)?.let { viewModel.save() }
-            // Note: ideally we could restrict to `application/*` but some file managers use `binary/octet-stream`
             R.id.editor_menu_import_file -> importIInkFileRequest.launch("*/*")
             R.id.editor_menu_share_file -> (partState as? PartState.Loaded)?.let { onShareFile(it.partId) }
             else -> return super.onOptionsItemSelected(item)
@@ -569,9 +529,6 @@ class MainActivity : AppCompatActivity() {
         with(binding.editorToolbar) {
             partEditorControls.isVisible = state != PartState.Unloaded
             switchActivePen.isEnabled = state.isReady
-            editorZoomIn.isEnabled = state.isReady
-            editorZoomOut.isEnabled = state.isReady
-            editorResetView.isEnabled = state.isReady
             editorClearContent.isEnabled = state.isReady
         }
     }

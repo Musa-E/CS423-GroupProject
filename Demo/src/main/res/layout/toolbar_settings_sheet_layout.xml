@@ -11,7 +11,7 @@ into this Android SDK and then edited by our team -->
     android:orientation="vertical"
     android:layout_gravity="center_horizontal"
     style="?attr/bottomSheetStyle"
-    android:background="?android:attr/colorBackground"
+    android:background="@drawable/rounded_corners"
     android:paddingHorizontal="?attr/dialogPreferredPadding"
     android:elevation="16dp"
     app:behavior_hideable="false"
@@ -20,15 +20,18 @@ into this Android SDK and then edited by our team -->
     app:layout_behavior="@string/bottom_sheet_behavior">
 
     <ImageView
+        android:contentDescription="bar to hold"
         android:layout_width="24dp"
         android:layout_height="4dp"
         android:src="@drawable/bottom_sheet_handle"
         app:tint="?attr/colorControlNormal"
+        android:background="@color/black"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="16dp" />
 
     <androidx.recyclerview.widget.RecyclerView
+        android:contentDescription="tool-type"
         android:id="@+id/toolbar_tools"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -39,6 +42,7 @@ into this Android SDK and then edited by our team -->
         tools:itemCount="5" />
 
     <androidx.recyclerview.widget.RecyclerView
+        android:contentDescription="color of pen"
         android:id="@+id/toolbar_colors"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -51,6 +55,7 @@ into this Android SDK and then edited by our team -->
         tools:visibility="visible"/>
 
     <androidx.recyclerview.widget.RecyclerView
+        android:contentDescription="pen thickness"
         android:id="@+id/toolbar_thicknesses"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -63,6 +68,7 @@ into this Android SDK and then edited by our team -->
         tools:visibility="visible"/>
 
     <LinearLayout
+        android:background="@drawable/rounded_corner_white"
         android:id="@+id/toolbar_pen_brush_section"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -73,17 +79,23 @@ into this Android SDK and then edited by our team -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:text="@string/tool_configuration_pen_brush_section_title"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="@string/tool_configuration_pen_brush_section_title" />
+            android:textColor="@color/control_gray"
+            android:textSize="20dp"
+            android:textStyle="bold" />
 
         <androidx.appcompat.widget.AppCompatSpinner
             android:layout_gravity="start"
             android:id="@+id/pen_brush_dropdown"
             android:layout_width="match_parent"
-            tools:minWidth="250dp"
+            tools:minWidth="200dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
             tools:minHeight="?attr/listPreferredItemHeightSmall"
-            tools:listitem="@layout/toolbar_pen_brush_row" />
+            tools:listitem="@layout/toolbar_pen_brush_row"/>
     </LinearLayout>
 </LinearLayout>
