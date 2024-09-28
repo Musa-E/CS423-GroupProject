@@ -321,10 +321,6 @@ class MainActivity : AppCompatActivity() {
                 val blockTypes = actionState.items
                 launchActionChoiceDialog(blockTypes.map(BlockType::toString)) { selected ->
                     when (val blockType = blockTypes[selected]) {
-                        BlockType.Image -> {
-                            addImagePosition = PointF(actionState.x, actionState.y)
-                            importImageRequest.launch("image/*")
-                        }
                         BlockType.Text -> {
                             // Ensure bottom sheet is collapsed to avoid weird state when IME is dismissed.
                             viewModel.expandColorPalette(false)
@@ -551,10 +547,7 @@ class MainActivity : AppCompatActivity() {
     private fun onPartCreationRequest(request: NewPartRequest?) {
         if (request != null) {
             val partTypes = request.availablePartTypes
-            val defaultIndex = partTypes.indexOf(request.defaultPartType)
-            launchSingleChoiceDialog(R.string.nav_new_part_dialog_title, partTypes.map(PartType::toString), defaultIndex) {
-                viewModel.createPart(partTypes[it])
-            }
+            viewModel.createPart(partTypes[0])
         }
     }
 
@@ -563,7 +556,7 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.let {
             val (title, subtitle) = when (state.partId) {
                 null -> getString(R.string.app_name) to null
-                else -> (state.partType?.toString() ?: "…") to state.partId
+                else -> (state.partType?.toString() ?: "…") to state.partId //To-do: this must be changed to the class name musa comes up with, with the name of the person's list
             }
             it.title = title
             it.subtitle = subtitle

@@ -39,12 +39,7 @@ import com.myscript.iink.graphics.Color as IInkColor
 
 
 enum class PartType(private val stringValue: String) {
-    Diagram("Diagram"),
-    Math("Math"),
-    Drawing("Drawing"),
-    RawContent("Raw Content"),
-    Text("Text"),
-    TextDocument("Text Document");
+    Text("Text");
 
     override fun toString(): String = stringValue
 
@@ -82,28 +77,18 @@ enum class PenBrush(val styleValue: String) {
 }
 
 enum class BlockType {
-    Diagram, Math, Drawing, RawContent, Text, Image;
+    Text;
 
     override fun toString(): String {
         return when (this) {
-            Diagram -> "Diagram"
-            Math -> "Math"
-            Drawing -> "Drawing"
-            RawContent -> "Raw Content"
             Text -> "Text"
-            Image -> "Image"
         }
     }
 
     companion object {
         fun fromString(value: String): BlockType? {
             return when (value) {
-                "Diagram" -> Diagram
-                "Math" -> Math
-                "Drawing" -> Drawing
-                "Raw Content" -> RawContent
                 "Text" -> Text
-                "Image" -> Image
                 else -> null
             }
         }
@@ -698,41 +683,6 @@ private fun PartType.availableTools(tools: List<ToolType>, enableActivePen: Bool
     val toolEraser = tools.first { it == ToolType.ERASER }
 
     return when (this) {
-        PartType.TextDocument -> mapOf(
-            toolHand to !enableActivePen,
-            toolPen to true,
-            toolHighlighter to true,
-            toolLasso to true,
-            toolEraser to true
-        )
-        PartType.Diagram -> mapOf(
-            toolHand to !enableActivePen,
-            toolPen to true,
-            toolHighlighter to true,
-            toolLasso to true,
-            toolEraser to true
-        )
-        PartType.Math -> mapOf(
-            toolHand to !enableActivePen,
-            toolPen to true,
-            toolHighlighter to false,
-            toolLasso to false,
-            toolEraser to true
-        )
-        PartType.Drawing -> mapOf(
-            toolHand to !enableActivePen,
-            toolPen to true,
-            toolHighlighter to true,
-            toolLasso to false,
-            toolEraser to true
-        )
-        PartType.RawContent -> mapOf(
-            toolHand to !enableActivePen,
-            toolPen to true,
-            toolHighlighter to true,
-            toolLasso to true,
-            toolEraser to true
-        )
         PartType.Text -> mapOf(
             toolHand to !enableActivePen,
             toolPen to true,
