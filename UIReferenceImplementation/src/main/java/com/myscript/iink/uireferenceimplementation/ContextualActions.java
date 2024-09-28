@@ -1,4 +1,6 @@
 package com.myscript.iink.uireferenceimplementation;
+//<!--AI STATEMENT: AI was not used in this. This file was imported from https://github.com/MyScript/interactive-ink-examples-android
+//into this Android SDK and then edited by our team -->
 
 import com.myscript.iink.ContentSelection;
 import com.myscript.iink.Editor;
