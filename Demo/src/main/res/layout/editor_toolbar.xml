@@ -24,7 +24,6 @@ into this Android SDK and then edited by our team -->
         android:layout_weight="1" />
 
     <ImageButton
-        android:contentDescription="undo"
         android:id="@+id/editor_undo"
         android:layout_width="48dp"
         android:layout_height="48dp"
@@ -35,7 +34,6 @@ into this Android SDK and then edited by our team -->
         tools:targetApi="o" />
 
     <ImageButton
-        android:contentDescription="redo"
         android:id="@+id/editor_redo"
         android:layout_width="48dp"
         android:layout_height="48dp"
@@ -46,7 +44,6 @@ into this Android SDK and then edited by our team -->
         tools:targetApi="o" />
 
     <ImageButton
-        android:contentDescription="trash"
         android:id="@+id/editor_clear_content"
         android:layout_width="48dp"
         android:layout_height="48dp"

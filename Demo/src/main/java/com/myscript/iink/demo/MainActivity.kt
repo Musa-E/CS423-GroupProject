@@ -6,7 +6,6 @@ package com.myscript.iink.demo
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.graphics.PointF
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -112,6 +111,7 @@ private val PenBrush.label: Int
 
 class MainActivity : AppCompatActivity() {
 
+    private var partStateArrayList: ArrayList<PartState> = ArrayList()
     private val exportsDir: File
         get() = File(cacheDir, "exports").apply(File::mkdirs)
     private val binding by lazy { MainActivityBinding.inflate(layoutInflater) }
@@ -144,7 +144,6 @@ class MainActivity : AppCompatActivity() {
 
         override fun onNothingSelected(parent: AdapterView<*>?) = Unit
     }
-    private var addImagePosition: PointF? = null
 
     private companion object {
         const val EnableCapturePredictionByDefault: Boolean = true
@@ -255,7 +254,9 @@ class MainActivity : AppCompatActivity() {
         //creates new part when clicked from main menu, instead of list
         val bundle = intent.extras
         if (bundle != null) {
-            viewModel.requestNewPart()
+            if(bundle.getString("blank") == "yeah"){
+                viewModel.requestNewPart();
+            }
         }
     }
 
@@ -431,9 +432,9 @@ class MainActivity : AppCompatActivity() {
 
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
         menu?.let {
-            it.findItem(R.id.nav_menu_new_part).isEnabled = viewModel.requestPartTypes().isNotEmpty()
-            it.findItem(R.id.nav_menu_previous_part).isEnabled = navigationState.hasPrevious
-            it.findItem(R.id.nav_menu_next_part).isEnabled = navigationState.hasNext
+//            it.findItem(R.id.nav_menu_new_part).isEnabled = viewModel.requestPartTypes().isNotEmpty()
+//            it.findItem(R.id.nav_menu_previous_part).isEnabled = navigationState.hasPrevious
+//            it.findItem(R.id.nav_menu_next_part).isEnabled = navigationState.hasNext
             it.findItem(R.id.editor_menu_convert).isEnabled = partState.isReady
             it.findItem(R.id.editor_menu_prediction).isEnabled = true
             it.findItem(R.id.editor_menu_export).isEnabled = partState.isReady
@@ -446,9 +447,41 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.nav_menu_new_part -> viewModel.requestNewPart()
-            R.id.nav_menu_previous_part -> viewModel.previousPart()
-            R.id.nav_menu_next_part -> viewModel.nextPart()
+//            R.id.nav_menu_new_part -> viewModel.requestNewPart()
+//            R.id.nav_menu_previous_part -> viewModel.previousPart()
+//            R.id.nav_menu_next_part -> viewModel.nextPart()
+
+            R.id.back_arrow -> {
+                val intent = Intent(applicationContext, TaskListView::class.java)
+
+//                if(partStateArrayList != null){
+//                    var num = 0
+//                    for(x in partStateArrayList){
+//                        if(x.partUUID == partState.partUUID){
+//                            num = 1
+//                            break
+//                        }
+//                    }
+//                    if(num == 0){
+//                        partStateArrayList.add(partState)
+//                    }
+//                }
+//                else{
+//                    partStateArrayList.add(partState);
+//                }
+//                Log.d("part state exists", partState.partUUID.toString())
+
+
+
+                intent.putExtra("partId", partState.partId)
+                intent.putExtra("isReady", partState.isReady)
+                intent.putExtra("partUUID", partState.partUUID)
+                intent.putExtra("partType", partState.partType.toString())
+
+
+                startActivity(intent)
+                finish()
+            }
             R.id.editor_menu_convert -> viewModel.convertContent()
             R.id.editor_menu_prediction -> showPredictionSettingsDialog()
             R.id.editor_menu_export -> onExport(viewModel.getExportMimeTypes())
@@ -513,13 +546,14 @@ class MainActivity : AppCompatActivity() {
 
     private fun onPartStateUpdate(state: PartState) {
         partState = state
+        partStateArrayList?.add(state)
         supportActionBar?.let {
             val (title, subtitle) = when (state.partId) {
                 null -> getString(R.string.app_name) to null
                 else -> (state.partType?.toString() ?: "…") to state.partId //To-do: this must be changed to the class name musa comes up with, with the name of the person's list
             }
-            it.title = title
-            it.subtitle = subtitle
+            it.title = "name of list" //to-do: put title of list
+            it.subtitle = subtitle //to-do: this is the same at the "else" to-do right there, so that is confusing as hell
         }
 
         editorView?.isVisible = state.isReady

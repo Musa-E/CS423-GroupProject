@@ -33,17 +33,20 @@ data class PartHistoryState(val canUndo: Boolean = false, val canRedo: Boolean =
 
 data class PartNavigationState(val hasPrevious: Boolean = false, val hasNext: Boolean = false)
 
-sealed class PartState {
-    open val isReady: Boolean = false
-    open val partId: String? = null
-    open val partType: PartType? = null
-
+open class PartState(
+    open val partId: String? = null,
+    open val isReady: Boolean = false,
+    open val partType: PartType? = null,
+    open val partUUID: UUID = UUID.randomUUID()
+) {
     object Unloaded : PartState()
     data class Loading(override val partId: String) : PartState()
     data class Loaded(override val partId: String, override val partType: PartType) : PartState() {
         override val isReady: Boolean = true
     }
 }
+
+
 
 sealed class ContextualActionState {
     data class AddBlock(val x: Float, val y: Float, val items: List<BlockType>) : ContextualActionState()
@@ -245,10 +248,6 @@ class EditorViewModel(
             partEditor.loadParts()
         }
         partEditor.setListener(partEditorListener)
-
-        if (partEditor.lastChosenPartType() == null) {
-            requestNewPart()
-        }
     }
 
     override fun onCleared() {
@@ -467,3 +466,6 @@ class EditorViewModel(
         partEditor.saveCurrentPart()
     }
 }
+
+
+
