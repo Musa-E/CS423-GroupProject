@@ -17,6 +17,16 @@ class ArrayRepository private constructor() {
         partStateArrayList.remove(partState)
     }
 
+    @Synchronized
+    fun checkForPart(partState: PartState): Boolean {
+        for(x in partStateArrayList) {
+            if(x.partId == partState.partId){
+                return true
+            }
+        }
+        return false
+    }
+
     @get:Synchronized
     val partStates: List<PartState>
         get() = ArrayList(partStateArrayList) // Return a copy

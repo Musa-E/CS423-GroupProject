@@ -36,8 +36,8 @@ data class PartNavigationState(val hasPrevious: Boolean = false, val hasNext: Bo
 open class PartState(
     open val partId: String? = null,
     open val isReady: Boolean = false,
-    open val partType: PartType? = null,
-    open val partUUID: UUID = UUID.randomUUID()
+    open val partType: PartType? = null, // Text("text")
+    //to-do: list of different tasks, like "get milk"
 ) {
     object Unloaded : PartState()
     data class Loading(override val partId: String) : PartState()
@@ -45,7 +45,6 @@ open class PartState(
         override val isReady: Boolean = true
     }
 }
-
 
 
 sealed class ContextualActionState {
@@ -284,6 +283,12 @@ class EditorViewModel(
             viewModelScope.launch(Dispatchers.Main) {
                 _partCreationRequest.value = NewPartRequest(partTypes, defaultPartType)
             }
+        }
+    }
+
+    fun getPart(partState: PartState){
+        if(partState != null){
+            _partState.value = partState
         }
     }
 

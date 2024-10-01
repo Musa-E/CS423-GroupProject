@@ -17,6 +17,7 @@ import com.myscript.iink.PointerType
 import com.myscript.iink.TextFormat
 import com.myscript.iink.demo.data.IContentRepository
 import com.myscript.iink.demo.data.ToolRepository
+import com.myscript.iink.demo.ui.PartState
 import com.myscript.iink.demo.ui.androidColor
 import com.myscript.iink.demo.ui.iinkColor
 import com.myscript.iink.demo.util.autoCloseable
@@ -332,6 +333,13 @@ class PartEditor(
             } catch (e: Exception) {
                 listener?.partLoadingError(partId, e)
             }
+        }
+    }
+
+
+    fun getPart(partState: PartState){
+        if(partState != null){
+            partState.partId?.let { openPart(it) }
         }
     }
 

@@ -34,6 +34,7 @@ import com.myscript.iink.demo.databinding.MainActivityBinding
 import com.myscript.iink.demo.di.EditorViewModelFactory
 import com.myscript.iink.demo.domain.BlockType
 import com.myscript.iink.demo.domain.MenuAction
+import com.myscript.iink.demo.domain.PartType.Companion.fromString
 import com.myscript.iink.demo.domain.PenBrush
 import com.myscript.iink.demo.ui.ColorState
 import com.myscript.iink.demo.ui.ColorsAdapter
@@ -62,6 +63,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.util.UUID
 import kotlin.math.roundToInt
 
 
@@ -256,6 +258,18 @@ class MainActivity : AppCompatActivity() {
         if (bundle != null) {
             if(bundle.getString("blank") == "yeah"){
                 viewModel.requestNewPart();
+            }
+            else if (bundle.getString("partId") != null){
+                val partTypeString = bundle.getString("partType")
+                val partType = fromString(partTypeString!!)
+
+                val partState = PartState(
+                    bundle["partId"] as String?,
+                    (bundle["isReady"] as Boolean?)!!,
+                    partType
+                )
+
+                viewModel.getPart(partState)
             }
         }
     }
@@ -454,28 +468,8 @@ class MainActivity : AppCompatActivity() {
             R.id.back_arrow -> {
                 val intent = Intent(applicationContext, TaskListView::class.java)
 
-//                if(partStateArrayList != null){
-//                    var num = 0
-//                    for(x in partStateArrayList){
-//                        if(x.partUUID == partState.partUUID){
-//                            num = 1
-//                            break
-//                        }
-//                    }
-//                    if(num == 0){
-//                        partStateArrayList.add(partState)
-//                    }
-//                }
-//                else{
-//                    partStateArrayList.add(partState);
-//                }
-//                Log.d("part state exists", partState.partUUID.toString())
-
-
-
                 intent.putExtra("partId", partState.partId)
                 intent.putExtra("isReady", partState.isReady)
-                intent.putExtra("partUUID", partState.partUUID)
                 intent.putExtra("partType", partState.partType.toString())
 
 
