@@ -20,16 +20,16 @@
 
     <TextView
         android:id="@+id/date"
+        android:textColor="@color/control_gray"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/myscriptinter_bold"
+        android:fontFamily="@font/myscriptinter_regular"
         android:gravity="center_vertical"
         android:minHeight="?android:attr/listPreferredItemHeightSmall"
         android:paddingStart="?android:attr/listPreferredItemPaddingStart"
         android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"
         android:text="the date"
-        app:layout_constraintBottom_toBottomOf="@id/layout"
-        app:layout_constraintRight_toRightOf="@id/title"
+        app:layout_constraintRight_toRightOf="@id/layout"
         android:textAppearance="?android:attr/textAppearanceListItemSmall"
         android:textSize="10sp"/>
 </LinearLayout>

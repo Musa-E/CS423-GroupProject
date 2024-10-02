@@ -37,7 +37,10 @@ public class ToDoListAdapter extends ArrayAdapter<PartState> {
         PartState currentNumberPosition = getItem(position);
 
         TextView textView = currentItemView.findViewById(R.id.title);
-        textView.setText(currentNumberPosition.getPartId());
+        textView.setText(currentNumberPosition.getTitle());
+
+        TextView textViewTwo = currentItemView.findViewById(R.id.date);
+        textViewTwo.setText(currentNumberPosition.getDateCreated());
 
         return currentItemView;
     }

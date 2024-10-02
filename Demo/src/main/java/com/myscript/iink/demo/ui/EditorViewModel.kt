@@ -37,6 +37,8 @@ open class PartState(
     open val partId: String? = null,
     open val isReady: Boolean = false,
     open val partType: PartType? = null, // Text("text")
+    open var dateCreated: String = null.toString(),
+    open var title: String = null.toString()
     //to-do: list of different tasks, like "get milk"
 ) {
     object Unloaded : PartState()
@@ -45,7 +47,6 @@ open class PartState(
         override val isReady: Boolean = true
     }
 }
-
 
 sealed class ContextualActionState {
     data class AddBlock(val x: Float, val y: Float, val items: List<BlockType>) : ContextualActionState()
@@ -120,7 +121,7 @@ class EditorViewModel(
     val partCreationRequest: LiveData<NewPartRequest?>
         get() = _partCreationRequest
 
-    private var _partState = MutableLiveData<PartState>(PartState.Unloaded)
+    private val _partState = MutableLiveData<PartState>(PartState.Unloaded)
     val partState: LiveData<PartState>
         get() = _partState
 

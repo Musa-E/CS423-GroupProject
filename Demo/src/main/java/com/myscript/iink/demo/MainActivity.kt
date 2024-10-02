@@ -63,7 +63,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
-import java.util.UUID
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 import kotlin.math.roundToInt
 
 
@@ -114,6 +116,7 @@ private val PenBrush.label: Int
 class MainActivity : AppCompatActivity() {
 
     private var partStateArrayList: ArrayList<PartState> = ArrayList()
+    private var officialTitle: String = null.toString()
     private val exportsDir: File
         get() = File(cacheDir, "exports").apply(File::mkdirs)
     private val binding by lazy { MainActivityBinding.inflate(layoutInflater) }
@@ -256,18 +259,27 @@ class MainActivity : AppCompatActivity() {
         //creates new part when clicked from main menu, instead of list
         val bundle = intent.extras
         if (bundle != null) {
-            if(bundle.getString("blank") == "yeah"){
+            if(bundle.getString("blank") != null){
+
+                officialTitle = bundle["blank"] as String;
+                Log.d("ggg", officialTitle)
+
                 viewModel.requestNewPart();
+                partState.title = officialTitle
             }
             else if (bundle.getString("partId") != null){
                 val partTypeString = bundle.getString("partType")
                 val partType = fromString(partTypeString!!)
 
-                val partState = PartState(
+                partState = PartState(
                     bundle["partId"] as String?,
                     (bundle["isReady"] as Boolean?)!!,
-                    partType
+                    partType,
+                    bundle["partDate"] as String,
+                    bundle["partTitle"] as String
                 )
+
+                officialTitle = bundle["partTitle"] as String
 
                 viewModel.getPart(partState)
             }
@@ -468,9 +480,24 @@ class MainActivity : AppCompatActivity() {
             R.id.back_arrow -> {
                 val intent = Intent(applicationContext, TaskListView::class.java)
 
+                if(officialTitle != null){
+                    partState.title = officialTitle.toString()
+                }
+
+                if(partState.dateCreated != null){
+                    val c = Calendar.getInstance().time
+
+                    val df = SimpleDateFormat("dd-MMM-yyyy", Locale.getDefault())
+                    val formattedDate = df.format(c)
+
+                    partState.dateCreated = formattedDate
+                }
+
                 intent.putExtra("partId", partState.partId)
                 intent.putExtra("isReady", partState.isReady)
                 intent.putExtra("partType", partState.partType.toString())
+                intent.putExtra("partDate", partState.dateCreated)
+                intent.putExtra("partTitle", partState.title)
 
 
                 startActivity(intent)
@@ -540,14 +567,41 @@ class MainActivity : AppCompatActivity() {
 
     private fun onPartStateUpdate(state: PartState) {
         partState = state
+        Log.d("Hello", partState.title)
         partStateArrayList?.add(state)
         supportActionBar?.let {
-            val (title, subtitle) = when (state.partId) {
+            var (title, subtitle) = when (state.partId) {
                 null -> getString(R.string.app_name) to null
                 else -> (state.partType?.toString() ?: "…") to state.partId //To-do: this must be changed to the class name musa comes up with, with the name of the person's list
             }
-            it.title = "name of list" //to-do: put title of list
-            it.subtitle = subtitle //to-do: this is the same at the "else" to-do right there, so that is confusing as hell
+
+            if(partState.title != null){
+                title = officialTitle
+            }
+            else{
+                title = partState.title
+            }
+
+            it.title = title
+
+            supportActionBar?.setDisplayShowHomeEnabled(true)
+
+            val c = Calendar.getInstance().time
+
+            val df = SimpleDateFormat("dd-MMM-yyyy", Locale.getDefault())
+            val formattedDate = df.format(c)
+
+            if(partState.dateCreated != null){
+                val c = Calendar.getInstance().time
+
+                val df = SimpleDateFormat("dd-MMM-yyyy", Locale.getDefault())
+                val formattedDate = df.format(c)
+                it.subtitle = formattedDate
+
+            }
+            else{
+                    it.subtitle = partState.dateCreated
+                }
         }
 
         editorView?.isVisible = state.isReady
