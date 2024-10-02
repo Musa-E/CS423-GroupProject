@@ -4,6 +4,11 @@ import com.myscript.iink.demo.ui.PartState
 
 // AI STATEMENT: this file used zero AI and was made by our team 100%
 
+
+/*
+This class is, basically, a global variable to store all the PartStates in for the listview. This allows the
+list to stay alive, even if you call TaskListView.java 100 times, instead of the list refreshing, which would stink.
+ */
 class ArrayRepository private constructor() {
     private val partStateArrayList: ArrayList<PartState> = ArrayList()
 
@@ -17,6 +22,7 @@ class ArrayRepository private constructor() {
         partStateArrayList.remove(partState)
     }
 
+    //Checks to see if that part exists in the list
     @Synchronized
     fun checkForPart(partState: PartState): Boolean {
         for(x in partStateArrayList) {

@@ -68,7 +68,8 @@ import java.util.Calendar
 import java.util.Locale
 import kotlin.math.roundToInt
 
-
+//This function is for the "exporting" feature that we probably are not going to use.
+//I'm keeping it because I have the "you never know" mentality.
 suspend fun Context.processUriFile(uri: Uri, file: File, logic: (File) -> Unit) {
     withContext(Dispatchers.IO) {
         runCatching {
@@ -86,6 +87,7 @@ suspend fun Context.processUriFile(uri: Uri, file: File, logic: (File) -> Unit) 
     }
 }
 
+//menu option for the drop-down that, again, we probably are not going to use
 @get:StringRes
 private val MenuAction.stringRes: Int
     get() = when (this) {
@@ -104,6 +106,8 @@ private val MenuAction.stringRes: Int
         MenuAction.FORMAT_TEXT_LIST_NUMBERED -> R.string.editor_action_format_text_as_list_numbered
     }
 
+// Declares all the types of pens and their names for display
+// R.String just is as it sounds: holds string values that you use consistently
 @get:StringRes
 private val PenBrush.label: Int
     get() = when (this) {
@@ -113,17 +117,17 @@ private val PenBrush.label: Int
         PenBrush.PENCIL -> R.string.pen_brush_pencil_brush
     }
 
-class MainActivity : AppCompatActivity() {
 
-    private var partStateArrayList: ArrayList<PartState> = ArrayList()
-    private var officialTitle: String = null.toString()
+//Now here is the actual class, believe it or not
+class MainActivity : AppCompatActivity() {
+    private var officialTitle: String = null.toString() //title of page that gets added to PartState.title
     private val exportsDir: File
-        get() = File(cacheDir, "exports").apply(File::mkdirs)
-    private val binding by lazy { MainActivityBinding.inflate(layoutInflater) }
-    private var editorView: EditorView? = null
-    private val viewModel: EditorViewModel by viewModels { EditorViewModelFactory() }
-    private var navigationState: PartNavigationState = PartNavigationState()
-    private var partState: PartState = PartState.Unloaded
+        get() = File(cacheDir, "exports").apply(File::mkdirs) //variable we prob wont need
+    private val binding by lazy { MainActivityBinding.inflate(layoutInflater) } //we need this, just sets up UI
+    private var editorView: EditorView? = null //need this, creates the editing area
+    private val viewModel: EditorViewModel by viewModels { EditorViewModelFactory() } //this is the entire UI page boxed into this
+    private var navigationState: PartNavigationState = PartNavigationState() //let's, for now, not touch this: holds nav states (like, past), which I sort of got rid of, but, again, you never know
+    private var partState: PartState = PartState.Unloaded //global var that holds the literal object with all the stuff, never delete
     private val editorBinding = IInkApplication.DemoModule.editorBinding
     private var smartGuideView: SmartGuideView? = null
     private var toolsAdapter = ToolsAdapter { viewModel.changeTool(it) }
@@ -132,6 +136,7 @@ class MainActivity : AppCompatActivity() {
     private val penBrushesAdapter by lazy {
         ArrayAdapter<String>(this, R.layout.toolbar_pen_brush_row, R.id.toolbar_pen_brush_row_label)
     }
+    //listens for pen brush to be changed
     private val penBrushSelectedListener = object : AdapterView.OnItemSelectedListener {
         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
             val penBrushLabel = penBrushesAdapter.getItem(position) ?: return
@@ -155,6 +160,7 @@ class MainActivity : AppCompatActivity() {
         const val DefaultMinimumPredictionDurationMs: Int = 16 // 1 frame @60Hz, 2 frames @120Hz
     }
 
+    //apparently, something happens on a long press, so we should investigate
     private val onEditorLongPress = IInputControllerListener { x, y, _ ->
         val actionState = viewModel.requestContentBlockActions(x, y)
         showContextualActionDialog(actionState)
@@ -177,6 +183,7 @@ class MainActivity : AppCompatActivity() {
         override fun onSlide(bottomSheet: View, slideOffset: Float) = Unit
     }
 
+    //Now this is something I don't believe we will need. This is just importing an object, if wanted
     private val importIInkFileRequest = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         if (uri == null) return@registerForActivityResult
         val mimeType = DocumentFile.fromSingleUri(this@MainActivity, uri)?.type ?: contentResolver.getType(uri)
@@ -198,14 +205,16 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    //Here is the function that is called, I swear, when the activity is called
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         editorView = findViewById(com.myscript.iink.uireferenceimplementation.R.id.editor_view)
         smartGuideView = findViewById(com.myscript.iink.uireferenceimplementation.R.id.smart_guide_view)
 
-        setSupportActionBar(binding.toolbar)
+        setSupportActionBar(binding.toolbar) //creates the bar at the top and makes it editable programmically
 
+        //sets up the entire viewmodel, do not touch
         viewModel.enableActivePen.observe(this) { activePenEnabled ->
             binding.editorToolbar.switchActivePen.isChecked = activePenEnabled
         }
@@ -245,8 +254,7 @@ class MainActivity : AppCompatActivity() {
             penBrushDropdown.onItemSelectedListener = penBrushSelectedListener
         }
 
-        // Note: could be managed by domain layer and handled through observable error channel
-        // but kept simple as is to avoid adding too much complexity for this special (unrecoverable) error case
+        //just an error response, dont touch
         if (IInkApplication.DemoModule.engine == null) {
             // the certificate provided in `DemoModule.provideEngine` is most likely incorrect
             onError(Error(
@@ -256,21 +264,22 @@ class MainActivity : AppCompatActivity() {
             ))
         }
 
-        //creates new part when clicked from main menu, instead of list
+        //by Polly: gets the "paramters" that you sent over from "TaskListView.java" and reads them and
+        //responds accordingly
         val bundle = intent.extras
         if (bundle != null) {
+            //I created "blank" to mean it is a new entry; it is the title the user put in
             if(bundle.getString("blank") != null){
+                officialTitle = bundle["blank"] as String; //making the title equal what user put
 
-                officialTitle = bundle["blank"] as String;
-                Log.d("ggg", officialTitle)
-
-                viewModel.requestNewPart();
+                viewModel.requestNewPart(); //this is the function that gets a new PartState
                 partState.title = officialTitle
-            }
+            } //this is if the user clicked on the listview to open up this activity
             else if (bundle.getString("partId") != null){
                 val partTypeString = bundle.getString("partType")
                 val partType = fromString(partTypeString!!)
 
+                //making global partState what the user sent in from "EditorViewModel.kt"
                 partState = PartState(
                     bundle["partId"] as String?,
                     (bundle["isReady"] as Boolean?)!!,
@@ -281,11 +290,12 @@ class MainActivity : AppCompatActivity() {
 
                 officialTitle = bundle["partTitle"] as String
 
-                viewModel.getPart(partState)
+                viewModel.getPart(partState) //function that gets the PartState you want to load
             }
         }
     }
 
+    //let's not touch this
     private fun setMargins(editor: Editor, @DimenRes horizontalMarginRes: Int, @DimenRes verticalMarginRes: Int) {
         val displayMetrics = resources.displayMetrics
         with (editor.configuration) {
@@ -303,6 +313,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    //this is a menu item that we do not need, but, again "You never know"
     private fun configureDefaultCaptureStrokePrediction(context: Context) {
         val durationMs = FrameTimeEstimator.getFrameTime(context)
             .roundToInt()
@@ -310,6 +321,7 @@ class MainActivity : AppCompatActivity() {
         viewModel.changePredictionSettings(EnableCapturePredictionByDefault, durationMs)
     }
 
+    //again, you never know...
     private fun showContextualActionDialog(actionState: ContextualActionState, selectedBlockId: String? = null) {
         when (actionState) {
             is ContextualActionState.AddBlock -> {
@@ -350,6 +362,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    //this is launched after OnCreate(), actually. This is just more declaring that had to be doen when other stuff was
     override fun onStart() {
         super.onStart()
 
@@ -359,7 +372,7 @@ class MainActivity : AppCompatActivity() {
             }
             editorUndo.setOnClickListener { viewModel.undo() }
             editorRedo.setOnClickListener { viewModel.redo() }
-            editorClearContent.setOnClickListener { viewModel.clearContent() }
+            editorClearContent.setOnClickListener { viewModel.clearContent() } //clears content
         }
 
         with(binding.editorToolbarSheet) {
@@ -370,6 +383,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    //this is called right when you call finish()
     override fun onStop() {
         with(binding.editorToolbar) {
             switchActivePen.setOnCheckedChangeListener(null)
@@ -385,6 +399,7 @@ class MainActivity : AppCompatActivity() {
         super.onStop()
     }
 
+    //this is called after onStop()
     override fun onDestroy() {
         smartGuideView?.setEditor(null)
         smartGuideView?.setMenuListener(null)
@@ -392,6 +407,7 @@ class MainActivity : AppCompatActivity() {
         super.onDestroy()
     }
 
+    //this is an error function that, again, i don't think is wise to touch, per say
     private fun onError(error: Error?) {
         if (error != null) {
             Log.e("MainActivity", error.toString(), error.exception)
@@ -419,27 +435,32 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    //updating the toolsheet
     private fun onToolSheetExpansionStateUpdate(expanded: Boolean) {
         with(BottomSheetBehavior.from(binding.editorToolbarSheet.toolbarSettingsBottomSheet)) {
             state = if (expanded) BottomSheetBehavior.STATE_EXPANDED else BottomSheetBehavior.STATE_COLLAPSED
         }
     }
 
+    //updating the toolsheet
     private fun onAvailableToolsUpdate(toolStates: List<ToolState>) {
         toolsAdapter.submitList(toolStates)
         binding.editorToolbarSheet.toolbarTools.isVisible = toolStates.isNotEmpty()
     }
 
+    //updating the colors in the toolsheet
     private fun onAvailableColorsUpdate(colorStates: List<ColorState>) {
         colorsAdapter.submitList(colorStates)
         binding.editorToolbarSheet.toolbarColors.isVisible = colorStates.isNotEmpty()
     }
 
+    //updating the thickness in the toolsheet
     private fun onAvailableThicknessesUpdate(thicknessStates: List<ThicknessState>) {
         thicknessesAdapter.submitList(thicknessStates)
         binding.editorToolbarSheet.toolbarThicknesses.isVisible = thicknessStates.isNotEmpty()
     }
 
+    //updating the toolsheet brushes
     private fun onAvailablePenBrushesUpdate(penBrushStates: List<PenBrushState>) {
         penBrushesAdapter.clear()
         if (penBrushStates.isNotEmpty()) {
@@ -450,12 +471,14 @@ class MainActivity : AppCompatActivity() {
         binding.editorToolbarSheet.toolbarPenBrushSection.isVisible = penBrushStates.isNotEmpty()
     }
 
+    //this creates the options menu: the drop down, the three dots (i know think we need but...)
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         super.onCreateOptionsMenu(menu)
         menuInflater.inflate(R.menu.main_menu, menu)
         return true
     }
 
+    //this is called to find the items and declare what to do
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
         menu?.let {
 //            it.findItem(R.id.nav_menu_new_part).isEnabled = viewModel.requestPartTypes().isNotEmpty()
@@ -471,6 +494,7 @@ class MainActivity : AppCompatActivity() {
         return super.onPrepareOptionsMenu(menu)
     }
 
+    //what happens when you select
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
 //            R.id.nav_menu_new_part -> viewModel.requestNewPart()
@@ -514,6 +538,7 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
+    //this is for sharing a file, but you never know
     private fun onShareFile(partId: String) {
         viewModel.extractPart(partId, exportsDir) { file ->
             if (file != null) {
@@ -526,6 +551,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    //this is for exporting, but you never know
     private fun onExport(mimeTypes: List<MimeType>, x: Float? = null, y: Float? = null, selectedBlockId: String? = null) {
         if (mimeTypes.isNotEmpty()) {
             val label = mimeTypes.map { mimeType ->
@@ -558,6 +584,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    //this is to request a new PartState
     private fun onPartCreationRequest(request: NewPartRequest?) {
         if (request != null) {
             val partTypes = request.availablePartTypes
@@ -565,29 +592,27 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    //this sets the title and date on the action bar
     private fun onPartStateUpdate(state: PartState) {
         partState = state
-        Log.d("Hello", partState.title)
-        partStateArrayList?.add(state)
         supportActionBar?.let {
             var (title, subtitle) = when (state.partId) {
                 null -> getString(R.string.app_name) to null
                 else -> (state.partType?.toString() ?: "…") to state.partId //To-do: this must be changed to the class name musa comes up with, with the name of the person's list
             }
 
+            //I know this looks convulted, but, i swear to god, the title doesn't set without it, so please don't touch
             if(partState.title != null){
                 title = officialTitle
             }
             else{
                 title = partState.title
             }
-
             it.title = title
-
             supportActionBar?.setDisplayShowHomeEnabled(true)
 
+            //sets the date to current
             val c = Calendar.getInstance().time
-
             val df = SimpleDateFormat("dd-MMM-yyyy", Locale.getDefault())
             val formattedDate = df.format(c)
 
@@ -615,6 +640,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    //this is the undo/redo history, which works, so let's not touch it
     private fun onPartHistoryUpdate(state: PartHistoryState) {
         with(binding.editorToolbar) {
             editorRedo.isEnabled = state.canRedo
@@ -622,11 +648,13 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    //no idea what this is for, lemme tell you, but sounds important
     private fun onPartNavigationStateUpdate(state: PartNavigationState) {
         navigationState = state
         invalidateOptionsMenu()
     }
 
+    //this is something we don't need, but you never know...
     private fun showPredictionSettingsDialog() {
         val currentSettings = viewModel.predictionSettings
         launchPredictionDialog(currentSettings.enabled, currentSettings.durationMs) { enabled, durationMs ->
