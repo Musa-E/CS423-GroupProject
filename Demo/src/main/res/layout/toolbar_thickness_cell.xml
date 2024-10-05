@@ -7,10 +7,10 @@ into this Android SDK and then edited by our team -->
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="48dp"
     android:layout_height="48dp"
-    android:background="@drawable/tool_background"
-    android:backgroundTint="?attr/colorControlHighlight"
+    android:background="@drawable/rounded_corner_white"
     tools:showIn="@layout/toolbar_settings_sheet_layout">
   <ImageView
+      android:contentDescription="thickness for pen"
       android:id="@+id/toolbar_thickness_icon"
       android:layout_width="48dp"
       android:layout_height="48dp"

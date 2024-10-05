@@ -17,6 +17,7 @@ into this Android SDK and then edited by our team -->
             android:layout_height="wrap_content"
             android:theme="?attr/actionBarTheme"
             android:orientation="vertical"
+            android:background="@drawable/action_bar_background"
             android:animateLayoutChanges="true">
 
             <androidx.appcompat.widget.Toolbar
@@ -27,6 +28,11 @@ into this Android SDK and then edited by our team -->
             <include
                 android:id="@+id/editor_toolbar"
                 layout="@layout/editor_toolbar" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/black" />
 
         </com.google.android.material.appbar.AppBarLayout>
 

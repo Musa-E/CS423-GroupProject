@@ -2,6 +2,7 @@
 <!--AI STATEMENT: AI was not used in this. This file was imported from https://github.com/MyScript/interactive-ink-examples-android
 into this Android SDK and then edited by our team -->
 <ImageView
+    android:contentDescription="color for pen"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="@layout/toolbar_settings_sheet_layout"
@@ -9,7 +10,6 @@ into this Android SDK and then edited by our team -->
     android:layout_width="48dp"
     android:layout_height="48dp"
     android:padding="12dp"
-    android:background="@drawable/tool_background"
-    android:backgroundTint="?attr/colorControlHighlight"
+    android:background="@drawable/rounded_corner_white"
     android:src="@drawable/disc"
     tools:tint="@sample/colors" />

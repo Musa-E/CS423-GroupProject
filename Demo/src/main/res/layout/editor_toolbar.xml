@@ -7,10 +7,12 @@ into this Android SDK and then edited by our team -->
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
+    android:padding="2dp"
     android:orientation="horizontal">
 
     <androidx.appcompat.widget.SwitchCompat
         android:id="@+id/switch_active_pen"
+        android:theme="@style/SCBSwitch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
@@ -39,36 +41,6 @@ into this Android SDK and then edited by our team -->
         android:background="?android:selectableItemBackground"
         android:src="@drawable/ic_redo"
         android:tooltipText="@string/editor_redo"
-        tools:targetApi="o" />
-
-    <ImageButton
-        android:id="@+id/editor_zoom_in"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:padding="12dp"
-        android:background="?android:selectableItemBackground"
-        android:src="@drawable/ic_zoom_in"
-        android:tooltipText="@string/editor_zoom_in"
-        tools:targetApi="o" />
-
-    <ImageButton
-        android:id="@+id/editor_zoom_out"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:padding="12dp"
-        android:background="?android:selectableItemBackground"
-        android:src="@drawable/ic_zoom_out"
-        android:tooltipText="@string/editor_zoom_out"
-        tools:targetApi="o" />
-
-    <ImageButton
-        android:id="@+id/editor_reset_view"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:padding="12dp"
-        android:background="?android:selectableItemBackground"
-        android:src="@drawable/ic_reset_view"
-        android:tooltipText="@string/editor_resetView"
         tools:targetApi="o" />
 
     <ImageButton
