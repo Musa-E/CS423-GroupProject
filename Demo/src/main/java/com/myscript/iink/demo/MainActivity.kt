@@ -501,7 +501,7 @@ class MainActivity : AppCompatActivity() {
 //            R.id.nav_menu_previous_part -> viewModel.previousPart()
 //            R.id.nav_menu_next_part -> viewModel.nextPart()
 
-            R.id.back_arrow -> {
+            R.id.back_arrows -> {
                 val intent = Intent(applicationContext, TaskListView::class.java)
 
                 if(officialTitle != null){
