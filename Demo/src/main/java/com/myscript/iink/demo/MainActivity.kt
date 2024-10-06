@@ -349,18 +349,21 @@ class MainActivity : AppCompatActivity() {
                 //and then is when the user lifts their finger
                 MotionEvent.ACTION_UP -> {
                     Log.d("TouchEvent", "ACTION_UP at (${it.x}, ${it.y})")
-                    if(isPenActivated) {
-                        if (isFlippedCShape(touchPoints)) {
-                            onUndoGestureDetected()
-                            //if the pen is activiated, we gotta get rid of the WOOSH too
-                                Handler(Looper.getMainLooper()).postDelayed({
-                                    listenerStateSaved.value = true
-                                }, 200)
-                        } else if (isCShape(touchPoints)) {
-                            onRedoGestureDetected()
-                                Handler(Looper.getMainLooper()).postDelayed({
-                                    listenerStateSaved.value = true
-                                }, 200)
+                    if (isFlippedCShape(touchPoints)) {
+                        onUndoGestureDetected()
+                        //if the pen is activiated, we gotta get rid of the WOOSH too
+                        if(isPenActivated){
+                            Handler(Looper.getMainLooper()).postDelayed({
+                                listenerStateSaved.value = true
+                            }, 200)
+                        }
+                    }
+                    else if (isCShape(touchPoints)) {
+                        onRedoGestureDetected()
+                        if(isPenActivated){
+                            Handler(Looper.getMainLooper()).postDelayed({
+                                listenerStateSaved.value = true
+                            }, 200)
                         }
                     }
                     touchPoints.clear();
@@ -385,7 +388,7 @@ class MainActivity : AppCompatActivity() {
         val heightDifference = startY - endY
         val widthDifference = endX - startX
 
-        return heightDifference > 40 && widthDifference < 200
+        return heightDifference > 40 && heightDifference < 200 && widthDifference < 200
     }
 
     //checks for redo
@@ -402,7 +405,7 @@ class MainActivity : AppCompatActivity() {
         val heightDifference = startY - endY
         val widthDifference = endX - startX
 
-        return heightDifference > 40 && widthDifference < 200
+        return heightDifference > 40 && heightDifference < 200 && widthDifference < 200
     }
 
 
