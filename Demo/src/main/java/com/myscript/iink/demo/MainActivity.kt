@@ -6,11 +6,16 @@ package com.myscript.iink.demo
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.graphics.PointF
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
+import android.view.GestureDetector
 import android.view.Menu
 import android.view.MenuItem
+import android.view.MotionEvent
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -25,6 +30,7 @@ import androidx.core.app.ShareCompat
 import androidx.core.content.FileProvider
 import androidx.core.view.isVisible
 import androidx.documentfile.provider.DocumentFile
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.coroutineScope
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.snackbar.Snackbar
@@ -120,6 +126,13 @@ private val PenBrush.label: Int
 
 //Now here is the actual class, believe it or not
 class MainActivity : AppCompatActivity() {
+    //variables for undo/redo gestures
+    private lateinit var gestureDetector: GestureDetector
+    private val touchPoints = mutableListOf<PointF>()
+    private var isPenActivated = false;
+    private val listenerStateSaved = MutableLiveData<Boolean>()
+
+
     private var officialTitle: String = null.toString() //title of page that gets added to PartState.title
     private val exportsDir: File
         get() = File(cacheDir, "exports").apply(File::mkdirs) //variable we prob wont need
@@ -206,9 +219,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     //Here is the function that is called, I swear, when the activity is called
+    @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+
+        //gestureDetector prof was walking about in class
+        gestureDetector = GestureDetector(this, GestureListener())
+
         editorView = findViewById(com.myscript.iink.uireferenceimplementation.R.id.editor_view)
         smartGuideView = findViewById(com.myscript.iink.uireferenceimplementation.R.id.smart_guide_view)
 
@@ -217,6 +235,7 @@ class MainActivity : AppCompatActivity() {
         //sets up the entire viewmodel, do not touch
         viewModel.enableActivePen.observe(this) { activePenEnabled ->
             binding.editorToolbar.switchActivePen.isChecked = activePenEnabled
+            isPenActivated = activePenEnabled;
         }
         viewModel.error.observe(this, this::onError)
         viewModel.toolSheetExpansionState.observe(this, this::onToolSheetExpansionStateUpdate)
@@ -229,11 +248,28 @@ class MainActivity : AppCompatActivity() {
         viewModel.partHistoryState.observe(this, this::onPartHistoryUpdate)
         viewModel.partNavigationState.observe(this, this::onPartNavigationStateUpdate)
 
-        // extra brushes (if any) must be set prior to editor binding
+        // Extra brushes must be set prior to editor binding
         editorView?.extraBrushConfigs = IInkApplication.DemoModule.extraBrushes
         val editorData = editorBinding.openEditor(editorView)
-        editorData.inputController?.listener = onEditorLongPress
         editorData.inputController?.setViewListener(editorView)
+
+        //the touch listener for the editor view to include custom one
+         editorView?.setOnTouchListener { _, event ->
+            editorData.inputController?.onTouch(editorView, event)
+             onTouchEvent(event)
+            true
+        }
+
+        //this is a handler that pauses the time before an undo; trust me, it is needed *sobs*
+        listenerStateSaved.observe(this) { isSaved ->
+            if (isSaved) {
+                viewModel.undo();
+                listenerStateSaved.value = false
+            }
+        }
+
+
+
         editorData.editor?.let { editor ->
             viewModel.setEditor(editorData)
             setMargins(editor, R.dimen.editor_horizontal_margin, R.dimen.editor_vertical_margin)
@@ -293,6 +329,133 @@ class MainActivity : AppCompatActivity() {
                 viewModel.getPart(partState) //function that gets the PartState you want to load
             }
         }
+    }
+
+    //here is our own custom touch event, which we will prob use for more gestures
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+        event?.let {
+            when (it.action) {
+                //this means when the user presses on the screen
+                MotionEvent.ACTION_DOWN -> {
+                    touchPoints.clear()
+                    touchPoints.add(PointF(it.x, it.y))
+                    Log.d("TouchEvent", "ACTION_DOWN at (${it.x}, ${it.y})")
+                }
+                //this means when their finger is moving, as you can imagine
+                MotionEvent.ACTION_MOVE -> {
+                    touchPoints.add(PointF(it.x, it.y)) //adding points to an array to look at later
+                    Log.d("TouchEvent", "ACTION_MOVE at (${it.x}, ${it.y})")
+                }
+                //and then is when the user lifts their finger
+                MotionEvent.ACTION_UP -> {
+                    Log.d("TouchEvent", "ACTION_UP at (${it.x}, ${it.y})")
+                    if (isFlippedCShape(touchPoints)) {
+                        onUndoGestureDetected()
+                        //if the pen is activiated, we gotta get rid of the WOOSH too
+                        if(isPenActivated){
+                            Handler(Looper.getMainLooper()).postDelayed({
+                                listenerStateSaved.value = true
+                            }, 200)
+                        }
+                    }
+                    else if (isCShape(touchPoints)) {
+                        onRedoGestureDetected()
+                        if(isPenActivated){
+                            Handler(Looper.getMainLooper()).postDelayed({
+                                listenerStateSaved.value = true
+                            }, 200)
+                        }
+                    }
+                    touchPoints.clear();
+                }
+                else -> {}
+            }
+        }
+        return event?.let { gestureDetector.onTouchEvent(it) } == true || super.onTouchEvent(event)
+    }
+
+    //checks for undo
+    private fun isFlippedCShape(points: List<PointF>): Boolean {
+        if (points.size < 5) return false
+
+        val startX = points.first().x
+        val startY = points.first().y
+        val endX = points.last().x
+        val endY = points.last().y
+
+        if (startY < endY || startX < endX) return false
+
+        val heightDifference = startY - endY
+        val widthDifference = endX - startX
+
+        return heightDifference > 40 && heightDifference < 200 && widthDifference < 200
+    }
+
+    //checks for redo
+    private fun isCShape(points: List<PointF>): Boolean {
+        if (points.size < 5) return false
+
+        val startX = points.first().x
+        val startY = points.first().y
+        val endX = points.last().x
+        val endY = points.last().y
+
+        if (startY < endY || startX > endX) return false
+
+        val heightDifference = startY - endY
+        val widthDifference = endX - startX
+
+        return heightDifference > 40 && heightDifference < 200 && widthDifference < 200
+    }
+
+
+    //what to do when it is detected
+    private fun onUndoGestureDetected() {
+        if(isPenActivated){
+            Handler(Looper.getMainLooper()).postDelayed({
+                listenerStateSaved.value = true
+            }, 400)
+        }
+        //viewModel.undo()
+        Toast.makeText(this, "Undo action detected!", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun onRedoGestureDetected() {
+        viewModel.redo()
+        Toast.makeText(this, "Redo action detected!", Toast.LENGTH_SHORT).show()
+    }
+
+    //this was the gesture listener prof told us to use. I haven't used it yet but here are swipe exmaples for you all
+    private inner class GestureListener : GestureDetector.SimpleOnGestureListener() {
+        override fun onFling(
+            e1: MotionEvent?,
+            e2: MotionEvent,
+            velocityX: Float,
+            velocityY: Float
+        ): Boolean {
+            if (e1 != null && e2 != null) {
+                val deltaX = e2.x - e1.x
+                val deltaY = e2.y - e1.y
+
+                if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 100 && Math.abs(velocityX) > 100) {
+                    if (deltaX > 0) {
+                        onSwipeRight()
+                    } else {
+                        onSwipeLeft()
+                    }
+                    return true
+                }
+            }
+            return false
+        }
+    }
+
+    private fun onSwipeRight() {
+        Toast.makeText(this, "Swiped Right!", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun onSwipeLeft() {
+        Toast.makeText(this, "Swiped Left!", Toast.LENGTH_SHORT).show()
     }
 
     //let's not touch this
@@ -369,6 +532,7 @@ class MainActivity : AppCompatActivity() {
         with(binding.editorToolbar) {
             switchActivePen.setOnCheckedChangeListener { _, isChecked ->
                 viewModel.enableActivePen(isChecked)
+                isPenActivated = true;
             }
             editorUndo.setOnClickListener { viewModel.undo() }
             editorRedo.setOnClickListener { viewModel.redo() }
@@ -661,4 +825,5 @@ class MainActivity : AppCompatActivity() {
             viewModel.changePredictionSettings(enabled, durationMs)
         }
     }
+
 }

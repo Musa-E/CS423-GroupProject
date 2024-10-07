@@ -3,6 +3,7 @@
 
 package com.myscript.iink.demo.ui
 
+import android.util.Log
 import androidx.annotation.ColorInt
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
