@@ -387,7 +387,7 @@ class MainActivity : AppCompatActivity() {
         val heightDifference = startY - endY
         val widthDifference = endX - startX
 
-        return heightDifference > 40 && widthDifference < 200
+        return heightDifference > 70 && widthDifference < 200
     }
 
     //checks for redo
@@ -404,7 +404,7 @@ class MainActivity : AppCompatActivity() {
         val heightDifference = startY - endY
         val widthDifference = endX - startX
 
-        return heightDifference > 40 && widthDifference < 200
+        return heightDifference > 70 && widthDifference < 200
     }
 
 
