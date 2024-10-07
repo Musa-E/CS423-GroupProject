@@ -132,7 +132,6 @@ class MainActivity : AppCompatActivity() {
     private var isPenActivated = false;
     private val listenerStateSaved = MutableLiveData<Boolean>()
 
-
     private var officialTitle: String = null.toString() //title of page that gets added to PartState.title
     private val exportsDir: File
         get() = File(cacheDir, "exports").apply(File::mkdirs) //variable we prob wont need
@@ -388,7 +387,7 @@ class MainActivity : AppCompatActivity() {
         val heightDifference = startY - endY
         val widthDifference = endX - startX
 
-        return heightDifference > 40 && heightDifference < 200 && widthDifference < 200
+        return heightDifference > 40 && widthDifference < 200
     }
 
     //checks for redo
@@ -405,7 +404,7 @@ class MainActivity : AppCompatActivity() {
         val heightDifference = startY - endY
         val widthDifference = endX - startX
 
-        return heightDifference > 40 && heightDifference < 200 && widthDifference < 200
+        return heightDifference > 40 && widthDifference < 200
     }
 
 
