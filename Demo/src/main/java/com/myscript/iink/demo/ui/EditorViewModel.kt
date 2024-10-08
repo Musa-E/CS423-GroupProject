@@ -3,6 +3,7 @@
 
 package com.myscript.iink.demo.ui
 
+import android.util.Log
 import androidx.annotation.ColorInt
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -33,11 +34,14 @@ data class PartHistoryState(val canUndo: Boolean = false, val canRedo: Boolean =
 
 data class PartNavigationState(val hasPrevious: Boolean = false, val hasNext: Boolean = false)
 
-sealed class PartState {
-    open val isReady: Boolean = false
-    open val partId: String? = null
-    open val partType: PartType? = null
-
+open class PartState(
+    open val partId: String? = null,
+    open val isReady: Boolean = false,
+    open val partType: PartType? = null, // Text("text")
+    open var dateCreated: String = null.toString(),
+    open var title: String = null.toString()
+    //to-do: list of different tasks, like "get milk"
+) {
     object Unloaded : PartState()
     data class Loading(override val partId: String) : PartState()
     data class Loaded(override val partId: String, override val partType: PartType) : PartState() {
@@ -75,7 +79,7 @@ class ColorPalette(
 }
 
 // You could add any further data place holder here (like default name, last chosen recognition language, ...)
-data class NewPartRequest(val availablePartTypes: List<PartType>, val defaultPartType: PartType? = null)
+data class NewPartRequest(val availablePartTypes: List<PartType>, val defaultPartType: PartType? = PartType.Text)
 
 data class Error(
     val severity: Severity,
@@ -118,7 +122,7 @@ class EditorViewModel(
     val partCreationRequest: LiveData<NewPartRequest?>
         get() = _partCreationRequest
 
-    private var _partState = MutableLiveData<PartState>(PartState.Unloaded)
+    private val _partState = MutableLiveData<PartState>(PartState.Unloaded)
     val partState: LiveData<PartState>
         get() = _partState
 
@@ -245,10 +249,6 @@ class EditorViewModel(
             partEditor.loadParts()
         }
         partEditor.setListener(partEditorListener)
-
-        if (partEditor.lastChosenPartType() == null) {
-            requestNewPart()
-        }
     }
 
     override fun onCleared() {
@@ -285,6 +285,12 @@ class EditorViewModel(
             viewModelScope.launch(Dispatchers.Main) {
                 _partCreationRequest.value = NewPartRequest(partTypes, defaultPartType)
             }
+        }
+    }
+
+    fun getPart(partState: PartState){
+        if(partState != null){
+            _partState.value = partState
         }
     }
 
@@ -402,18 +408,6 @@ class EditorViewModel(
         return ContextualActionState.Export(x, y, actions)
     }
 
-    fun zoomOut() {
-        partEditor.zoomOut()
-    }
-
-    fun zoomIn() {
-        partEditor.zoomIn()
-    }
-
-    fun resetView() {
-        partEditor.resetView()
-    }
-
     fun undo() {
         partEditor.undo()
     }
@@ -479,3 +473,6 @@ class EditorViewModel(
         partEditor.saveCurrentPart()
     }
 }
+
+
+
