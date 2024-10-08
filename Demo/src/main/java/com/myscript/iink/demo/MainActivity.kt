@@ -63,7 +63,6 @@ import com.myscript.iink.demo.util.launchSingleChoiceDialog
 import com.myscript.iink.demo.util.launchTextBlockInputDialog
 import com.myscript.iink.uireferenceimplementation.EditorView
 import com.myscript.iink.uireferenceimplementation.FrameTimeEstimator
-import com.myscript.iink.uireferenceimplementation.IInputControllerListener
 import com.myscript.iink.uireferenceimplementation.SmartGuideView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -72,7 +71,9 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
+import java.util.Timer
 import kotlin.math.roundToInt
+
 
 //This function is for the "exporting" feature that we probably are not going to use.
 //I'm keeping it because I have the "you never know" mentality.
@@ -127,6 +128,10 @@ private val PenBrush.label: Int
 //Now here is the actual class, believe it or not
 class MainActivity : AppCompatActivity() {
     //variables for undo/redo gestures
+    private var startTime: Long = 0
+    private var endTime: Long = 0
+    val timer: Timer = Timer()
+
     private lateinit var gestureDetector: GestureDetector
     private val touchPoints = mutableListOf<PointF>()
     private var isPenActivated = false;
@@ -170,13 +175,6 @@ class MainActivity : AppCompatActivity() {
     private companion object {
         const val EnableCapturePredictionByDefault: Boolean = true
         const val DefaultMinimumPredictionDurationMs: Int = 16 // 1 frame @60Hz, 2 frames @120Hz
-    }
-
-    //apparently, something happens on a long press, so we should investigate
-    private val onEditorLongPress = IInputControllerListener { x, y, _ ->
-        val actionState = viewModel.requestContentBlockActions(x, y)
-        showContextualActionDialog(actionState)
-        true
     }
 
     private val onSmartGuideMenuAction = SmartGuideView.MenuListener { x, y, blockId ->
@@ -338,17 +336,38 @@ class MainActivity : AppCompatActivity() {
                 MotionEvent.ACTION_DOWN -> {
                     touchPoints.clear()
                     touchPoints.add(PointF(it.x, it.y))
+                    startTime = System.currentTimeMillis()
                     Log.d("TouchEvent", "ACTION_DOWN at (${it.x}, ${it.y})")
                 }
                 //this means when their finger is moving, as you can imagine
                 MotionEvent.ACTION_MOVE -> {
+                    startTime = System.currentTimeMillis()
                     touchPoints.add(PointF(it.x, it.y)) //adding points to an array to look at later
                     Log.d("TouchEvent", "ACTION_MOVE at (${it.x}, ${it.y})")
                 }
                 //and then is when the user lifts their finger
                 MotionEvent.ACTION_UP -> {
                     Log.d("TouchEvent", "ACTION_UP at (${it.x}, ${it.y})")
-                    if (isFlippedCShape(touchPoints)) {
+                    endTime = System.currentTimeMillis()
+                    val duration = (endTime - startTime) / 1000.0
+                    Log.d("Time", duration.toString())
+                    if(duration >= 1.00){
+                        viewModel.convertContent()
+                    }
+                    startTime = 0
+                    endTime = 0
+
+
+                    if(isUnderline(touchPoints)){
+                        viewModel.convertContent()
+                        if(isPenActivated){
+                            Handler(Looper.getMainLooper()).postDelayed({
+                                listenerStateSaved.value = true
+                            }, 200)
+                        }
+
+                    }
+                    else if (isFlippedCShape(touchPoints)) {
                         onUndoGestureDetected()
                         //if the pen is activiated, we gotta get rid of the WOOSH too
                         if(isPenActivated){
@@ -371,6 +390,18 @@ class MainActivity : AppCompatActivity() {
             }
         }
         return event?.let { gestureDetector.onTouchEvent(it) } == true || super.onTouchEvent(event)
+    }
+
+    private fun isUnderline(points: List<PointF>): Boolean {
+        val startX = points.first().x
+        val startY = points.first().y
+        val endX = points.last().x
+        val endY = points.last().y
+
+        val heightDifference = startY - endY
+        val widthDifference = endX - startX
+
+        return heightDifference < 10 && widthDifference > 70
     }
 
     //checks for undo
@@ -426,27 +457,30 @@ class MainActivity : AppCompatActivity() {
 
     //this was the gesture listener prof told us to use. I haven't used it yet but here are swipe exmaples for you all
     private inner class GestureListener : GestureDetector.SimpleOnGestureListener() {
-        override fun onFling(
-            e1: MotionEvent?,
-            e2: MotionEvent,
-            velocityX: Float,
-            velocityY: Float
-        ): Boolean {
-            if (e1 != null && e2 != null) {
-                val deltaX = e2.x - e1.x
-                val deltaY = e2.y - e1.y
-
-                if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 100 && Math.abs(velocityX) > 100) {
-                    if (deltaX > 0) {
-                        onSwipeRight()
-                    } else {
-                        onSwipeLeft()
-                    }
-                    return true
-                }
-            }
-            return false
-        }
+//        override fun onLongPress(e: MotionEvent) {
+//            viewModel.convertContent()
+//        }
+//        override fun onFling(
+//            e1: MotionEvent?,
+//            e2: MotionEvent,
+//            velocityX: Float,
+//            velocityY: Float
+//        ): Boolean {
+//            if (e1 != null && e2 != null) {
+//                val deltaX = e2.x - e1.x
+//                val deltaY = e2.y - e1.y
+//
+//                if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 100 && Math.abs(velocityX) > 100) {
+//                    if (deltaX > 0) {
+//                        onSwipeRight()
+//                    } else {
+//                        onSwipeLeft()
+//                    }
+//                    return true
+//                }
+//            }
+//            return false
+//        }
     }
 
     private fun onSwipeRight() {
