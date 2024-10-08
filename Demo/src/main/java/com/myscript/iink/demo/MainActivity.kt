@@ -341,6 +341,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 //this means when their finger is moving, as you can imagine
                 MotionEvent.ACTION_MOVE -> {
+                    startTime = System.currentTimeMillis()
                     touchPoints.add(PointF(it.x, it.y)) //adding points to an array to look at later
                     Log.d("TouchEvent", "ACTION_MOVE at (${it.x}, ${it.y})")
                 }
@@ -357,7 +358,16 @@ class MainActivity : AppCompatActivity() {
                     endTime = 0
 
 
-                    if (isFlippedCShape(touchPoints)) {
+                    if(isUnderline(touchPoints)){
+                        viewModel.convertContent()
+                        if(isPenActivated){
+                            Handler(Looper.getMainLooper()).postDelayed({
+                                listenerStateSaved.value = true
+                            }, 200)
+                        }
+
+                    }
+                    else if (isFlippedCShape(touchPoints)) {
                         onUndoGestureDetected()
                         //if the pen is activiated, we gotta get rid of the WOOSH too
                         if(isPenActivated){
@@ -380,6 +390,18 @@ class MainActivity : AppCompatActivity() {
             }
         }
         return event?.let { gestureDetector.onTouchEvent(it) } == true || super.onTouchEvent(event)
+    }
+
+    private fun isUnderline(points: List<PointF>): Boolean {
+        val startX = points.first().x
+        val startY = points.first().y
+        val endX = points.last().x
+        val endY = points.last().y
+
+        val heightDifference = startY - endY
+        val widthDifference = endX - startX
+
+        return heightDifference < 10 && widthDifference > 70
     }
 
     //checks for undo
@@ -438,27 +460,27 @@ class MainActivity : AppCompatActivity() {
 //        override fun onLongPress(e: MotionEvent) {
 //            viewModel.convertContent()
 //        }
-        override fun onFling(
-            e1: MotionEvent?,
-            e2: MotionEvent,
-            velocityX: Float,
-            velocityY: Float
-        ): Boolean {
-            if (e1 != null && e2 != null) {
-                val deltaX = e2.x - e1.x
-                val deltaY = e2.y - e1.y
-
-                if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 100 && Math.abs(velocityX) > 100) {
-                    if (deltaX > 0) {
-                        onSwipeRight()
-                    } else {
-                        onSwipeLeft()
-                    }
-                    return true
-                }
-            }
-            return false
-        }
+//        override fun onFling(
+//            e1: MotionEvent?,
+//            e2: MotionEvent,
+//            velocityX: Float,
+//            velocityY: Float
+//        ): Boolean {
+//            if (e1 != null && e2 != null) {
+//                val deltaX = e2.x - e1.x
+//                val deltaY = e2.y - e1.y
+//
+//                if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 100 && Math.abs(velocityX) > 100) {
+//                    if (deltaX > 0) {
+//                        onSwipeRight()
+//                    } else {
+//                        onSwipeLeft()
+//                    }
+//                    return true
+//                }
+//            }
+//            return false
+//        }
     }
 
     private fun onSwipeRight() {
