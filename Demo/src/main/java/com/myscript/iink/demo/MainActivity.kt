@@ -136,6 +136,7 @@ class MainActivity : AppCompatActivity() {
     private val touchPoints = mutableListOf<PointF>()
     private var isPenActivated = false;
     private val listenerStateSaved = MutableLiveData<Boolean>()
+    private var canGesture = false;
 
     private var officialTitle: String = null.toString() //title of page that gets added to PartState.title
     private val exportsDir: File
@@ -220,6 +221,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+        canGesture = true
 
         //gestureDetector prof was walking about in class
         gestureDetector = GestureDetector(this, GestureListener())
@@ -264,8 +266,6 @@ class MainActivity : AppCompatActivity() {
                 listenerStateSaved.value = false
             }
         }
-
-
 
         editorData.editor?.let { editor ->
             viewModel.setEditor(editorData)
@@ -330,63 +330,69 @@ class MainActivity : AppCompatActivity() {
 
     //here is our own custom touch event, which we will prob use for more gestures
     override fun onTouchEvent(event: MotionEvent?): Boolean {
-        event?.let {
-            when (it.action) {
-                //this means when the user presses on the screen
-                MotionEvent.ACTION_DOWN -> {
-                    touchPoints.clear()
-                    touchPoints.add(PointF(it.x, it.y))
-                    startTime = System.currentTimeMillis()
-                    Log.d("TouchEvent", "ACTION_DOWN at (${it.x}, ${it.y})")
-                }
-                //this means when their finger is moving, as you can imagine
-                MotionEvent.ACTION_MOVE -> {
-                    startTime = System.currentTimeMillis()
-                    touchPoints.add(PointF(it.x, it.y)) //adding points to an array to look at later
-                    Log.d("TouchEvent", "ACTION_MOVE at (${it.x}, ${it.y})")
-                }
-                //and then is when the user lifts their finger
-                MotionEvent.ACTION_UP -> {
-                    Log.d("TouchEvent", "ACTION_UP at (${it.x}, ${it.y})")
-                    endTime = System.currentTimeMillis()
-                    val duration = (endTime - startTime) / 1000.0
-                    Log.d("Time", duration.toString())
-                    if(duration >= 1.00){
-                        viewModel.convertContent()
+        if(isPenActivated && canGesture) {
+            event?.let {
+                when (it.action) {
+                    //this means when the user presses on the screen
+                    MotionEvent.ACTION_DOWN -> {
+                        touchPoints.clear()
+                        touchPoints.add(PointF(it.x, it.y))
+                        startTime = System.currentTimeMillis()
+                        Log.d("TouchEvent", "ACTION_DOWN at (${it.x}, ${it.y})")
                     }
-                    startTime = 0
-                    endTime = 0
+                    //this means when their finger is moving, as you can imagine
+                    MotionEvent.ACTION_MOVE -> {
+                        startTime = System.currentTimeMillis()
+                        touchPoints.add(
+                            PointF(
+                                it.x,
+                                it.y
+                            )
+                        ) //adding points to an array to look at later
+                        Log.d("TouchEvent", "ACTION_MOVE at (${it.x}, ${it.y})")
+                    }
+                    //and then is when the user lifts their finger
+                    MotionEvent.ACTION_UP -> {
+                        Log.d("TouchEvent", "ACTION_UP at (${it.x}, ${it.y})")
+                        endTime = System.currentTimeMillis()
+                        val duration = (endTime - startTime) / 1000.0
+                        Log.d("Time", duration.toString())
+                        if (duration >= 1.00) {
+                            viewModel.convertContent()
+                        }
+                        startTime = 0
+                        endTime = 0
 
 
-                    if(isUnderline(touchPoints)){
-                        viewModel.convertContent()
-                        if(isPenActivated){
-                            Handler(Looper.getMainLooper()).postDelayed({
-                                listenerStateSaved.value = true
-                            }, 200)
-                        }
+                        if (isUnderline(touchPoints)) {
+                            viewModel.convertContent()
+                            if (isPenActivated) {
+                                Handler(Looper.getMainLooper()).postDelayed({
+                                    listenerStateSaved.value = true
+                                }, 200)
+                            }
 
-                    }
-                    else if (isFlippedCShape(touchPoints)) {
-                        onUndoGestureDetected()
-                        //if the pen is activiated, we gotta get rid of the WOOSH too
-                        if(isPenActivated){
-                            Handler(Looper.getMainLooper()).postDelayed({
-                                listenerStateSaved.value = true
-                            }, 200)
+                        } else if (isFlippedCShape(touchPoints)) {
+                            onUndoGestureDetected()
+                            //if the pen is activiated, we gotta get rid of the WOOSH too
+                            if (isPenActivated) {
+                                Handler(Looper.getMainLooper()).postDelayed({
+                                    listenerStateSaved.value = true
+                                }, 200)
+                            }
+                        } else if (isCShape(touchPoints)) {
+                            onRedoGestureDetected()
+                            if (isPenActivated) {
+                                Handler(Looper.getMainLooper()).postDelayed({
+                                    listenerStateSaved.value = true
+                                }, 200)
+                            }
                         }
+                        touchPoints.clear();
                     }
-                    else if (isCShape(touchPoints)) {
-                        onRedoGestureDetected()
-                        if(isPenActivated){
-                            Handler(Looper.getMainLooper()).postDelayed({
-                                listenerStateSaved.value = true
-                            }, 200)
-                        }
-                    }
-                    touchPoints.clear();
+
+                    else -> {}
                 }
-                else -> {}
             }
         }
         return event?.let { gestureDetector.onTouchEvent(it) } == true || super.onTouchEvent(event)
@@ -401,7 +407,7 @@ class MainActivity : AppCompatActivity() {
         val heightDifference = startY - endY
         val widthDifference = endX - startX
 
-        return heightDifference < 10 && widthDifference > 70
+        return heightDifference < 20 && widthDifference > 70
     }
 
     //checks for undo
@@ -525,6 +531,8 @@ class MainActivity : AppCompatActivity() {
                 launchActionChoiceDialog(blockTypes.map(BlockType::toString)) { selected ->
                     when (val blockType = blockTypes[selected]) {
                         BlockType.Text -> {
+                            canGesture = false
+                            Log.d("Polly", canGesture.toString());
                             // Ensure bottom sheet is collapsed to avoid weird state when IME is dismissed.
                             viewModel.expandColorPalette(false)
                             launchTextBlockInputDialog { text ->
@@ -665,6 +673,8 @@ class MainActivity : AppCompatActivity() {
             binding.editorToolbarSheet.penBrushDropdown.setSelection(penBrushStates.indexOfFirst(PenBrushState::isSelected))
         }
         penBrushesAdapter.notifyDataSetChanged()
+        canGesture = penBrushStates.isNotEmpty()
+        Log.d("polly", canGesture.toString())
         binding.editorToolbarSheet.toolbarPenBrushSection.isVisible = penBrushStates.isNotEmpty()
     }
 

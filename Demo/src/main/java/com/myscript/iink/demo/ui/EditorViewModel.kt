@@ -12,6 +12,7 @@ import androidx.lifecycle.distinctUntilChanged
 import androidx.lifecycle.viewModelScope
 import com.myscript.iink.EditorError
 import com.myscript.iink.MimeType
+import com.myscript.iink.PointerTool
 import com.myscript.iink.demo.domain.BlockType
 import com.myscript.iink.demo.domain.MenuAction
 import com.myscript.iink.demo.domain.PartEditor
@@ -79,7 +80,7 @@ class ColorPalette(
 }
 
 // You could add any further data place holder here (like default name, last chosen recognition language, ...)
-data class NewPartRequest(val availablePartTypes: List<PartType>, val defaultPartType: PartType? = PartType.Text)
+data class NewPartRequest(val availablePartTypes: List<PartType>, val defaultPartType: PartType? = PartType.TextDocument)
 
 data class Error(
     val severity: Severity,
@@ -426,6 +427,10 @@ class EditorViewModel(
     fun toggleColorPalette() {
         val expanded = _toolSheetExpansionState.value ?: return
         expandColorPalette(!expanded)
+    }
+
+    fun getToggleColorPalette(): Boolean? {
+        return _toolSheetExpansionState.value
     }
 
     fun changeTool(tool: ToolState) {
