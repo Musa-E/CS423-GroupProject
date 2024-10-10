@@ -407,7 +407,7 @@ class MainActivity : AppCompatActivity() {
         val heightDifference = startY - endY
         val widthDifference = endX - startX
 
-        return heightDifference < 20 && widthDifference > 70
+        return heightDifference < 40 && widthDifference > 70
     }
 
     //checks for undo

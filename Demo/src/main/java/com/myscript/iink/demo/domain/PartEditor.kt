@@ -40,7 +40,7 @@ import com.myscript.iink.graphics.Color as IInkColor
 
 
 enum class PartType(private val stringValue: String) {
-    TextDocument("Text Document");
+    Text("Text");
 
     override fun toString(): String = stringValue
 
@@ -692,7 +692,7 @@ private fun PartType.availableTools(tools: List<ToolType>, enableActivePen: Bool
     val toolEraser = tools.first { it == ToolType.ERASER }
 
     return when (this) {
-        PartType.TextDocument -> mapOf(
+        PartType.Text -> mapOf(
             toolHand to !enableActivePen,
             toolPen to true,
             toolHighlighter to true,

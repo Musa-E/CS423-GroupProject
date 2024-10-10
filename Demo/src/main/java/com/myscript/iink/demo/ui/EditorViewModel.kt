@@ -80,7 +80,7 @@ class ColorPalette(
 }
 
 // You could add any further data place holder here (like default name, last chosen recognition language, ...)
-data class NewPartRequest(val availablePartTypes: List<PartType>, val defaultPartType: PartType? = PartType.TextDocument)
+data class NewPartRequest(val availablePartTypes: List<PartType>, val defaultPartType: PartType? = PartType.Text)
 
 data class Error(
     val severity: Severity,
