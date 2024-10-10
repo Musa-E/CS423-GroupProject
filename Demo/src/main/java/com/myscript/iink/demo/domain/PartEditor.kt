@@ -40,7 +40,7 @@ import com.myscript.iink.graphics.Color as IInkColor
 
 
 enum class PartType(private val stringValue: String) {
-    Text("Text");
+    TextDocument("Text Document");
 
     override fun toString(): String = stringValue
 
@@ -54,6 +54,7 @@ enum class PartType(private val stringValue: String) {
 enum class ToolType {
     HAND, PEN, ERASER, HIGHLIGHTER, LASSO
 }
+
 
 val ToolType.storageKey: String
     get() = when (this) {
@@ -691,11 +692,11 @@ private fun PartType.availableTools(tools: List<ToolType>, enableActivePen: Bool
     val toolEraser = tools.first { it == ToolType.ERASER }
 
     return when (this) {
-        PartType.Text -> mapOf(
+        PartType.TextDocument -> mapOf(
             toolHand to !enableActivePen,
             toolPen to true,
             toolHighlighter to true,
-            toolLasso to false,
+            toolLasso to true,
             toolEraser to true
         )
     }
