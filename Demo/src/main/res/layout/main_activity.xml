@@ -5,6 +5,7 @@ into this Android SDK and then edited by our team -->
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".MainActivity">
 
     <LinearLayout
@@ -56,11 +57,24 @@ into this Android SDK and then edited by our team -->
 
             <include layout="@layout/smart_guide_layout" />
 
+            <ImageButton
+                android:id="@+id/gesturesHelpButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|end"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="72dp"
+                android:backgroundTint="@color/colorAccent"
+                android:contentDescription="@string/gestures_help_button"
+                android:src="@android:drawable/ic_menu_help"/>
+
         </FrameLayout>
     </LinearLayout>
 
     <include
         android:id="@+id/editor_toolbar_sheet"
         layout="@layout/toolbar_settings_sheet_layout" />
+
+    <!-- Add FloatingActionButton here -->
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
