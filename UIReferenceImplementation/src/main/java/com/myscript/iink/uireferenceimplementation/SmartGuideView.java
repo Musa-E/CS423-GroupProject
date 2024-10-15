@@ -39,6 +39,7 @@ import com.myscript.iink.Editor;
 import com.myscript.iink.EditorError;
 import com.myscript.iink.Engine;
 import com.myscript.iink.IEditorListener;
+import com.myscript.iink.IImagePainter;
 import com.myscript.iink.IRendererListener;
 import com.myscript.iink.MimeType;
 import com.myscript.iink.ParameterSet;
@@ -47,6 +48,8 @@ import com.myscript.iink.graphics.Point;
 import com.myscript.iink.graphics.Rectangle;
 import com.myscript.iink.graphics.Transform;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -415,7 +418,16 @@ public class SmartGuideView extends LinearLayout implements IEditorListener, IRe
 
     if (activeBlock != null && Arrays.asList(blockIds).contains(activeBlock.getId()))
     {
-      update(activeBlock, UpdateCause.EDIT);
+        try {
+//          IImagePainter imagePainter = new ImagePainter();
+//          ((ImagePainter) imagePainter).setImageLoader(editor.getImageLoader());
+//
+//          editor.export_(activeBlock, String.valueOf(new File("out/export.docx")), imagePainter);
+            Log.e("TAG", editor.export_(activeBlock, MimeType.JIIX));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        update(activeBlock, UpdateCause.EDIT);
     }
   }
 

@@ -3,7 +3,9 @@
 
 package com.myscript.iink.demo.domain
 
+import android.R.attr.path
 import android.graphics.Typeface
+import android.util.Log
 import androidx.annotation.VisibleForTesting
 import com.myscript.iink.ContentBlock
 import com.myscript.iink.ContentPart
@@ -34,13 +36,19 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.json.JSONObject
+import java.io.BufferedWriter
 import java.io.File
+import java.io.FileWriter
+import java.io.IOException
+import java.nio.charset.StandardCharsets
+import java.nio.file.Files
 import java.util.Locale
 import com.myscript.iink.graphics.Color as IInkColor
 
 
 enum class PartType(private val stringValue: String) {
-    Text("Text");
+    TextDocument("Text Document");
 
     override fun toString(): String = stringValue
 
@@ -597,10 +605,41 @@ class PartEditor(
 
     fun convertContent(content: ContentSelection? = null) {
         val conversionState = editor?.getSupportedTargetConversionStates(content)
+
         if (!conversionState.isNullOrEmpty()) {
             editor?.convert(content, conversionState.first())
+
+            if (content is ContentBlock) {
+                val originalBlock = content
+                val transform = editor?.renderer?.viewTransform
+                val topLeft = transform?.apply(originalBlock.box.x, originalBlock.box.y)
+                val x = topLeft?.x
+                val y = topLeft?.y
+
+                val savedString: String? = editor?.export_(originalBlock, MimeType.JIIX)
+                val jsonObject = JSONObject(savedString)
+
+                val mainLabel = jsonObject.getString("label")
+
+                if (savedString != null) {
+                    Log.d("converttextt", mainLabel)
+                }
+
+                editor?.erase(originalBlock)
+                editor?.waitForIdle()
+
+                if (x != null && y != null) {
+                    if (!mainLabel.contains("☐"))
+                        this.insertText(x, y, "☐$mainLabel")
+                    else
+                        this.insertText(x, y, mainLabel)
+                }
+            } else {
+                Log.e("ConversionError", "Content is not of type ContentBlock")
+            }
         }
     }
+
 
     fun waitForIdle() {
         editor?.waitForIdle()
@@ -692,7 +731,7 @@ private fun PartType.availableTools(tools: List<ToolType>, enableActivePen: Bool
     val toolEraser = tools.first { it == ToolType.ERASER }
 
     return when (this) {
-        PartType.Text -> mapOf(
+        PartType.TextDocument -> mapOf(
             toolHand to !enableActivePen,
             toolPen to true,
             toolHighlighter to true,
