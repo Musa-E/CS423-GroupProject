@@ -104,6 +104,9 @@ class DemoModule(application: Application) {
                 conf.setStringArray("configuration-manager.search-path", arrayOf(confDir))
                 val tempDir = File(application.cacheDir, "tmp")
                 conf.setString("content-package.temp-folder", tempDir.absolutePath)
+                //disables strike through and stuff
+                val disabled_Gestures = arrayOf<String>("strike-through","double-strike-through","cross-out","pigtail-out","select","join","arc-join","insert", "underline")
+                conf.setStringArray("gesture.disabled-gestures", disabled_Gestures)
             }
         }
     }

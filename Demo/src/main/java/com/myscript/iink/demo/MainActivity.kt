@@ -339,7 +339,6 @@ class MainActivity : AppCompatActivity() {
                         touchPoints.clear()
                         touchPoints.add(PointF(it.x, it.y))
                         startTime = System.currentTimeMillis()
-                        Log.d("TouchEvent", "ACTION_DOWN at (${it.x}, ${it.y})")
                     }
                     //this means when their finger is moving, as you can imagine
                     MotionEvent.ACTION_MOVE -> {
@@ -350,14 +349,11 @@ class MainActivity : AppCompatActivity() {
                                 it.y
                             )
                         ) //adding points to an array to look at later
-                        Log.d("TouchEvent", "ACTION_MOVE at (${it.x}, ${it.y})")
                     }
                     //and then is when the user lifts their finger
                     MotionEvent.ACTION_UP -> {
-                        Log.d("TouchEvent", "ACTION_UP at (${it.x}, ${it.y})")
                         endTime = System.currentTimeMillis()
                         val duration = (endTime - startTime) / 1000.0
-                        Log.d("Time", duration.toString())
                         if (duration >= 1.00) {
                             viewModel.convertContent()
                         }
@@ -533,7 +529,6 @@ class MainActivity : AppCompatActivity() {
                     when (val blockType = blockTypes[selected]) {
                         BlockType.Text -> {
                             canGesture = false
-                            Log.d("Polly", canGesture.toString());
                             // Ensure bottom sheet is collapsed to avoid weird state when IME is dismissed.
                             viewModel.expandColorPalette(false)
                             launchTextBlockInputDialog { text ->
@@ -675,7 +670,6 @@ class MainActivity : AppCompatActivity() {
         }
         penBrushesAdapter.notifyDataSetChanged()
         canGesture = penBrushStates.isNotEmpty()
-        Log.d("polly", canGesture.toString())
         binding.editorToolbarSheet.toolbarPenBrushSection.isVisible = penBrushStates.isNotEmpty()
     }
 
