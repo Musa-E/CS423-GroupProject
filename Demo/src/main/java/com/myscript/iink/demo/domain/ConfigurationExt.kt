@@ -29,8 +29,9 @@ fun Configuration.enableRawContentInteractivity() {
     setStringArray("raw-content.guides.show", arrayOf("alignment", "text", "square", "square-inside", "image-aspect-ratio", "rotation"))
     setStringArray("raw-content.guides.snap", arrayOf("alignment", "text", "square", "square-inside", "image-aspect-ratio", "rotation"))
 
-    // Allow gesture detection
-   // setStringArray("raw-content.pen.gestures", arrayOf("underline", "scratch-out", "strike-through"))
+    // Allow/disallow gesture detection
+    //setStringArray("raw-content.pen.gestures", arrayOf("underline", "scratch-out", "strike-through"))
+    setStringArray("raw-content.pen.gestures", arrayOf<String>())
 
     // Allow shape & image rotation
     setStringArray("raw-content.rotation", arrayOf("shape", "image"))
