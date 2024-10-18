@@ -237,9 +237,10 @@ class MainActivity : AppCompatActivity() {
 
         //sets up the entire viewmodel, do not touch
         viewModel.enableActivePen.observe(this) { activePenEnabled ->
-            binding.editorToolbar.switchActivePen.isChecked = activePenEnabled
+            binding.editorToolbar.switchActivePen.isChecked = !activePenEnabled
             isPenActivated = activePenEnabled;
         }
+
         viewModel.error.observe(this, this::onError)
         viewModel.toolSheetExpansionState.observe(this, this::onToolSheetExpansionStateUpdate)
         viewModel.availableTools.observe(this, this::onAvailableToolsUpdate)
@@ -419,7 +420,7 @@ class MainActivity : AppCompatActivity() {
         val heightDifference = startY - endY
         val widthDifference = endX - startX
 
-        return heightDifference < 20 && widthDifference > 70
+        return heightDifference < 40 && widthDifference > 70
     }
 
     //checks for undo
@@ -584,7 +585,7 @@ class MainActivity : AppCompatActivity() {
 
         with(binding.editorToolbar) {
             switchActivePen.setOnCheckedChangeListener { _, isChecked ->
-                viewModel.enableActivePen(isChecked)
+                viewModel.enableActivePen(!isChecked)
                 isPenActivated = true;
             }
             editorUndo.setOnClickListener { viewModel.undo() }
