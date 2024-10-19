@@ -5,3 +5,4 @@ include 'Demo'
 project(':Demo').dir = file("$settingsDir/Demo")
 include ':UIReferenceImplementation'
 project(':UIReferenceImplementation').dir = file("$settingsDir/UIReferenceImplementation")
+include ':PdollarRecognizer'

@@ -74,6 +74,10 @@ import java.util.Locale
 import java.util.Timer
 import kotlin.math.roundToInt
 
+import com.example.pdollarrecognizer.Gesture
+import com.example.pdollarrecognizer.Point
+import com.example.pdollarrecognizer.PointCloudRecognizer
+
 
 //This function is for the "exporting" feature that we probably are not going to use.
 //I'm keeping it because I have the "you never know" mentality.
@@ -360,6 +364,9 @@ class MainActivity : AppCompatActivity() {
                         startTime = 0
                         endTime = 0
 
+                        // timer?
+                        // if it's been x seconds since the user has touched the screen, then check
+                        // if the user touches the screen again, call this function again and add the points to the same array
 
                         if (isUnderline(touchPoints)) {
                             viewModel.convertContent()
@@ -396,10 +403,15 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun isUnderline(points: List<PointF>): Boolean {
+
         val startX = points.first().x
         val startY = points.first().y
         val endX = points.last().x
         val endY = points.last().y
+
+        val testPoint = Point(startX, startY, 0);
+
+        Log.d("ARGH", "test point values: (${testPoint.X},${testPoint.Y})")
 
         val heightDifference = startY - endY
         val widthDifference = endX - startX
