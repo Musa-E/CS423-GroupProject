@@ -65,8 +65,12 @@ package com.example.pdollarrecognizer;
 // import com.aspose.ms.System.msMath;
 
 import static java.lang.Float.MAX_VALUE;
+import static java.lang.Float.max;
+
 import java.lang.Math;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * <p>
@@ -85,20 +89,22 @@ public class PointCloudRecognizer
      * @param candidate 
      * @param trainingSet 
      */
-    public static String classify(Gesture candidate, Gesture[] trainingSet)
+    public static Result classify(Gesture candidate, List<Gesture> trainingSet)
     {
-        float minDistance = MAX_VALUE;
+        float score = MAX_VALUE;
         String gestureClass = "";
         for (Gesture template : trainingSet)
         {
             float dist = greedyCloudMatch(candidate.Points, template.Points);
-            if (dist < minDistance)
+            if (dist < score)
             {
-                minDistance = dist;
+                score = dist;
                 gestureClass = template.Name;
             }
         }
-        return gestureClass;
+        score = (float)Double.max((2.0-score)/2.0, 0.0);
+        Result r = new Result(gestureClass, score);
+        return r;
     }
 
     /**
@@ -109,9 +115,9 @@ public class PointCloudRecognizer
      * @param points1 
      * @param points2 
      */
-    private static float greedyCloudMatch(Point[] points1, Point[] points2)
+    private static float greedyCloudMatch(List<Point> points1, List<Point> points2)
     {
-        int n = points1.length; // the two clouds should have the same number of points by now
+        int n = points1.size(); // the two clouds should have the same number of points by now
         float eps = 0.5f;       // controls the number of greedy search trials (eps is in [0..1])
         int step = (int) Math.floor(Math.pow(n, 1.0f - eps));
         float minDistance = MAX_VALUE;
@@ -134,9 +140,9 @@ public class PointCloudRecognizer
      * @param points2 
      * @param startIndex 
      */
-    private static float cloudDistance(Point[] points1, Point[] points2, int startIndex)
+    private static float cloudDistance(List<Point> points1, List<Point> points2, int startIndex)
     {
-        int n = points1.length;       // the two clouds should have the same number of points by now
+        int n = points1.size();       // the two clouds should have the same number of points by now
         ArrayList<Boolean> matched = new ArrayList<>(); // matched[i] signals whether point i from the 2nd cloud has been already matched
         // no points are matched at the beginning
         for (int i = 0; i < n; i++) {
@@ -152,14 +158,14 @@ public class PointCloudRecognizer
             for(int j = 0; j < n; j++)
                 if (!matched.get(j))
                 {
-                    float dist = Geometry.sqrEuclideanDistance(points1[i], points2[j]);  // use squared Euclidean distance to save some processing time
+                    float dist = Geometry.sqrEuclideanDistance(points1.get(i), points2.get(j));  // use squared Euclidean distance to save some processing time
                     if (dist < minDistance)
                     {
                         minDistance = dist;
                         index = j;
                     }
                 }
-            matched.set(index, true); // point index from the 2nd cloud is matched to point i from the 1st cloud
+            matched.add(index, true); // point index from the 2nd cloud is matched to point i from the 1st cloud
             float weight = 1.0f - ((i - startIndex + n) % n) / (1.0f * n);
             sum += weight * minDistance; // weight each distance with a confidence coefficient that decreases from 1 to 0
             i = (i + 1) % n;

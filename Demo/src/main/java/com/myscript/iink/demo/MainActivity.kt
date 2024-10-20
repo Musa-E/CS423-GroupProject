@@ -77,6 +77,7 @@ import kotlin.math.roundToInt
 import com.example.pdollarrecognizer.Gesture
 import com.example.pdollarrecognizer.Point
 import com.example.pdollarrecognizer.PointCloudRecognizer
+import com.example.pdollarrecognizer.PointCloudRecognizer.classify
 
 
 //This function is for the "exporting" feature that we probably are not going to use.
@@ -137,7 +138,11 @@ class MainActivity : AppCompatActivity() {
     val timer: Timer = Timer()
 
     private lateinit var gestureDetector: GestureDetector
-    private val touchPoints = mutableListOf<PointF>()
+    private val touchPoints = mutableListOf<Point>()
+    private val gestureRecognizer = PointCloudRecognizer()
+    private var gestureTemplates = mutableListOf<Gesture>()
+    private var strokeNum: Int = 0;
+
     private var isPenActivated = false;
     private val listenerStateSaved = MutableLiveData<Boolean>()
     private var canGesture = false;
@@ -339,8 +344,8 @@ class MainActivity : AppCompatActivity() {
                 when (it.action) {
                     //this means when the user presses on the screen
                     MotionEvent.ACTION_DOWN -> {
-                        touchPoints.clear()
-                        touchPoints.add(PointF(it.x, it.y))
+                        // touchPoints.clear()
+                        touchPoints.add(Point(it.x, it.y, strokeNum))
                         startTime = System.currentTimeMillis()
                         Log.d("TouchEvent", "ACTION_DOWN at (${it.x}, ${it.y})")
                     }
@@ -348,10 +353,7 @@ class MainActivity : AppCompatActivity() {
                     MotionEvent.ACTION_MOVE -> {
                         startTime = System.currentTimeMillis()
                         touchPoints.add(
-                            PointF(
-                                it.x,
-                                it.y
-                            )
+                            Point(it.x, it.y, strokeNum)
                         ) //adding points to an array to look at later
                         Log.d("TouchEvent", "ACTION_MOVE at (${it.x}, ${it.y})")
                     }
@@ -361,11 +363,6 @@ class MainActivity : AppCompatActivity() {
                         endTime = System.currentTimeMillis()
                         val duration = (endTime - startTime) / 1000.0
                         Log.d("Time", duration.toString())
-                        if (duration >= 1.00) {
-                            viewModel.convertContent()
-                        }
-                        startTime = 0
-                        endTime = 0
 
                         // timer?
                         // if it's been x seconds since the user has touched the screen, then check
@@ -381,7 +378,7 @@ class MainActivity : AppCompatActivity() {
 
                         } else if (isFlippedCShape(touchPoints)) {
                             onUndoGestureDetected()
-                            //if the pen is activiated, we gotta get rid of the WOOSH too
+                            //if the pen is activated, we gotta get rid of the WOOSH too
                             if (isPenActivated) {
                                 Handler(Looper.getMainLooper()).postDelayed({
                                     listenerStateSaved.value = true
@@ -395,7 +392,11 @@ class MainActivity : AppCompatActivity() {
                                 }, 200)
                             }
                         }
+                        // resets things after gesture has been recognized
                         touchPoints.clear();
+                        strokeNum = 0;
+                        startTime = 0
+                        endTime = 0
                     }
 
                     else -> {}
@@ -405,31 +406,55 @@ class MainActivity : AppCompatActivity() {
         return event?.let { gestureDetector.onTouchEvent(it) } == true || super.onTouchEvent(event)
     }
 
-    private fun isUnderline(points: List<PointF>): Boolean {
+    private fun setUpGestureTemplates() {
+        // underline
+        val underlinePoints = listOf( Point(-0.56F, 0.0F, 0), Point(-0.53F, 0.0F, 0), Point(-0.50F, 0.0F, 0), Point(-0.46F, 0.0F, 0), Point(-0.43F, 0.0F, 0), Point(-0.40F, 0.0F, 0), Point(-0.36F, 0.0F, 0), Point(-0.33F, 0.0F, 0), Point(-0.30F, 0.0F, 0), Point(-0.26F, 0.0F, 0), Point(-0.24F, 0.0F, 0), Point(-0.21F, 0.0F, 0), Point(-0.18F, 0.0F, 0), Point(-0.16F, 0.0F, 0), Point(-0.13F, 0.0F, 0), Point(-0.094F, 0.0F, 0), Point(-0.061F, 0.0F, 0), Point(-0.028F, 0.0F, 0), Point(0.005F, 0.0F, 0), Point(0.038F, 0.0F, 0), Point(0.071F, 0.0F, 0), Point(0.105F, 0.0F, 0), Point(0.138F, 0.0F, 0), Point(0.171F, 0.0F, 0), Point(0.205F, 0.0F, 0), Point(0.238F, 0.0F, 0), Point(0.272F, 0.0F, 0), Point(0.305F, 0.0F, 0), Point(0.338F, 0.0F, 0), Point(0.372F, 0.0F, 0), Point(0.404F, 0.0F, 0), Point(0.436F, 0.0F, 0) )
+        val underline = Gesture(underlinePoints, "underline")
+        gestureTemplates.add(underline)
 
-        val startX = points.first().x
-        val startY = points.first().y
-        val endX = points.last().x
-        val endY = points.last().y
+        // etc
+        Log.d("GESTURE", "set up templates")
+        for (temp in gestureTemplates) {
+            Log.d("GESTURE", "name: ${temp.Name}")
+        }
 
-        val testPoint = Point(startX, startY, 0);
+    }
 
-        Log.d("ARGH", "test point values: (${testPoint.X},${testPoint.Y})")
+    private fun isUnderline(points: List<Point>): Boolean {
 
-        val heightDifference = startY - endY
-        val widthDifference = endX - startX
+        val inputGesture = Gesture(points, "test")
+        Log.d("GESTURE", "testing if gesture is underline")
 
-        return heightDifference < 20 && widthDifference > 70
+//        val startX = points.first().X
+//        val startY = points.first().Y
+//        val endX = points.last().X
+//        val endY = points.last().Y
+//
+//        val heightDifference = startY - endY
+//        val widthDifference = endX - startX
+//
+//        return heightDifference < 20 && widthDifference > 70
+
+        val result = classify(inputGesture, gestureTemplates)
+
+        if (result.name == "underline" && result.score >= 0.8) {
+            Log.d("GESTURE", "gesture is underline (${result.score})")
+            return true
+        } else {
+            Log.d("GESTURE", "gesture is not underline")
+            return false
+        }
+
     }
 
     //checks for undo
-    private fun isFlippedCShape(points: List<PointF>): Boolean {
+    private fun isFlippedCShape(points: List<Point>): Boolean {
         if (points.size < 5) return false
 
-        val startX = points.first().x
-        val startY = points.first().y
-        val endX = points.last().x
-        val endY = points.last().y
+        val startX = points.first().X
+        val startY = points.first().Y
+        val endX = points.last().X
+        val endY = points.last().Y
 
         if (startY < endY || startX < endX) return false
 
@@ -440,13 +465,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     //checks for redo
-    private fun isCShape(points: List<PointF>): Boolean {
+    private fun isCShape(points: List<Point>): Boolean {
         if (points.size < 5) return false
 
-        val startX = points.first().x
-        val startY = points.first().y
-        val endX = points.last().x
-        val endY = points.last().y
+        val startX = points.first().X
+        val startY = points.first().Y
+        val endX = points.last().X
+        val endY = points.last().Y
 
         if (startY < endY || startX > endX) return false
 
@@ -598,6 +623,8 @@ class MainActivity : AppCompatActivity() {
                 viewModel.toggleColorPalette()
             }
         }
+
+        setUpGestureTemplates()
     }
 
     //this is called right when you call finish()
