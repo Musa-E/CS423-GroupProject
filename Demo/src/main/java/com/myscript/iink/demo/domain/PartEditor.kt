@@ -607,7 +607,7 @@ class PartEditor(
         val conversionState = editor?.getSupportedTargetConversionStates(content)
 
         if (!conversionState.isNullOrEmpty()) {
-            editor?.convert(content, conversionState.first())
+            //editor?.convert(content, conversionState.first())
 
             if (content is ContentBlock) {
                 val originalBlock = content
@@ -624,7 +624,6 @@ class PartEditor(
                 if (savedString != null) {
                     Log.d("converttextt", mainLabel)
                 }
-
                 editor?.erase(originalBlock)
                 editor?.waitForIdle()
 
