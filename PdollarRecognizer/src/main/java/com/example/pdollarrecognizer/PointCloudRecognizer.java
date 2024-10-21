@@ -165,7 +165,10 @@ public class PointCloudRecognizer
                         index = j;
                     }
                 }
-            matched.add(index, true); // point index from the 2nd cloud is matched to point i from the 1st cloud
+            if (index >= matched.size()) { // "condition is always false" you would think that wouldn't you
+                index = index % matched.size();
+            }
+            matched.set(index, true); // point index from the 2nd cloud is matched to point i from the 1st cloud
             float weight = 1.0f - ((i - startIndex + n) % n) / (1.0f * n);
             sum += weight * minDistance; // weight each distance with a confidence coefficient that decreases from 1 to 0
             i = (i + 1) % n;
