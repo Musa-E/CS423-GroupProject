@@ -71,6 +71,9 @@ import static java.lang.Float.MIN_VALUE;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  * <p>
@@ -80,7 +83,7 @@ import static java.lang.Math.min;
  */
 public class Gesture
 {
-    public Point[] Points = null;            // gesture points (normalized)
+    public List<Point> Points = null;            // gesture points (normalized)
     public String Name = "";                 // gesture class
     private static final int SAMPLING_RESOLUTION = 32;
 
@@ -90,7 +93,7 @@ public class Gesture
      * </p>
      * @param points 
      */
-    public Gesture(Point[] points, String gestureName)
+    public Gesture(List<Point> points, String gestureName)
     {
         this.Name = gestureName;
         
@@ -98,6 +101,14 @@ public class Gesture
         this.Points = scale(points);
         this.Points = translateTo(Points, centroid(Points));
         this.Points = resample(Points, SAMPLING_RESOLUTION);
+    }
+
+    public String toString() {
+        String result = "Gesture name: " + this.Name + ": ";
+        for (Point point : this.Points) {
+            result = result + "Point(" + point.X + "F, " + point.Y + "F, " + point.StrokeID + "), ";
+        }
+        return result;
     }
 
     //>>>>>>>> #region  gesture pre-processing steps: scale normalization, translation to origin, and resampling
@@ -109,21 +120,21 @@ public class Gesture
      * @return 
      * @param points 
      */
-    private Point[] scale(Point[] points)
+    private List<Point> scale(List<Point> points)
     {
         float minx = MAX_VALUE, miny = MAX_VALUE, maxx = MIN_VALUE, maxy = MIN_VALUE;
-        for (int i = 0; i < points.length; i++)
+        for (int i = 0; i < points.size(); i++)
         {
-            if (minx > points[i].X) minx = points[i].X;
-            if (miny > points[i].Y) miny = points[i].Y;
-            if (maxx < points[i].X) maxx = points[i].X;
-            if (maxy < points[i].Y) maxy = points[i].Y;
+            if (minx > points.get(i).X) minx = points.get(i).X;
+            if (miny > points.get(i).Y) miny = points.get(i).Y;
+            if (maxx < points.get(i).X) maxx = points.get(i).X;
+            if (maxy < points.get(i).Y) maxy = points.get(i).Y;
         }
 
-        Point[] newPoints = new Point[points.length];
+        List<Point> newPoints = new ArrayList<Point>(points.size());
         float scale = max(maxx - minx, maxy - miny);
-        for (int i = 0; i < points.length; i++)
-            newPoints[i] = new Point((points[i].X - minx) / scale, (points[i].Y - miny) / scale, points[i].StrokeID);
+        for (int i = 0; i < points.size(); i++)
+            newPoints.add(new Point((points.get(i).X - minx) / scale, (points.get(i).Y - miny) / scale, points.get(i).StrokeID));
         return newPoints;
     }
 
@@ -135,11 +146,11 @@ public class Gesture
      * @param points 
      * @param p 
      */
-    private Point[] translateTo(Point[] points, Point p)
+    private List<Point> translateTo(List<Point> points, Point p)
     {
-        Point[] newPoints = new Point[points.length];
-        for (int i = 0; i < points.length; i++)
-            newPoints[i] = new Point(points[i].X - p.X, points[i].Y - p.Y, points[i].StrokeID);
+        List<Point> newPoints = new ArrayList<>(points.size());
+        for (int i = 0; i < points.size(); i++)
+            newPoints.add(new Point(points.get(i).X - p.X, points.get(i).Y - p.Y, points.get(i).StrokeID));
         return newPoints;
     }
 
@@ -150,15 +161,16 @@ public class Gesture
      * @return 
      * @param points 
      */
-    private Point centroid(Point[] points)
+    private Point centroid(List<Point> points)
     {
+        int pointsLength = points.size();
         float cx = 0, cy = 0;
-        for (int i = 0; i < points.length; i++)
+        for (int i = 0; i < pointsLength; i++)
         {
-            cx += points[i].X;
-            cy += points[i].Y;
+            cx += points.get(i).X;
+            cy += points.get(i).Y;
         }
-        return new Point(cx / points.length, cy / points.length, 0);
+        return new Point(cx / pointsLength, cy / pointsLength, 0);
     }
 
     /**
@@ -169,37 +181,38 @@ public class Gesture
      * @param points 
      * @param n 
      */
-    public final Point[] resample(Point[] points, int n)
+    public final List<Point> resample(List<Point> points, int n)
     {
-        Point[] newPoints = new Point[n];
-        newPoints[0] = new Point(points[0].X, points[0].Y, points[0].StrokeID);
+        List<Point> newPoints = new ArrayList<Point>(n);
+        newPoints.add(new Point(points.get(0).X, points.get(0).Y, points.get(0).StrokeID));
         int numPoints = 1;
 
         float I = pathLength(points) / (n - 1); // computes interval length
         float D = 0;
-        for (int i = 1; i < points.length; i++)
+        for (int i = 1; i < points.size(); i++)
         {
-            if (points[i].StrokeID == points[i - 1].StrokeID)
+            if (points.get(i).StrokeID == points.get(i - 1).StrokeID)
             {
-                float d = Geometry.euclideanDistance(points[i - 1], points[i]);
+                float d = Geometry.euclideanDistance(points.get(i - 1), points.get(i));
                 if (D + d >= I)
                 {
-                    Point firstPoint = points[i - 1];
+                    Point firstPoint = points.get(i - 1);
                     while (D + d >= I)
                     {
                         // add interpolated point
                         float t = min(max((I - D) / d, 0.0f), 1.0f);
                         if (isNaN(t)) t = 0.5f;
-                        newPoints[numPoints++] = new Point(
-                            (1.0f - t) * firstPoint.X + t * points[i].X,
-                            (1.0f - t) * firstPoint.Y + t * points[i].Y,
-                            points[i].StrokeID
-                        );
+                        newPoints.add(new Point(
+                                (1.0f - t) * firstPoint.X + t * points.get(i).X,
+                                (1.0f - t) * firstPoint.Y + t * points.get(i).Y,
+                                points.get(i).StrokeID
+                        ));
+                        numPoints++;
 
                         // update partial length
                         d = D + d - I;
                         D = 0;
-                        firstPoint = newPoints[numPoints - 1];
+                        firstPoint = newPoints.get(numPoints - 1);
                     }
                     D = d;
                 }
@@ -208,7 +221,7 @@ public class Gesture
         }
 
         if (numPoints == n - 1) // sometimes we fall a rounding-error short of adding the last point, so add it if so
-            newPoints[numPoints++] = new Point(points[points.length - 1].X, points[points.length - 1].Y, points[points.length - 1].StrokeID);
+            newPoints.add(new Point(points.get(points.size() - 1).X, points.get(points.size() - 1).Y, points.get(points.size() - 1).StrokeID));
         return newPoints;
     }
 
@@ -219,12 +232,12 @@ public class Gesture
      * @return 
      * @param points 
      */
-    private float pathLength(Point[] points)
+    private float pathLength(List<Point> points)
     {
         float length = 0;
-        for (int i = 1; i < points.length; i++)
-            if (points[i].StrokeID == points[i - 1].StrokeID)
-                length += Geometry.euclideanDistance(points[i - 1], points[i]);
+        for (int i = 1; i < points.size(); i++)
+            if (points.get(i).StrokeID == points.get(i - 1).StrokeID)
+                length += Geometry.euclideanDistance(points.get(i - 1), points.get(i));
         return length;
     }
 
