@@ -340,7 +340,7 @@ class MainActivity : AppCompatActivity() {
 
     //here is our own custom touch event
     override fun onTouchEvent(event: MotionEvent?): Boolean {
-        if(isPenActivated && canGesture) {
+        if(canGesture) {
             event?.let {
                 when (it.action) {
                     // this means when the user presses on the screen
