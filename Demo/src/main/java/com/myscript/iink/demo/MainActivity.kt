@@ -264,9 +264,9 @@ class MainActivity : AppCompatActivity() {
         editorData.inputController?.setViewListener(editorView)
 
         //the touch listener for the editor view to include custom one
-        editorView?.setOnTouchListener { _, event ->
+         editorView?.setOnTouchListener { _, event ->
             editorData.inputController?.onTouch(editorView, event)
-                onTouchEvent(event)
+             onTouchEvent(event)
             true
         }
 
@@ -340,19 +340,19 @@ class MainActivity : AppCompatActivity() {
         setUpGestureTemplates()
     }
 
-    //here is our own custom touch event, which we will prob use for more gestures
+    //here is our own custom touch event
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         if(canGesture) {
             event?.let {
                 when (it.action) {
-                    //this means when the user presses on the screen
+                    // this means when the user presses on the screen
                     MotionEvent.ACTION_DOWN -> {
                         // touchPoints.clear()
                         touchPoints.add(Point(it.x, it.y, strokeNum))
                         startTime = System.currentTimeMillis()
                         Log.d("TouchEvent", "ACTION_DOWN at (${it.x}, ${it.y})")
                     }
-                    //this means when their finger is moving, as you can imagine
+                    // this means when their finger is moving, as you can imagine
                     MotionEvent.ACTION_MOVE -> {
                         startTime = System.currentTimeMillis()
                         touchPoints.add(
@@ -360,7 +360,7 @@ class MainActivity : AppCompatActivity() {
                         ) //adding points to an array to look at later
                         Log.d("TouchEvent", "ACTION_MOVE at (${it.x}, ${it.y})")
                     }
-                    //and then is when the user lifts their finger
+                    // and then is when the user lifts their finger
                     MotionEvent.ACTION_UP -> {
                         Log.d("TouchEvent", "ACTION_UP at (${it.x}, ${it.y})")
                         endTime = System.currentTimeMillis()
@@ -371,35 +371,43 @@ class MainActivity : AppCompatActivity() {
                         // if it's been x seconds since the user has touched the screen, then check
                         // if the user touches the screen again, call this function again and add the points to the same array
 
+
+                        // recognize the gesture and check what the result is
+
                         val inputGesture = Gesture(touchPoints, "test")
                         Log.d("GESTURE", inputGesture.toString())
 
-                        if(isUnderline(touchPoints)){
-                            val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
-                            val editor = sharedPreferences.edit()
-                            editor.putString("universal_value", "New Value")
-                            editor.apply() // or editor.commit()
+                        val result = classify(inputGesture, gestureTemplates)
+
+                        if(result.score < 0){
+                            Log.d("GESTURE", result.name)
+                        } else{
+
+                            if (result.name == "underline" && result.score >= 0.9) {
+                                val sharedPreferences =
+                                    getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+                                val editor = sharedPreferences.edit()
+                                editor.putString("universal_value", "New Value")
+                                editor.apply() // or editor.commit()
                                 Handler(Looper.getMainLooper()).postDelayed({
                                     viewModel.undo()
                                     viewModel.convertContent()
                                 }, 500)
 
-                        } else if (isFlippedCShape(touchPoints)) {
-                            onUndoGestureDetected()
-                        } else if (isCShape(touchPoints)) {
-                            onRedoGestureDetected()
-//                            if (isPenActivated) {
-//                                Handler(Looper.getMainLooper()).postDelayed({
-//                                    listenerStateSaved.value = true
-//                                }, 500)
-//                            }
-                        } else if (isCheckmark(touchPoints)) {
-                            // idk do checkmark things
-//                            if (isPenActivated) {
-//                                Handler(Looper.getMainLooper()).postDelayed({
-//                                    listenerStateSaved.value = true
-//                                }, 400)
-//                            }
+                            } else if (result.name == "flippedCShape" && result.score >= 0.85) {
+                                onUndoGestureDetected()
+                            } else if (result.name == "CShape" && result.score >= 0.85) {
+                                onRedoGestureDetected()
+                            } else if (result.name == "checkmark" && result.score >= 0.88) {
+                                Log.d("GESTURE", "gesture is checkmark (${result.score})")
+                                // do whatever checkmark does
+                            } else if ((result.name == "pureCircle" || result.name == "oval") && result.score >= 0.88) {
+                                Log.d("GESTURE", "gesture is pureCircle (${result.score})")
+                                Handler(Looper.getMainLooper()).postDelayed({
+                                    viewModel.undo()
+                                    viewModel.convertContent()
+                                }, 500)
+                            }
                         }
                         // resets things after gesture has been recognized
                         touchPoints.clear();
@@ -901,9 +909,9 @@ class MainActivity : AppCompatActivity() {
                             startActivity(Intent.createChooser(intent, uri.lastPathSegment))
                         } else {
                             ShareCompat.IntentBuilder(this)
-                                .setType(mimeType.typeName)
-                                .setStream(uri)
-                                .startChooser()
+                                    .setType(mimeType.typeName)
+                                    .setStream(uri)
+                                    .startChooser()
                         }
                     } else {
                         Toast.makeText(this, R.string.editor_export_failed, Toast.LENGTH_LONG).show()
@@ -954,8 +962,8 @@ class MainActivity : AppCompatActivity() {
 
             }
             else{
-                it.subtitle = partState.dateCreated
-            }
+                    it.subtitle = partState.dateCreated
+                }
         }
 
         editorView?.isVisible = state.isReady

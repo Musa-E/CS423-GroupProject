@@ -1,5 +1,7 @@
 // This code was downloaded as C# source code from https://depts.washington.edu/acelab/proj/dollar/pdollar.html
 // Then converted to Java using https://products.codeporting.app/convert/csharp-to-java-project/
+
+// AI STATEMENT: This was not implemented using AI
 /**
  * The $P Point-Cloud Recognizer (.NET Framework 4.0 C# version)
  *
@@ -96,6 +98,10 @@ public class PointCloudRecognizer
         for (Gesture template : trainingSet)
         {
             float dist = greedyCloudMatch(candidate.Points, template.Points);
+            if (dist < 0) {
+                return new Result("error recognizing gesture:" + template.Name, -1);
+            }
+
             if (dist < score)
             {
                 score = dist;
@@ -126,6 +132,11 @@ public class PointCloudRecognizer
             float dist1 = cloudDistance(points1, points2, i);   // match points1 --> points2 starting with index point i
             float dist2 = cloudDistance(points2, points1, i);   // match points2 --> points1 starting with index point i
             minDistance = Math.min(minDistance, Math.min(dist1, dist2));
+
+            if (minDistance < 0) {
+                // an error happened in cloudDistance
+                return -1;
+            }
         }
         return minDistance;
     }
@@ -143,6 +154,9 @@ public class PointCloudRecognizer
     private static float cloudDistance(List<Point> points1, List<Point> points2, int startIndex)
     {
         int n = points1.size();       // the two clouds should have the same number of points by now
+        if (points1.size() != points2.size()) {
+            return -1;
+        }
         ArrayList<Boolean> matched = new ArrayList<>(); // matched[i] signals whether point i from the 2nd cloud has been already matched
         // no points are matched at the beginning
         for (int i = 0; i < n; i++) {
@@ -174,5 +188,8 @@ public class PointCloudRecognizer
             i = (i + 1) % n;
         } while (i != startIndex);
         return sum;
-    }
-}
+
+    } // end cloudDistance()
+
+
+} // end class

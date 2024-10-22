@@ -1,5 +1,7 @@
 // This code was downloaded as C# source code from https://depts.washington.edu/acelab/proj/dollar/pdollar.html
 // Then converted to Java using https://products.codeporting.app/convert/csharp-to-java-project/
+//
+// AI STATEMENT: This was not implemented using AI
 /**
  * The $P Point-Cloud Recognizer (.NET Framework 4.0 C# version)
  *
