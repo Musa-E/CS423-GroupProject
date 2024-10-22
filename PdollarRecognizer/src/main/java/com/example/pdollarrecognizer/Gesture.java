@@ -104,9 +104,9 @@ public class Gesture
     }
 
     public String toString() {
-        String result = "Gesture name: " + this.Name + " - ";
+        String result = "Gesture name: " + this.Name + ": ";
         for (Point point : this.Points) {
-            result = result + "(" + point.X + ", " + point.Y + ", " + point.StrokeID + "), ";
+            result = result + "Point(" + point.X + "F, " + point.Y + "F, " + point.StrokeID + "), ";
         }
         return result;
     }
