@@ -402,6 +402,13 @@ class MainActivity : AppCompatActivity() {
                                     listenerStateSaved.value = true
                                 }, 200)
                             }
+                        } else if (isOval(touchPoints)) {
+                            viewModel.convertContent()
+                            if (isPenActivated) {
+                                Handler(Looper.getMainLooper()).postDelayed({
+                                    listenerStateSaved.value = true
+                                }, 200)
+                            }
                         }
                         // resets things after gesture has been recognized
                         touchPoints.clear();
@@ -457,10 +464,31 @@ class MainActivity : AppCompatActivity() {
         val pureCircle = Gesture(pureCirclePoints, "pureCircle")
         gestureTemplates.add(pureCircle)
 
+        // oval
+        val ovalPoints = listOf( Point(-0.0166F, -0.286F, 0), Point(-0.111F, -0.286F, 0), Point(-0.200F, -0.271F, 0), Point(-0.283F, -0.250F, 0), Point(-0.361F, -0.218F, 0), Point(-0.427F, -0.175F, 0), Point(-0.470F, -0.119F, 0), Point(-0.494F, -0.048F, 0), Point(-0.494F, 0.046F, 0), Point(-0.452F, 0.109F, 0), Point(-0.405F, 0.162F, 0), Point(-0.339F, 0.200F, 0), Point(-0.264F, 0.234F, 0), Point(-0.187F, 0.258F, 0), Point(-0.101F, 0.271F, 0), Point(-0.006F, 0.271F, 0), Point(0.0822F, 0.271F, 0), Point(0.166F, 0.289F, 0), Point(0.258F, 0.283F, 0), Point(0.340F, 0.260F, 0), Point(0.413F, 0.225F, 0), Point(0.467F, 0.166F, 0), Point(0.498F, 0.091F, 0), Point(0.492F, 0.008F, 0), Point(0.462F, -0.063F, 0), Point(0.424F, -0.130F, 0), Point(0.368F, -0.187F, 0), Point(0.308F, -0.237F, 0), Point(0.236F, -0.268F, 0), Point(0.148F, -0.275F, 0), Point(0.059F, -0.280F, 0), Point(-0.029F, -0.286F, 0))
+        val oval = Gesture(ovalPoints, "oval")
+        gestureTemplates.add(oval)
+
 
         Log.d("GESTURE", "set up templates")
         for (temp in gestureTemplates) {
             Log.d("GESTURE", "name: ${temp.Name}")
+        }
+
+    }
+
+    private fun isOval(points: List<Point>): Boolean {
+
+        val inputGesture = Gesture(points, "test")
+
+        val result = classify(inputGesture, gestureTemplates)
+
+        if (result.name == "oval" && result.score >= 0.9) {
+            Log.d("GESTURE", "gesture is oval (${result.score})")
+            return true
+        } else {
+            Log.d("GESTURE", "gesture is not oval (${result.score})")
+            return false
         }
 
     }
