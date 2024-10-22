@@ -41,7 +41,7 @@ public final class ContextualActionsHelper
 
             if (displayAddBlock) actions.add(ContextualActions.ADD_BLOCK);
             if (displayRemove) actions.add(ContextualActions.REMOVE);
-            if (displayConvert) actions.add(ContextualActions.CONVERT);
+           // if (displayConvert) actions.add(ContextualActions.CONVERT);
             if (displayCopy) actions.add(ContextualActions.COPY);
             if (isRootBlock) actions.add(ContextualActions.PASTE);
             if (displayExport) actions.add(ContextualActions.EXPORT);
@@ -60,7 +60,7 @@ public final class ContextualActionsHelper
         boolean displayFormatText = selection != null && !editor.getSupportedTextFormats(selection).isEmpty();
 
         actions.add(ContextualActions.REMOVE);
-        if (displayConvert) actions.add(ContextualActions.CONVERT);
+        //if (displayConvert) actions.add(ContextualActions.CONVERT);
         actions.add(ContextualActions.COPY);
         if (displayExport) actions.add(ContextualActions.EXPORT);
         if (displayFormatText) actions.add(ContextualActions.FORMAT_TEXT);
