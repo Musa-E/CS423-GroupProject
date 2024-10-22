@@ -131,7 +131,7 @@ public class Gesture
             if (maxy < points.get(i).Y) maxy = points.get(i).Y;
         }
 
-        List<Point> newPoints = new ArrayList<Point>(points.size());
+        List<Point> newPoints = new ArrayList<Point>();
         float scale = max(maxx - minx, maxy - miny);
         for (int i = 0; i < points.size(); i++)
             newPoints.add(new Point((points.get(i).X - minx) / scale, (points.get(i).Y - miny) / scale, points.get(i).StrokeID));
@@ -148,7 +148,7 @@ public class Gesture
      */
     private List<Point> translateTo(List<Point> points, Point p)
     {
-        List<Point> newPoints = new ArrayList<>(points.size());
+        List<Point> newPoints = new ArrayList<>();
         for (int i = 0; i < points.size(); i++)
             newPoints.add(new Point(points.get(i).X - p.X, points.get(i).Y - p.Y, points.get(i).StrokeID));
         return newPoints;
@@ -183,7 +183,7 @@ public class Gesture
      */
     public final List<Point> resample(List<Point> points, int n)
     {
-        List<Point> newPoints = new ArrayList<Point>(n);
+        List<Point> newPoints = new ArrayList<Point>();
         newPoints.add(new Point(points.get(0).X, points.get(0).Y, points.get(0).StrokeID));
         int numPoints = 1;
 

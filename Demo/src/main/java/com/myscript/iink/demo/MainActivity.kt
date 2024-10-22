@@ -338,19 +338,19 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    //here is our own custom touch event, which we will prob use for more gestures
+    //here is our own custom touch event
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         if(isPenActivated && canGesture) {
             event?.let {
                 when (it.action) {
-                    //this means when the user presses on the screen
+                    // this means when the user presses on the screen
                     MotionEvent.ACTION_DOWN -> {
                         // touchPoints.clear()
                         touchPoints.add(Point(it.x, it.y, strokeNum))
                         startTime = System.currentTimeMillis()
                         Log.d("TouchEvent", "ACTION_DOWN at (${it.x}, ${it.y})")
                     }
-                    //this means when their finger is moving, as you can imagine
+                    // this means when their finger is moving, as you can imagine
                     MotionEvent.ACTION_MOVE -> {
                         startTime = System.currentTimeMillis()
                         touchPoints.add(
@@ -358,7 +358,7 @@ class MainActivity : AppCompatActivity() {
                         ) //adding points to an array to look at later
                         Log.d("TouchEvent", "ACTION_MOVE at (${it.x}, ${it.y})")
                     }
-                    //and then is when the user lifts their finger
+                    // and then is when the user lifts their finger
                     MotionEvent.ACTION_UP -> {
                         Log.d("TouchEvent", "ACTION_UP at (${it.x}, ${it.y})")
                         endTime = System.currentTimeMillis()
@@ -369,47 +369,83 @@ class MainActivity : AppCompatActivity() {
                         // if it's been x seconds since the user has touched the screen, then check
                         // if the user touches the screen again, call this function again and add the points to the same array
 
+
+                        // recognize the gesture and check what the result is
+
                         val inputGesture = Gesture(touchPoints, "test")
                         Log.d("GESTURE", inputGesture.toString())
 
-                        if (isUnderline(touchPoints)) {
-                            viewModel.convertContent()
-                            if (isPenActivated) {
-                                Handler(Looper.getMainLooper()).postDelayed({
-                                    listenerStateSaved.value = true
-                                }, 200)
+                        val result = classify(inputGesture, gestureTemplates)
+
+                        // if an error happened
+                        if (result.score < 0) {
+                            Log.d("GESTURE", result.name)
+                        } else {
+
+                            // check underline
+                            if (result.name == "underline" && result.score >= 0.9) {
+                                Log.d("GESTURE", "gesture is underline (${result.score})")
+                                // convert text
+                                viewModel.convertContent()
+                                if (isPenActivated) {
+                                    Handler(Looper.getMainLooper()).postDelayed({
+                                        listenerStateSaved.value = true
+                                    }, 200)
+                                }
+                            } else {
+                                Log.d("GESTURE", "gesture is not underline")
                             }
 
-                        } else if (isFlippedCShape(touchPoints)) {
-                            onUndoGestureDetected()
-                            //if the pen is activated, we gotta get rid of the WOOSH too
-                            if (isPenActivated) {
-                                Handler(Looper.getMainLooper()).postDelayed({
-                                    listenerStateSaved.value = true
-                                }, 500)
+                            // check flippedCShape
+                            if (result.name == "flippedCShape" && result.score >= 0.85) {
+                                Log.d("GESTURE", "gesture is flippedCShape (${result.score})")
+                                // undo
+                                onUndoGestureDetected()
+                            } else {
+                                Log.d("GESTURE", "gesture is not flippedCShape")
                             }
-                        } else if (isCShape(touchPoints)) {
-                            onRedoGestureDetected()
-                            if (isPenActivated) {
-                                Handler(Looper.getMainLooper()).postDelayed({
-                                    listenerStateSaved.value = true
-                                }, 500)
+
+                            // check CShape
+                            if (result.name == "CShape" && result.score >= 0.85) {
+                                Log.d("GESTURE", "gesture is CShape (${result.score})")
+                                // redo
+                                onRedoGestureDetected()
+                            } else {
+                                Log.d("GESTURE", "gesture is not CShape")
                             }
-                        } else if (isCheckmark(touchPoints)) {
-                            // idk do checkmark things
-                            if (isPenActivated) {
-                                Handler(Looper.getMainLooper()).postDelayed({
-                                    listenerStateSaved.value = true
-                                }, 400)
+
+                            // check checkmark
+                            if (result.name == "checkmark" && result.score >= 0.88) {
+                                Log.d("GESTURE", "gesture is checkmark (${result.score})")
+                                // do whatever checkmark does
+                            } else {
+                                Log.d("GESTURE", "gesture is not checkmark")
                             }
-                        } else if (isOval(touchPoints)) {
-                            viewModel.convertContent()
-                            if (isPenActivated) {
-                                Handler(Looper.getMainLooper()).postDelayed({
-                                    listenerStateSaved.value = true
-                                }, 200)
+
+                            // check pureCircle
+                            if (result.name == "pureCircle" && result.score >= 0.88) {
+                                Log.d("GESTURE", "gesture is pureCircle (${result.score})")
+                                // do nothing
+                            } else {
+                                Log.d("GESTURE", "gesture is not pureCircle")
                             }
-                        }
+
+                            // check oval
+                            if (result.name == "oval" && result.score >= 0.9) {
+                                Log.d("GESTURE", "gesture is oval (${result.score})")
+                                // convert text
+                                viewModel.convertContent()
+                                if (isPenActivated) {
+                                    Handler(Looper.getMainLooper()).postDelayed({
+                                        listenerStateSaved.value = true
+                                    }, 200)
+                                }
+                            } else {
+                                Log.d("GESTURE", "gesture is not oval")
+                            }
+
+                        } // end else
+
                         // resets things after gesture has been recognized
                         touchPoints.clear();
                         strokeNum = 0;
@@ -429,6 +465,7 @@ class MainActivity : AppCompatActivity() {
         val underlinePoints = listOf( Point(-0.56F, 0.0F, 0), Point(-0.53F, 0.0F, 0), Point(-0.50F, 0.0F, 0), Point(-0.46F, 0.0F, 0), Point(-0.43F, 0.0F, 0), Point(-0.40F, 0.0F, 0), Point(-0.36F, 0.0F, 0), Point(-0.33F, 0.0F, 0), Point(-0.30F, 0.0F, 0), Point(-0.26F, 0.0F, 0), Point(-0.24F, 0.0F, 0), Point(-0.21F, 0.0F, 0), Point(-0.18F, 0.0F, 0), Point(-0.16F, 0.0F, 0), Point(-0.13F, 0.0F, 0), Point(-0.094F, 0.0F, 0), Point(-0.061F, 0.0F, 0), Point(-0.028F, 0.0F, 0), Point(0.005F, 0.0F, 0), Point(0.038F, 0.0F, 0), Point(0.071F, 0.0F, 0), Point(0.105F, 0.0F, 0), Point(0.138F, 0.0F, 0), Point(0.171F, 0.0F, 0), Point(0.205F, 0.0F, 0), Point(0.238F, 0.0F, 0), Point(0.272F, 0.0F, 0), Point(0.305F, 0.0F, 0), Point(0.338F, 0.0F, 0), Point(0.372F, 0.0F, 0), Point(0.404F, 0.0F, 0), Point(0.436F, 0.0F, 0) )
         val underline = Gesture(underlinePoints, "underline")
         gestureTemplates.add(underline)
+
 
         // CShape
         val cShapePoints = listOf( Point(0.46F, -0.42F, 0), Point(0.42F, -0.45F, 0), Point(0.35F, -0.47F, 0), Point(0.28F, -0.48F, 0), Point(0.20F, -0.48F, 0), Point(0.13F, -0.48F, 0), Point(0.056F, -0.48F, 0), Point(-0.018F, -0.48F, 0), Point(-0.055F, -0.449F, 0), Point(-0.09F, -0.40F, 0), Point(-0.108F, -0.35F, 0), Point(-0.124F, -0.28F, 0), Point(-0.15F, -0.23F, 0), Point(-0.185F, -0.18F, 0), Point(-0.21F, -0.12F, 0), Point(-0.219F, -0.046F, 0), Point(-0.242F, 0.006F, 0), Point(-0.24F, 0.081F, 0), Point(-0.24F, 0.15F, 0), Point(-0.21F, 0.218F, 0), Point(-0.185F, 0.27F, 0), Point(-0.17F, 0.33F, 0), Point(-0.14F, 0.378F, 0), Point(-0.105F, 0.424F, 0), Point(-0.061F, 0.45F, 0), Point(0.014F, 0.455F, 0), Point(0.067F, 0.478F, 0), Point(0.131F, 0.49F, 0), Point(0.207F, 0.49F, 0), Point(0.259F, 0.512F, 0), Point(0.328F, 0.497F, 0), Point(0.40F, 0.49F, 0) )
@@ -466,6 +503,7 @@ class MainActivity : AppCompatActivity() {
         val flippedCShape4 = Gesture(flippedCShapePoints4, "flippedCShape")
         gestureTemplates.add(flippedCShape4)
 
+
         // checkmark
         val checkmarkPoints = listOf( Point(-0.437F, 0.075F, 0), Point(-0.419F, 0.12F, 0), Point(-0.39F, 0.157F, 0), Point(-0.38F, 0.218F, 0), Point(-0.35F, 0.25F, 0), Point(-0.327F, 0.296F, 0), Point(-0.303F, 0.337F, 0), Point(-0.25F, 0.367F, 0), Point(-0.216F, 0.399F, 0), Point(-0.182F, 0.430F, 0), Point(-0.167F, 0.379F, 0), Point(-0.128F, 0.332F, 0), Point(-0.114F, 0.27F, 0), Point(-0.0698F, 0.231F, 0), Point(-0.04F, 0.174F, 0), Point(-0.025F, 0.125F, 0), Point(0.018F, 0.078F, 0), Point(0.034F, 0.020F, 0), Point(0.061F, -0.036F, 0), Point(0.097F, -0.089F, 0), Point(0.126F, -0.132F, 0), Point(0.149F, -0.173F, 0), Point(0.189F, -0.204F, 0), Point(0.221F, -0.255F, 0), Point(0.269F, -0.286F, 0), Point(0.311F, -0.321F, 0), Point(0.333F, -0.366F, 0), Point(0.38F, -0.406F, 0), Point(0.403F, -0.464F, 0), Point(0.449F, -0.482F, 0), Point(0.465F, -0.531F, 0), Point(0.491F, -0.57F, 0) )
         val checkmark = Gesture(checkmarkPoints, "checkmark")
@@ -478,6 +516,7 @@ class MainActivity : AppCompatActivity() {
         val pureCircle = Gesture(pureCirclePoints, "pureCircle")
         gestureTemplates.add(pureCircle)
 
+
         // oval
         val ovalPoints = listOf( Point(-0.0166F, -0.286F, 0), Point(-0.111F, -0.286F, 0), Point(-0.200F, -0.271F, 0), Point(-0.283F, -0.250F, 0), Point(-0.361F, -0.218F, 0), Point(-0.427F, -0.175F, 0), Point(-0.470F, -0.119F, 0), Point(-0.494F, -0.048F, 0), Point(-0.494F, 0.046F, 0), Point(-0.452F, 0.109F, 0), Point(-0.405F, 0.162F, 0), Point(-0.339F, 0.200F, 0), Point(-0.264F, 0.234F, 0), Point(-0.187F, 0.258F, 0), Point(-0.101F, 0.271F, 0), Point(-0.006F, 0.271F, 0), Point(0.0822F, 0.271F, 0), Point(0.166F, 0.289F, 0), Point(0.258F, 0.283F, 0), Point(0.340F, 0.260F, 0), Point(0.413F, 0.225F, 0), Point(0.467F, 0.166F, 0), Point(0.498F, 0.091F, 0), Point(0.492F, 0.008F, 0), Point(0.462F, -0.063F, 0), Point(0.424F, -0.130F, 0), Point(0.368F, -0.187F, 0), Point(0.308F, -0.237F, 0), Point(0.236F, -0.268F, 0), Point(0.148F, -0.275F, 0), Point(0.059F, -0.280F, 0), Point(-0.029F, -0.286F, 0))
         val oval = Gesture(ovalPoints, "oval")
@@ -489,89 +528,7 @@ class MainActivity : AppCompatActivity() {
             Log.d("GESTURE", "name: ${temp.Name}")
         }
 
-    }
-
-    private fun isOval(points: List<Point>): Boolean {
-
-        val inputGesture = Gesture(points, "test")
-
-        val result = classify(inputGesture, gestureTemplates)
-
-        if (result.name == "oval" && result.score >= 0.9) {
-            Log.d("GESTURE", "gesture is oval (${result.score})")
-            return true
-        } else {
-            Log.d("GESTURE", "gesture is not oval (${result.score})")
-            return false
-        }
-
-    }
-
-    private fun isUnderline(points: List<Point>): Boolean {
-
-        val inputGesture = Gesture(points, "test")
-
-        val result = classify(inputGesture, gestureTemplates)
-
-        if (result.name == "underline" && result.score >= 0.9) {
-            Log.d("GESTURE", "gesture is underline (${result.score})")
-            return true
-        } else {
-            Log.d("GESTURE", "gesture is not underline (${result.score})")
-            return false
-        }
-
-    }
-
-    //checks for undo
-    private fun isFlippedCShape(points: List<Point>): Boolean {
-        val inputGesture = Gesture(points, "test")
-
-        val result = classify(inputGesture, gestureTemplates)
-
-        if (result.name == "flippedCShape" && result.score >= 0.85) {
-            Log.d("GESTURE", "gesture is flippedCShape (${result.score})")
-            return true
-        } else {
-            Log.d("GESTURE", "gesture is not flippedCShape (${result.score})")
-            return false
-        }
-    }
-
-    //checks for redo
-    private fun isCShape(points: List<Point>): Boolean {
-
-        val inputGesture = Gesture(points, "test")
-
-        val result = classify(inputGesture, gestureTemplates)
-
-        if (result.name == "CShape" && result.score >= 0.85) {
-            Log.d("GESTURE", "gesture is CShape (${result.score})")
-            return true
-        } else {
-            Log.d("GESTURE", "gesture is not CShape (${result.score})")
-            return false
-        }
-
-    }
-
-
-    //checks for checkmark
-    private fun isCheckmark(points: List<Point>): Boolean {
-
-        val inputGesture = Gesture(points, "test")
-
-        val result = classify(inputGesture, gestureTemplates)
-
-        if (result.name == "checkmark" && result.score >= 0.88) {
-            Log.d("GESTURE", "gesture is checkmark (${result.score})")
-            return true
-        } else {
-            Log.d("GESTURE", "gesture is not checkmark (${result.score})")
-            return false
-        }
-
-    }
+    } // end setUpGestureTemplates()
 
 
     //what to do when it is detected
