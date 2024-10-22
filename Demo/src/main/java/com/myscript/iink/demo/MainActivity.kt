@@ -489,7 +489,7 @@ class MainActivity : AppCompatActivity() {
             Log.d("GESTURE", "gesture is underline (${result.score})")
             return true
         } else {
-            Log.d("GESTURE", "gesture is not underline")
+            Log.d("GESTURE", "gesture is not underline (${result.score})")
             return false
         }
 
@@ -505,7 +505,7 @@ class MainActivity : AppCompatActivity() {
             Log.d("GESTURE", "gesture is flippedCShape (${result.score})")
             return true
         } else {
-            Log.d("GESTURE", "gesture is not flippedCShape")
+            Log.d("GESTURE", "gesture is not flippedCShape (${result.score})")
             return false
         }
     }
@@ -521,7 +521,7 @@ class MainActivity : AppCompatActivity() {
             Log.d("GESTURE", "gesture is CShape (${result.score})")
             return true
         } else {
-            Log.d("GESTURE", "gesture is not CShape")
+            Log.d("GESTURE", "gesture is not CShape (${result.score})")
             return false
         }
 
@@ -539,7 +539,7 @@ class MainActivity : AppCompatActivity() {
             Log.d("GESTURE", "gesture is checkmark (${result.score})")
             return true
         } else {
-            Log.d("GESTURE", "gesture is not checkmark")
+            Log.d("GESTURE", "gesture is not checkmark (${result.score})")
             return false
         }
 
