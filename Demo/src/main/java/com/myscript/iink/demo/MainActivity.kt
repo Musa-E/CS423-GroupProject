@@ -77,6 +77,7 @@ import kotlin.math.roundToInt
 import com.example.pdollarrecognizer.Gesture
 import com.example.pdollarrecognizer.Point
 import com.example.pdollarrecognizer.PointCloudRecognizer
+import com.example.pdollarrecognizer.PointCloudRecognizer.classify
 
 
 //This function is for the "exporting" feature that we probably are not going to use.
@@ -137,7 +138,11 @@ class MainActivity : AppCompatActivity() {
     val timer: Timer = Timer()
 
     private lateinit var gestureDetector: GestureDetector
-    private val touchPoints = mutableListOf<PointF>()
+    private val touchPoints = mutableListOf<Point>()
+    private val gestureRecognizer = PointCloudRecognizer()
+    private var gestureTemplates = mutableListOf<Gesture>()
+    private var strokeNum: Int = 0;
+
     private var isPenActivated = false;
     private val listenerStateSaved = MutableLiveData<Boolean>()
     private var canGesture = false;
@@ -258,9 +263,9 @@ class MainActivity : AppCompatActivity() {
         editorData.inputController?.setViewListener(editorView)
 
         //the touch listener for the editor view to include custom one
-         editorView?.setOnTouchListener { _, event ->
+        editorView?.setOnTouchListener { _, event ->
             editorData.inputController?.onTouch(editorView, event)
-             onTouchEvent(event)
+            onTouchEvent(event)
             true
         }
 
@@ -340,33 +345,32 @@ class MainActivity : AppCompatActivity() {
                 when (it.action) {
                     //this means when the user presses on the screen
                     MotionEvent.ACTION_DOWN -> {
-                        touchPoints.clear()
-                        touchPoints.add(PointF(it.x, it.y))
+                        // touchPoints.clear()
+                        touchPoints.add(Point(it.x, it.y, strokeNum))
                         startTime = System.currentTimeMillis()
+                        Log.d("TouchEvent", "ACTION_DOWN at (${it.x}, ${it.y})")
                     }
                     //this means when their finger is moving, as you can imagine
                     MotionEvent.ACTION_MOVE -> {
                         startTime = System.currentTimeMillis()
                         touchPoints.add(
-                            PointF(
-                                it.x,
-                                it.y
-                            )
+                            Point(it.x, it.y, strokeNum)
                         ) //adding points to an array to look at later
+                        Log.d("TouchEvent", "ACTION_MOVE at (${it.x}, ${it.y})")
                     }
                     //and then is when the user lifts their finger
                     MotionEvent.ACTION_UP -> {
+                        Log.d("TouchEvent", "ACTION_UP at (${it.x}, ${it.y})")
                         endTime = System.currentTimeMillis()
                         val duration = (endTime - startTime) / 1000.0
-                        if (duration >= 1.00) {
-                            viewModel.convertContent()
-                        }
-                        startTime = 0
-                        endTime = 0
+                        Log.d("Time", duration.toString())
 
                         // timer?
                         // if it's been x seconds since the user has touched the screen, then check
                         // if the user touches the screen again, call this function again and add the points to the same array
+
+                        val inputGesture = Gesture(touchPoints, "test")
+                        Log.d("GESTURE", inputGesture.toString())
 
                         if (isUnderline(touchPoints)) {
                             viewModel.convertContent()
@@ -378,21 +382,32 @@ class MainActivity : AppCompatActivity() {
 
                         } else if (isFlippedCShape(touchPoints)) {
                             onUndoGestureDetected()
-                            //if the pen is activiated, we gotta get rid of the WOOSH too
+                            //if the pen is activated, we gotta get rid of the WOOSH too
                             if (isPenActivated) {
                                 Handler(Looper.getMainLooper()).postDelayed({
                                     listenerStateSaved.value = true
-                                }, 200)
+                                }, 500)
                             }
                         } else if (isCShape(touchPoints)) {
                             onRedoGestureDetected()
                             if (isPenActivated) {
                                 Handler(Looper.getMainLooper()).postDelayed({
                                     listenerStateSaved.value = true
-                                }, 200)
+                                }, 500)
+                            }
+                        } else if (isCheckmark(touchPoints)) {
+                            // idk do checkmark things
+                            if (isPenActivated) {
+                                Handler(Looper.getMainLooper()).postDelayed({
+                                    listenerStateSaved.value = true
+                                }, 400)
                             }
                         }
+                        // resets things after gesture has been recognized
                         touchPoints.clear();
+                        strokeNum = 0;
+                        startTime = 0
+                        endTime = 0
                     }
 
                     else -> {}
@@ -402,55 +417,132 @@ class MainActivity : AppCompatActivity() {
         return event?.let { gestureDetector.onTouchEvent(it) } == true || super.onTouchEvent(event)
     }
 
-    private fun isUnderline(points: List<PointF>): Boolean {
+    private fun setUpGestureTemplates() {
+        // underline
+        val underlinePoints = listOf( Point(-0.56F, 0.0F, 0), Point(-0.53F, 0.0F, 0), Point(-0.50F, 0.0F, 0), Point(-0.46F, 0.0F, 0), Point(-0.43F, 0.0F, 0), Point(-0.40F, 0.0F, 0), Point(-0.36F, 0.0F, 0), Point(-0.33F, 0.0F, 0), Point(-0.30F, 0.0F, 0), Point(-0.26F, 0.0F, 0), Point(-0.24F, 0.0F, 0), Point(-0.21F, 0.0F, 0), Point(-0.18F, 0.0F, 0), Point(-0.16F, 0.0F, 0), Point(-0.13F, 0.0F, 0), Point(-0.094F, 0.0F, 0), Point(-0.061F, 0.0F, 0), Point(-0.028F, 0.0F, 0), Point(0.005F, 0.0F, 0), Point(0.038F, 0.0F, 0), Point(0.071F, 0.0F, 0), Point(0.105F, 0.0F, 0), Point(0.138F, 0.0F, 0), Point(0.171F, 0.0F, 0), Point(0.205F, 0.0F, 0), Point(0.238F, 0.0F, 0), Point(0.272F, 0.0F, 0), Point(0.305F, 0.0F, 0), Point(0.338F, 0.0F, 0), Point(0.372F, 0.0F, 0), Point(0.404F, 0.0F, 0), Point(0.436F, 0.0F, 0) )
+        val underline = Gesture(underlinePoints, "underline")
+        gestureTemplates.add(underline)
 
-        val startX = points.first().x
-        val startY = points.first().y
-        val endX = points.last().x
-        val endY = points.last().y
+        // CShape
+        val cShapePoints = listOf( Point(0.46F, -0.42F, 0), Point(0.42F, -0.45F, 0), Point(0.35F, -0.47F, 0), Point(0.28F, -0.48F, 0), Point(0.20F, -0.48F, 0), Point(0.13F, -0.48F, 0), Point(0.056F, -0.48F, 0), Point(-0.018F, -0.48F, 0), Point(-0.055F, -0.449F, 0), Point(-0.09F, -0.40F, 0), Point(-0.108F, -0.35F, 0), Point(-0.124F, -0.28F, 0), Point(-0.15F, -0.23F, 0), Point(-0.185F, -0.18F, 0), Point(-0.21F, -0.12F, 0), Point(-0.219F, -0.046F, 0), Point(-0.242F, 0.006F, 0), Point(-0.24F, 0.081F, 0), Point(-0.24F, 0.15F, 0), Point(-0.21F, 0.218F, 0), Point(-0.185F, 0.27F, 0), Point(-0.17F, 0.33F, 0), Point(-0.14F, 0.378F, 0), Point(-0.105F, 0.424F, 0), Point(-0.061F, 0.45F, 0), Point(0.014F, 0.455F, 0), Point(0.067F, 0.478F, 0), Point(0.131F, 0.49F, 0), Point(0.207F, 0.49F, 0), Point(0.259F, 0.512F, 0), Point(0.328F, 0.497F, 0), Point(0.40F, 0.49F, 0) )
+        val CShape = Gesture(cShapePoints, "CShape")
+        gestureTemplates.add(CShape)
 
-        val testPoint = Point(startX, startY, 0);
+        // another CShape
+        val cShapePoints2 = listOf( Point(0.528F, 0.353F, 0), Point(0.473F, 0.40F, 0), Point(0.401F, 0.430F, 0), Point(0.326F, 0.450F, 0), Point(0.250F, 0.467F, 0), Point(0.177F, 0.497F, 0), Point(0.103F, 0.526F, 0), Point(0.025F, 0.53F, 0), Point(-0.055F, 0.532F, 0), Point(-0.134F, 0.532F, 0), Point(-0.213F, 0.532F, 0), Point(-0.277F, 0.487F, 0), Point(-0.321F, 0.422F, 0), Point(-0.362F, 0.354F, 0), Point(-0.403F, 0.286F, 0), Point(-0.443F, 0.218F, 0), Point(-0.452F, 0.141F, 0), Point(-0.452F, 0.0615F, 0), Point(-0.426F, -0.011F, 0), Point(-0.385F, -0.079F, 0), Point(-0.354F, -0.151F, 0), Point(-0.298F, -0.194F, 0), Point(-0.245F, -0.251F, 0), Point(-0.185F, -0.302F, 0), Point(-0.120F, -0.346F, 0), Point(-0.044F, -0.368F, 0), Point(0.0309F, -0.391F, 0), Point(0.102F, -0.425F, 0), Point(0.169F, -0.468F, 0), Point(0.248F, -0.468F, 0), Point(0.327F, -0.468F, 0), Point(0.407F, -0.468F, 0) )
+        val CShape2 = Gesture(cShapePoints2, "CShape")
+        gestureTemplates.add(CShape2)
 
-        Log.d("ARGH", "test point values: (${testPoint.X},${testPoint.Y})")
+        // another CShape
+        val cShapePoints3 = listOf(Point(0.25880083F, 0.30661562F, 0), Point(0.19568273F, 0.30661562F, 0), Point(0.13256463F, 0.30661562F, 0), Point(0.069446534F, 0.30661562F, 0), Point(0.0064835404F, 0.305745F, 0), Point(-0.052751042F, 0.28394687F, 0), Point(-0.11198562F, 0.26214874F, 0), Point(-0.17503355F, 0.2617549F, 0), Point(-0.23431057F, 0.2442413F, 0), Point(-0.29071933F, 0.21616642F, 0), Point(-0.3436231F, 0.18174133F, 0), Point(-0.39652684F, 0.14731623F, 0), Point(-0.4515484F, 0.11646409F, 0), Point(-0.49125397F, 0.07708108F, 0), Point(-0.4679516F, 0.020880407F, 0), Point(-0.43351257F, -0.032014273F, 0), Point(-0.39328146F, -0.07821383F, 0), Point(-0.33598176F, -0.104683384F, 0), Point(-0.27754068F, -0.12848327F, 0), Point(-0.21881518F, -0.15161783F, 0), Point(-0.16008966F, -0.1747524F, 0), Point(-0.10128024F, -0.19766805F, 0), Point(-0.04213333F, -0.21970299F, 0), Point(0.017013572F, -0.24173793F, 0), Point(0.076160476F, -0.26377288F, 0), Point(0.13530737F, -0.28580785F, 0), Point(0.19445428F, -0.30784276F, 0), Point(0.25627375F, -0.3150485F, 0), Point(0.31939185F, -0.31504846F, 0), Point(0.38250995F, -0.31504846F, 0), Point(0.44562805F, -0.3150485F, 0), Point(0.508746F, -0.3150485F, 0), )
+        val CShape3 = Gesture(cShapePoints3, "CShape")
+        gestureTemplates.add(CShape3)
 
-        val heightDifference = startY - endY
-        val widthDifference = endX - startX
 
-        return heightDifference < 40 && widthDifference > 70
+        // flippedCShape
+        val flippedCShapePoints = listOf( Point(-0.48F, -0.43F, 0), Point(-0.42F, -0.47F, 0), Point(-0.36F, -0.49F, 0), Point(-0.28F, -0.49F, 0), Point(-0.206F, -0.49F, 0), Point(-0.127F, -0.493F, 0), Point(-0.047F, -0.493F, 0), Point(-0.007F, -0.45F, 0), Point(0.066F, -0.439F, 0), Point(0.143F, -0.434F, 0), Point(0.18F, -0.39F, 0), Point(0.227F, -0.36F, 0), Point(0.247F, -0.288F, 0), Point(0.247F, -0.209F, 0), Point(0.247F, -0.13F, 0), Point(0.247F, -0.05F, 0), Point(0.247F, 0.029F, 0), Point(0.247F, 0.108F, 0), Point(0.227F, 0.168F, 0), Point(0.227F, 0.247F, 0), Point(0.227F, 0.327F, 0), Point(0.188F, 0.367F, 0), Point(0.132F, 0.39F, 0), Point(0.11F, 0.447F, 0), Point(0.052F, 0.468F, 0), Point(-0.0038F, 0.507F, 0), Point(-0.083F, 0.507F, 0), Point(-0.16F, 0.507F, 0), Point(-0.242F, 0.507F, 0), Point(-0.32F, 0.507F, 0), Point(-0.4F, 0.507F, 0), Point(-0.48F, 0.507F, 0) )
+        val flippedCShape = Gesture(flippedCShapePoints, "flippedCShape")
+        gestureTemplates.add(flippedCShape)
+
+        // another flippedCShape
+        val flippedCShapePoints2 = listOf( Point(-0.35F, 0.757F, 0), Point(-0.340F, 0.717F, 0), Point(-0.269F, 0.677F, 0), Point(-0.229F, 0.636F, 0), Point(-0.189F, 0.596F, 0), Point(-0.149F, 0.556F, 0), Point(-0.108F, 0.515F, 0), Point(-0.0696F, 0.474F, 0), Point(-0.0307F, 0.432F, 0), Point(0.0046F, 0.387F, 0), Point(0.0375F, 0.341F, 0), Point(0.0706F, 0.295F, 0), Point(0.111F, 0.254F, 0), Point(0.146F, 0.209F, 0), Point(0.174F, 0.160F, 0), Point(0.188F, 0.106F, 0), Point(0.188F, 0.049F, 0), Point(0.188F, -0.008F, 0), Point(0.188F, -0.065F, 0), Point(0.188F, -0.122F, 0), Point(0.188F, -0.179F, 0), Point(0.157F, -0.211F, 0), Point(0.114F, -0.243F, 0), Point(0.057F, -0.243F, 0), Point(-0.0004F, -0.243F, 0), Point(-0.057F, -0.243F, 0), Point(-0.114F, -0.243F, 0), Point(-0.171F, -0.243F, 0), Point(-0.217F, -0.215F, 0), Point(-0.257F, -0.175F, 0), Point(-0.297F, -0.135F, 0), Point(-0.35F, -0.124F, 0) )
+        val flippedCShape2 = Gesture(flippedCShapePoints2, "flippedCShape")
+        gestureTemplates.add(flippedCShape2)
+
+        //another flippedCShape
+        val flippedCShapePoints3 = listOf(Point(-0.28652596F, 0.25841972F, 0), Point(-0.22315463F, 0.25841972F, 0), Point(-0.1597833F, 0.25841972F, 0), Point(-0.09641197F, 0.25841972F, 0), Point(-0.033040643F, 0.25841972F, 0), Point(0.030330688F, 0.25841972F, 0), Point(0.09304829F, 0.2561376F, 0), Point(0.14680806F, 0.22258447F, 0), Point(0.20782867F, 0.21670032F, 0), Point(0.2658179F, 0.2036871F, 0), Point(0.31800964F, 0.1795552F, 0), Point(0.36389947F, 0.1358511F, 0), Point(0.40269804F, 0.087003335F, 0), Point(0.42885804F, 0.029554524F, 0), Point(0.4079797F, -0.025164299F, 0), Point(0.3631532F, -0.06995837F, 0), Point(0.31832668F, -0.114752434F, 0), Point(0.26491153F, -0.14867303F, 0), Point(0.2106954F, -0.18146607F, 0), Point(0.15533376F, -0.21230458F, 0), Point(0.09997214F, -0.24314308F, 0), Point(0.041042354F, -0.26606444F, 0), Point(-0.018730462F, -0.28711522F, 0), Point(-0.07850327F, -0.308166F, 0), Point(-0.13827609F, -0.3292168F, 0), Point(-0.19804892F, -0.3502676F, 0), Point(-0.25797245F, -0.37087864F, 0), Point(-0.31889415F, -0.38810408F, 0), Point(-0.38102818F, -0.39864254F, 0), Point(-0.44439948F, -0.39864254F, 0), Point(-0.50777084F, -0.3986425F, 0), Point(-0.57114196F, -0.3986425F, 0),)
+        val flippedCShape3 = Gesture(flippedCShapePoints3, "flippedCShape")
+        gestureTemplates.add(flippedCShape3)
+
+        //another flippedCShape
+        val flippedCShapePoints4 = listOf(Point(-0.47812015F, 0.39006054F, 0), Point(-0.41237044F, 0.3599987F, 0), Point(-0.3442252F, 0.33554554F, 0), Point(-0.27607995F, 0.31109235F, 0), Point(-0.20945852F, 0.2830779F, 0), Point(-0.13907316F, 0.2745527F, 0), Point(-0.06915256F, 0.26973504F, 0), Point(-0.027069978F, 0.21082163F, 0), Point(0.02833762F, 0.17780183F, 0), Point(0.10073742F, 0.17780185F, 0), Point(0.16693884F, 0.1520445F, 0), Point(0.22858438F, 0.11407666F, 0), Point(0.29120204F, 0.07824401F, 0), Point(0.3580269F, 0.053993266F, 0), Point(0.38485897F, -0.012791132F, 0), Point(0.40166295F, -0.08321385F, 0), Point(0.40204275F, -0.15556897F, 0), Point(0.38012674F, -0.22302191F, 0), Point(0.3401795F, -0.27746692F, 0), Point(0.26974866F, -0.29423678F, 0), Point(0.19778968F, -0.3009991F, 0), Point(0.12556367F, -0.30601272F, 0), Point(0.05333767F, -0.31102636F, 0), Point(-0.01888832F, -0.31603998F, 0), Point(-0.09115888F, -0.319768F, 0), Point(-0.16355868F, -0.31976798F, 0), Point(-0.23595849F, -0.31976798F, 0), Point(-0.30835828F, -0.319768F, 0), Point(-0.38075808F, -0.319768F, 0), Point(-0.45315784F, -0.319768F, 0), Point(-0.52555764F, -0.319768F, 0), Point(-0.59795725F, -0.319768F, 0),)
+        val flippedCShape4 = Gesture(flippedCShapePoints4, "flippedCShape")
+        gestureTemplates.add(flippedCShape4)
+
+        // checkmark
+        val checkmarkPoints = listOf( Point(-0.437F, 0.075F, 0), Point(-0.419F, 0.12F, 0), Point(-0.39F, 0.157F, 0), Point(-0.38F, 0.218F, 0), Point(-0.35F, 0.25F, 0), Point(-0.327F, 0.296F, 0), Point(-0.303F, 0.337F, 0), Point(-0.25F, 0.367F, 0), Point(-0.216F, 0.399F, 0), Point(-0.182F, 0.430F, 0), Point(-0.167F, 0.379F, 0), Point(-0.128F, 0.332F, 0), Point(-0.114F, 0.27F, 0), Point(-0.0698F, 0.231F, 0), Point(-0.04F, 0.174F, 0), Point(-0.025F, 0.125F, 0), Point(0.018F, 0.078F, 0), Point(0.034F, 0.020F, 0), Point(0.061F, -0.036F, 0), Point(0.097F, -0.089F, 0), Point(0.126F, -0.132F, 0), Point(0.149F, -0.173F, 0), Point(0.189F, -0.204F, 0), Point(0.221F, -0.255F, 0), Point(0.269F, -0.286F, 0), Point(0.311F, -0.321F, 0), Point(0.333F, -0.366F, 0), Point(0.38F, -0.406F, 0), Point(0.403F, -0.464F, 0), Point(0.449F, -0.482F, 0), Point(0.465F, -0.531F, 0), Point(0.491F, -0.57F, 0) )
+        val checkmark = Gesture(checkmarkPoints, "checkmark")
+        gestureTemplates.add(checkmark)
+
+
+        // pureCircle
+        // does not correspond with a gesture, but 'O'/'o' kept being read as undo/redo
+        val pureCirclePoints = listOf( Point(-0.221F, -0.418F, 0), Point(-0.311F, -0.386F, 0), Point(-0.374F, -0.328F, 0), Point(-0.407F, -0.238F, 0), Point(-0.448F, -0.145F, 0), Point(-0.448F, -0.023F, 0), Point(-0.448F, 0.099F, 0), Point(-0.448F, 0.221F, 0), Point(-0.413F, 0.307F, 0), Point(-0.359F, 0.394F, 0), Point(-0.269F, 0.449F, 0), Point(-0.189F, 0.492F, 0), Point(-0.067F, 0.492F, 0), Point(0.054F, 0.492F, 0), Point(0.176F, 0.492F, 0), Point(0.251F, 0.444F, 0), Point(0.324F, 0.396F, 0), Point(0.357F, 0.307F, 0), Point(0.417F, 0.243F, 0), Point(0.456F, 0.151F, 0), Point(0.472F, 0.045F, 0), Point(0.456F, -0.061F, 0), Point(0.414F, -0.152F, 0), Point(0.366F, -0.249F, 0), Point(0.324F, -0.328F, 0), Point(0.276F, -0.402F, 0), Point(0.212F, -0.460F, 0), Point(0.138F, -0.508F, 0), Point(0.016F, -0.508F, 0), Point(-0.105F, -0.508F, 0), Point(-0.179F, -0.459F, 0), Point(-0.269F, -0.418F, 0) )
+        val pureCircle = Gesture(pureCirclePoints, "pureCircle")
+        gestureTemplates.add(pureCircle)
+
+
+        Log.d("GESTURE", "set up templates")
+        for (temp in gestureTemplates) {
+            Log.d("GESTURE", "name: ${temp.Name}")
+        }
+
+    }
+
+    private fun isUnderline(points: List<Point>): Boolean {
+
+        val inputGesture = Gesture(points, "test")
+
+        val result = classify(inputGesture, gestureTemplates)
+
+        if (result.name == "underline" && result.score >= 0.9) {
+            Log.d("GESTURE", "gesture is underline (${result.score})")
+            return true
+        } else {
+            Log.d("GESTURE", "gesture is not underline (${result.score})")
+            return false
+        }
+
     }
 
     //checks for undo
-    private fun isFlippedCShape(points: List<PointF>): Boolean {
-        if (points.size < 5) return false
+    private fun isFlippedCShape(points: List<Point>): Boolean {
+        val inputGesture = Gesture(points, "test")
 
-        val startX = points.first().x
-        val startY = points.first().y
-        val endX = points.last().x
-        val endY = points.last().y
+        val result = classify(inputGesture, gestureTemplates)
 
-        if (startY < endY || startX < endX) return false
-
-        val heightDifference = startY - endY
-        val widthDifference = endX - startX
-
-        return heightDifference > 70 && widthDifference < 200
+        if (result.name == "flippedCShape" && result.score >= 0.85) {
+            Log.d("GESTURE", "gesture is flippedCShape (${result.score})")
+            return true
+        } else {
+            Log.d("GESTURE", "gesture is not flippedCShape (${result.score})")
+            return false
+        }
     }
 
     //checks for redo
-    private fun isCShape(points: List<PointF>): Boolean {
-        if (points.size < 5) return false
+    private fun isCShape(points: List<Point>): Boolean {
 
-        val startX = points.first().x
-        val startY = points.first().y
-        val endX = points.last().x
-        val endY = points.last().y
+        val inputGesture = Gesture(points, "test")
 
-        if (startY < endY || startX > endX) return false
+        val result = classify(inputGesture, gestureTemplates)
 
-        val heightDifference = startY - endY
-        val widthDifference = endX - startX
+        if (result.name == "CShape" && result.score >= 0.85) {
+            Log.d("GESTURE", "gesture is CShape (${result.score})")
+            return true
+        } else {
+            Log.d("GESTURE", "gesture is not CShape (${result.score})")
+            return false
+        }
 
-        return heightDifference > 70 && widthDifference < 200
+    }
+
+
+    //checks for checkmark
+    private fun isCheckmark(points: List<Point>): Boolean {
+
+        val inputGesture = Gesture(points, "test")
+
+        val result = classify(inputGesture, gestureTemplates)
+
+        if (result.name == "checkmark" && result.score >= 0.88) {
+            Log.d("GESTURE", "gesture is checkmark (${result.score})")
+            return true
+        } else {
+            Log.d("GESTURE", "gesture is not checkmark (${result.score})")
+            return false
+        }
+
     }
 
 
@@ -461,7 +553,7 @@ class MainActivity : AppCompatActivity() {
                 listenerStateSaved.value = true
             }, 400)
         }
-        //viewModel.undo()
+        viewModel.undo()
         Toast.makeText(this, "Undo action detected!", Toast.LENGTH_SHORT).show()
     }
 
@@ -541,6 +633,7 @@ class MainActivity : AppCompatActivity() {
                     when (val blockType = blockTypes[selected]) {
                         BlockType.Text -> {
                             canGesture = false
+                            Log.d("Polly", canGesture.toString());
                             // Ensure bottom sheet is collapsed to avoid weird state when IME is dismissed.
                             viewModel.expandColorPalette(false)
                             launchTextBlockInputDialog { text ->
@@ -574,7 +667,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    //this is launched after OnCreate(), actually. This is just more declaring that had to be doen when other stuff was
+    //this is launched after OnCreate(), actually. This is just more declaring that had to be done when other stuff was
     override fun onStart() {
         super.onStart()
 
@@ -594,6 +687,8 @@ class MainActivity : AppCompatActivity() {
                 viewModel.toggleColorPalette()
             }
         }
+
+        setUpGestureTemplates()
     }
 
     //this is called right when you call finish()
@@ -630,21 +725,21 @@ class MainActivity : AppCompatActivity() {
             Error.Severity.ERROR,
             Error.Severity.CRITICAL ->
                 AlertDialog.Builder(this)
-                        .setTitle(error.title)
-                        .setMessage(error.message)
-                        .setPositiveButton(R.string.dialog_ok, null)
-                        .show()
+                    .setTitle(error.title)
+                    .setMessage(error.message)
+                    .setPositiveButton(R.string.dialog_ok, null)
+                    .show()
             else ->
                 // Note: `EditorError` (if any) could be used to specialize the notification (adjust string, localize, notification nature, ...)
                 Snackbar.make(binding.root, getString(R.string.app_error_notification, error.severity.name, error.message), Snackbar.LENGTH_LONG)
-                        .setAnchorView(binding.editorToolbarSheet.toolbarSettingsBottomSheet)
-                        .addCallback(object : Snackbar.Callback() {
-                            override fun onDismissed(snackbar: Snackbar?, event: Int) {
-                                snackbar?.removeCallback(this)
-                                viewModel.dismissErrorMessage(error)
-                            }
-                        })
-                        .show()
+                    .setAnchorView(binding.editorToolbarSheet.toolbarSettingsBottomSheet)
+                    .addCallback(object : Snackbar.Callback() {
+                        override fun onDismissed(snackbar: Snackbar?, event: Int) {
+                            snackbar?.removeCallback(this)
+                            viewModel.dismissErrorMessage(error)
+                        }
+                    })
+                    .show()
         }
     }
 
@@ -682,10 +777,11 @@ class MainActivity : AppCompatActivity() {
         }
         penBrushesAdapter.notifyDataSetChanged()
         canGesture = penBrushStates.isNotEmpty()
+        Log.d("polly", canGesture.toString())
         binding.editorToolbarSheet.toolbarPenBrushSection.isVisible = penBrushStates.isNotEmpty()
     }
 
-    //this creates the options menu: the drop down, the three dots (i know think we need but...)
+    //this creates the options menu: the drop down, the three dots (i don't think we need but...)
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         super.onCreateOptionsMenu(menu)
         menuInflater.inflate(R.menu.main_menu, menu)
@@ -758,9 +854,9 @@ class MainActivity : AppCompatActivity() {
             if (file != null) {
                 val uri = FileProvider.getUriForFile(this, "${BuildConfig.APPLICATION_ID}.export", file)
                 ShareCompat.IntentBuilder(this)
-                        .setType("application/octet-stream")
-                        .setStream(uri)
-                        .startChooser()
+                    .setType("application/octet-stream")
+                    .setStream(uri)
+                    .startChooser()
             }
         }
     }
@@ -786,9 +882,9 @@ class MainActivity : AppCompatActivity() {
                             startActivity(Intent.createChooser(intent, uri.lastPathSegment))
                         } else {
                             ShareCompat.IntentBuilder(this)
-                                    .setType(mimeType.typeName)
-                                    .setStream(uri)
-                                    .startChooser()
+                                .setType(mimeType.typeName)
+                                .setStream(uri)
+                                .startChooser()
                         }
                     } else {
                         Toast.makeText(this, R.string.editor_export_failed, Toast.LENGTH_LONG).show()
@@ -839,8 +935,8 @@ class MainActivity : AppCompatActivity() {
 
             }
             else{
-                    it.subtitle = partState.dateCreated
-                }
+                it.subtitle = partState.dateCreated
+            }
         }
 
         editorView?.isVisible = state.isReady
