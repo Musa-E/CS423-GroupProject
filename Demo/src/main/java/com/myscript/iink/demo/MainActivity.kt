@@ -394,10 +394,10 @@ class MainActivity : AppCompatActivity() {
                                     viewModel.convertContent()
                                 }, 500)
 
-                            } else if (result.name == "flippedCShape" && result.score >= 0.85) {
+                            } else if (result.name == "flippedCShape" && result.score >= 0.80) {
                                 Log.d("GESTURE", "undo was recognized")
                                 onUndoGestureDetected()
-                            } else if (result.name == "CShape" && result.score >= 0.85) {
+                            } else if (result.name == "CShape" && result.score >= 0.80) {
                                 Log.d("GESTURE", "redo was recognized")
                                 onRedoGestureDetected()
                             } else if (result.name == "checkmark" && result.score >= 0.88) {
