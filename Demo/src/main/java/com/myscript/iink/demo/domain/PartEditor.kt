@@ -3,7 +3,9 @@
 
 package com.myscript.iink.demo.domain
 
+import android.content.Context
 import android.graphics.Typeface
+import android.util.Log
 import androidx.annotation.VisibleForTesting
 import com.myscript.iink.ContentBlock
 import com.myscript.iink.ContentPart
@@ -34,13 +36,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.json.JSONObject
 import java.io.File
 import java.util.Locale
 import com.myscript.iink.graphics.Color as IInkColor
 
 
 enum class PartType(private val stringValue: String) {
-    Text("Text");
+    TextDocument("Text Document");
 
     override fun toString(): String = stringValue
 
@@ -101,7 +104,7 @@ enum class MenuAction {
     COPY,
     PASTE,
     DELETE,
-    CONVERT,
+    //CONVERT,
     EXPORT,
     ADD_BLOCK,
     FORMAT_TEXT,
@@ -131,7 +134,13 @@ class PartEditor(
         fun partLoading(partId: String)
         fun partLoadingError(partId: String, exception: Exception)
         fun editorError(blockId: String, error: EditorError, message: String)
-        fun toolChanged(toolType: ToolType?, iinkColor: IInkColor, thickness: Float, penBrush: PenBrush?)
+        fun toolChanged(
+            toolType: ToolType?,
+            iinkColor: IInkColor,
+            thickness: Float,
+            penBrush: PenBrush?
+        )
+
         fun colorChanged(toolType: ToolType, iinkColor: IInkColor?)
         fun thicknessChanged(toolType: ToolType, thickness: Float?)
         fun penBrushChanged(toolType: ToolType, penBrush: PenBrush)
@@ -163,7 +172,8 @@ class PartEditor(
     var inputController: InputController? = null
 
     private val editorListener: IEditorListener = object : IEditorListener {
-        override fun partChanging(editor: Editor, oldPart: ContentPart?, newPart: ContentPart?) = Unit
+        override fun partChanging(editor: Editor, oldPart: ContentPart?, newPart: ContentPart?) =
+            Unit
 
         override fun partChanged(editor: Editor) {
             notifyState()
@@ -178,11 +188,11 @@ class PartEditor(
         }
 
         override fun selectionChanged(editor: Editor) {
-            // Available actions?
-        }
+             }
 
         override fun activeBlockChanged(editor: Editor, blockId: String) {
-            // Available actions?
+            CurrentBlockId.priorBlockID = CurrentBlockId.currentBlockID
+            CurrentBlockId.currentBlockID = blockId
         }
     }
 
@@ -262,7 +272,13 @@ class PartEditor(
         return editor?.getSupportedExportMimeTypes(null)?.toList() ?: emptyList()
     }
 
-    fun exportContent(mimeType: MimeType, x: Float?, y: Float?, selectedBlockId: String?, outputFile: File) {
+    fun exportContent(
+        mimeType: MimeType,
+        x: Float?,
+        y: Float?,
+        selectedBlockId: String?,
+        outputFile: File
+    ) {
         editor?.let { editor ->
             val content = when {
                 selectedBlockId != null -> editor.getBlockById(selectedBlockId)
@@ -338,8 +354,8 @@ class PartEditor(
     }
 
 
-    fun getPart(partState: PartState){
-        if(partState != null){
+    fun getPart(partState: PartState) {
+        if (partState != null) {
             partState.partId?.let { openPart(it) }
         }
     }
@@ -427,7 +443,12 @@ class PartEditor(
         }
     }
 
-    private fun setToolStyle(toolType: ToolType, iinkColor: IInkColor, thickness: Float, penBrush: PenBrush?): Boolean {
+    private fun setToolStyle(
+        toolType: ToolType,
+        iinkColor: IInkColor,
+        thickness: Float,
+        penBrush: PenBrush?
+    ): Boolean {
         val editor = editor ?: return true
 
         val colorValue = "#%08X".format(0xFFFFFFFF and iinkColor.rgba.toLong())
@@ -530,16 +551,39 @@ class PartEditor(
                 MenuAction.COPY -> editor.copy(content)
                 MenuAction.PASTE -> editor.paste(x, y)
                 MenuAction.DELETE -> if (content != null) editor.erase(content)
-                MenuAction.CONVERT -> convertContent(content)
+                //MenuAction.CONVERT -> convertContent(content)
                 MenuAction.EXPORT -> {}
                 MenuAction.ADD_BLOCK -> {}
                 MenuAction.FORMAT_TEXT -> {}
-                MenuAction.FORMAT_TEXT_H1 -> if (content != null) editor.setTextFormat(content, TextFormat.H1)
-                MenuAction.FORMAT_TEXT_H2 -> if (content != null) editor.setTextFormat(content, TextFormat.H2)
-                MenuAction.FORMAT_TEXT_PARAGRAPH -> if (content != null) editor.setTextFormat(content, TextFormat.PARAGRAPH)
-                MenuAction.FORMAT_TEXT_LIST_BULLET -> if (content != null) editor.setTextFormat(content, TextFormat.LIST_BULLET)
-                MenuAction.FORMAT_TEXT_LIST_CHECKBOX -> if (content != null) editor.setTextFormat(content, TextFormat.LIST_CHECKBOX)
-                MenuAction.FORMAT_TEXT_LIST_NUMBERED -> if (content != null) editor.setTextFormat(content, TextFormat.LIST_NUMBERED)
+                MenuAction.FORMAT_TEXT_H1 -> if (content != null) editor.setTextFormat(
+                    content,
+                    TextFormat.H1
+                )
+
+                MenuAction.FORMAT_TEXT_H2 -> if (content != null) editor.setTextFormat(
+                    content,
+                    TextFormat.H2
+                )
+
+                MenuAction.FORMAT_TEXT_PARAGRAPH -> if (content != null) editor.setTextFormat(
+                    content,
+                    TextFormat.PARAGRAPH
+                )
+
+                MenuAction.FORMAT_TEXT_LIST_BULLET -> if (content != null) editor.setTextFormat(
+                    content,
+                    TextFormat.LIST_BULLET
+                )
+
+                MenuAction.FORMAT_TEXT_LIST_CHECKBOX -> if (content != null) editor.setTextFormat(
+                    content,
+                    TextFormat.LIST_CHECKBOX
+                )
+
+                MenuAction.FORMAT_TEXT_LIST_NUMBERED -> if (content != null) editor.setTextFormat(
+                    content,
+                    TextFormat.LIST_NUMBERED
+                )
             }
         } catch (e: Exception) {
             listener?.actionError(e, (content as? ContentBlock)?.id)
@@ -566,7 +610,8 @@ class PartEditor(
     }
 
     fun insertText(x: Float, y: Float, text: String) {
-        editor?.addBlock(x, y, BlockType.Text.toString(), MimeType.TEXT, text)?.also(ContentBlock::close)
+        editor?.addBlock(x, y, BlockType.Text.toString(), MimeType.TEXT, text)
+            ?.also(ContentBlock::close)
     }
 
     fun zoomIn() {
@@ -597,10 +642,89 @@ class PartEditor(
 
     fun convertContent(content: ContentSelection? = null) {
         val conversionState = editor?.getSupportedTargetConversionStates(content)
+
+        Log.d("onError", CurrentBlockId.onError.toString())
+
+        if(CurrentBlockId.onError){
+            return
+        }
+
         if (!conversionState.isNullOrEmpty()) {
-            editor?.convert(content, conversionState.first())
+            if (content is ContentBlock) {
+                val originalBlock = content
+                val transform = editor?.renderer?.viewTransform
+                val topLeft = transform?.apply(originalBlock.box.x, originalBlock.box.y)
+                val x = topLeft?.x
+                val y = topLeft?.y
+
+                val savedString: String? = editor?.export_(originalBlock, MimeType.JIIX)
+                val jsonObject = JSONObject(savedString)
+
+                val mainLabel = jsonObject.getString("label")
+
+                if (savedString != null) {
+                    Log.d("converttextt", mainLabel)
+                }
+                editor?.erase(originalBlock)
+                editor?.waitForIdle()
+
+                if (x != null && y != null) {
+                    if (!mainLabel.contains("☐"))
+                        this.insertText(x, y, "☐$mainLabel")
+                    else
+                        this.insertText(x, y, mainLabel)
+                }
+            } else {
+                if (conversionState != null) {
+                    var idBlock: String = null.toString()
+                    if(CurrentBlockId.currentBlockID != null){
+                        if (CurrentBlockId.currentBlockID == "Default Value" || CurrentBlockId.currentBlockID == ""){
+                            idBlock = CurrentBlockId.priorBlockID
+                        } else{
+                            idBlock = CurrentBlockId.currentBlockID
+                        }
+                    } else if (CurrentBlockId.priorBlockID != null){
+                        idBlock = CurrentBlockId.priorBlockID
+                    } else {
+                        return
+                    }
+                    Log.d("prior", CurrentBlockId.priorBlockID)
+                    Log.d("cur", CurrentBlockId.currentBlockID)
+                    Log.d("idblock", idBlock)
+
+
+                    if(editor?.getBlockById(idBlock) == null){
+                        return
+                    }
+                    val originalBlock = editor?.getBlockById(idBlock) as ContentBlock
+
+                    val transform = editor?.renderer?.viewTransform
+                    val topLeft = transform?.apply(originalBlock.box.x, originalBlock.box.y)
+                    val x = topLeft?.x
+                    val y = topLeft?.y
+
+                    val savedString: String? = editor?.export_(originalBlock, MimeType.JIIX)
+                    val jsonObject = JSONObject(savedString)
+
+                    val mainLabel = jsonObject.getString("label")
+
+                    if (savedString != null) {
+                        Log.d("converttextt", mainLabel)
+                    }
+                    editor?.erase(originalBlock as ContentSelection)
+                    editor?.waitForIdle()
+
+                    if (x != null && y != null) {
+                        if (!mainLabel.contains("☐"))
+                            this.insertText(x, y, "☐$mainLabel")
+                        else
+                            this.insertText(x, y, mainLabel)
+                    }
+                }
+            }
         }
     }
+
 
     fun waitForIdle() {
         editor?.waitForIdle()
@@ -656,7 +780,7 @@ private fun TextFormat.toMenuAction(): MenuAction = when (this) {
 
 private fun ContextualActions.toMenuAction(): MenuAction = when (this) {
     ContextualActions.COPY -> MenuAction.COPY
-    ContextualActions.CONVERT -> MenuAction.CONVERT
+    //ContextualActions.CONVERT -> MenuAction.CONVERT
     ContextualActions.REMOVE -> MenuAction.DELETE
     ContextualActions.EXPORT -> MenuAction.EXPORT
     ContextualActions.ADD_BLOCK -> MenuAction.ADD_BLOCK
@@ -692,7 +816,7 @@ private fun PartType.availableTools(tools: List<ToolType>, enableActivePen: Bool
     val toolEraser = tools.first { it == ToolType.ERASER }
 
     return when (this) {
-        PartType.Text -> mapOf(
+        PartType.TextDocument -> mapOf(
             toolHand to !enableActivePen,
             toolPen to true,
             toolHighlighter to true,

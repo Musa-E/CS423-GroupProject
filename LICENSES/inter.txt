@@ -1,3 +1,7 @@
+<!--AI STATEMENT: AI was not used in this. This file was imported from https://github.com/MyScript/interactive-ink-examples-android
+into this Android SDK and then edited by our team -->
+
+
 Copyright (c) 2016-2020 The Inter Project Authors.
 "Inter" is trademark of Rasmus Andersson.
 https://github.com/rsms/inter
