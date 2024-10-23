@@ -3,6 +3,7 @@
 
 package com.myscript.iink.demo
 
+import CurrentBlockId
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
@@ -136,7 +137,8 @@ class MainActivity : AppCompatActivity() {
     //variables for undo/redo gestures
     private var startTime: Long = 0
     private var endTime: Long = 0
-    val timer: Timer = Timer()
+
+    private var partStateArrayList: ArrayList<PartState> = ArrayList()
 
     private lateinit var gestureDetector: GestureDetector
     private val touchPoints = mutableListOf<Point>()
@@ -270,14 +272,6 @@ class MainActivity : AppCompatActivity() {
             true
         }
 
-        //this is a handler that pauses the time before an undo; trust me, it is needed *sobs*
-        listenerStateSaved.observe(this) { isSaved ->
-            if (isSaved) {
-                viewModel.undo();
-                listenerStateSaved.value = false
-            }
-        }
-
         editorData.editor?.let { editor ->
             viewModel.setEditor(editorData)
             setMargins(editor, R.dimen.editor_horizontal_margin, R.dimen.editor_vertical_margin)
@@ -314,6 +308,7 @@ class MainActivity : AppCompatActivity() {
         if (bundle != null) {
             //I created "blank" to mean it is a new entry; it is the title the user put in
             if(bundle.getString("blank") != null){
+                Log.d("BUNDLE", "ITS BLANK")
                 officialTitle = bundle["blank"] as String; //making the title equal what user put
 
                 viewModel.requestNewPart(); //this is the function that gets a new PartState
@@ -331,10 +326,17 @@ class MainActivity : AppCompatActivity() {
                     bundle["partDate"] as String,
                     bundle["partTitle"] as String
                 )
+                Log.d("BUNDLE", bundle["partId"] as String)
+                Log.d("BUNDLE", bundle["isReady"].toString())
+                Log.d("BUNDLE", partType.toString())
+                Log.d("BUNDLE", bundle["partDate"] as String)
+                Log.d("BUNDLE", bundle["partTitle"] as String)
 
                 officialTitle = bundle["partTitle"] as String
 
+               // viewModel.getPart(bundle["partId"].toString())
                 viewModel.getPart(partState) //function that gets the PartState you want to load
+
             }
         }
         setUpGestureTemplates()
@@ -343,6 +345,7 @@ class MainActivity : AppCompatActivity() {
     //here is our own custom touch event
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         if(canGesture) {
+            CurrentBlockId.onError = false;
             event?.let {
                 when (it.action) {
                     // this means when the user presses on the screen
@@ -350,7 +353,6 @@ class MainActivity : AppCompatActivity() {
                         // touchPoints.clear()
                         touchPoints.add(Point(it.x, it.y, strokeNum))
                         startTime = System.currentTimeMillis()
-                        Log.d("TouchEvent", "ACTION_DOWN at (${it.x}, ${it.y})")
                     }
                     // this means when their finger is moving, as you can imagine
                     MotionEvent.ACTION_MOVE -> {
@@ -358,11 +360,9 @@ class MainActivity : AppCompatActivity() {
                         touchPoints.add(
                             Point(it.x, it.y, strokeNum)
                         ) //adding points to an array to look at later
-                        Log.d("TouchEvent", "ACTION_MOVE at (${it.x}, ${it.y})")
                     }
                     // and then is when the user lifts their finger
                     MotionEvent.ACTION_UP -> {
-                        Log.d("TouchEvent", "ACTION_UP at (${it.x}, ${it.y})")
                         endTime = System.currentTimeMillis()
                         val duration = (endTime - startTime) / 1000.0
                         Log.d("Time", duration.toString())
@@ -383,7 +383,8 @@ class MainActivity : AppCompatActivity() {
                             Log.d("GESTURE", result.name)
                         } else{
 
-                            if (result.name == "underline" && result.score >= 0.9) {
+                            if ((result.name == "underline" || result.name == "pureCircle" || result.name == "oval") && result.score >= 0.9) {
+                                Log.d("GESTURE", "some sort of conversation was recognized")
                                 val sharedPreferences =
                                     getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
                                 val editor = sharedPreferences.edit()
@@ -395,18 +396,14 @@ class MainActivity : AppCompatActivity() {
                                 }, 500)
 
                             } else if (result.name == "flippedCShape" && result.score >= 0.85) {
+                                Log.d("GESTURE", "undo was recognized")
                                 onUndoGestureDetected()
                             } else if (result.name == "CShape" && result.score >= 0.85) {
+                                Log.d("GESTURE", "redo was recognized")
                                 onRedoGestureDetected()
                             } else if (result.name == "checkmark" && result.score >= 0.88) {
                                 Log.d("GESTURE", "gesture is checkmark (${result.score})")
                                 // do whatever checkmark does
-                            } else if ((result.name == "pureCircle" || result.name == "oval") && result.score >= 0.88) {
-                                Log.d("GESTURE", "gesture is pureCircle (${result.score})")
-                                Handler(Looper.getMainLooper()).postDelayed({
-                                    viewModel.undo()
-                                    viewModel.convertContent()
-                                }, 500)
                             }
                         }
                         // resets things after gesture has been recognized
@@ -487,6 +484,15 @@ class MainActivity : AppCompatActivity() {
         val pureCircle = Gesture(pureCirclePoints, "pureCircle")
         gestureTemplates.add(pureCircle)
 
+        //another circle
+        val circle = listOf(Point(0.044942796F, -0.21606079F, 0), Point(-0.051692255F, -0.24786487F, 0), Point(-0.15403703F, -0.2545929F, 0), Point(-0.25010237F, -0.22446823F, 0), Point(-0.327656F, -0.15766697F, 0), Point(-0.37062344F, -0.06767777F, 0), Point(-0.37275344F, 0.034866817F, 0), Point(-0.347976F, 0.13388143F, 0), Point(-0.2937287F, 0.22072187F, 0), Point(-0.21787229F, 0.28965044F, 0), Point(-0.13211091F, 0.34591746F, 0), Point(-0.039127573F, 0.3891608F, 0), Point(0.059584588F, 0.41718835F, 0), Point(0.16181156F, 0.4243062F, 0), Point(0.26378942F, 0.41575113F, 0), Point(0.36073345F, 0.3820266F, 0), Point(0.45200515F, 0.33531114F, 0), Point(0.52432954F, 0.26315108F, 0), Point(0.5537817F, 0.16630082F, 0), Point(0.5488264F, 0.064231746F, 0), Point(0.5039629F, -0.027449803F, 0), Point(0.4431855F, -0.110158086F, 0), Point(0.37308457F, -0.18513231F, 0), Point(0.29454482F, -0.2512837F, 0), Point(0.20867337F, -0.30689883F, 0), Point(0.11033112F, -0.33539137F, 0), Point(0.007881339F, -0.3422763F, 0), Point(-0.09389658F, -0.33077335F, 0), Point(-0.1932391F, -0.3047585F, 0), Point(-0.2907721F, -0.27250552F, 0), Point(-0.38601267F, -0.23424092F, 0), Point(-0.4449654F, -0.15551046F, 0),)
+        val circlePure = Gesture(circle, "pureCircle")
+        gestureTemplates.add(circlePure)
+
+        //another circles
+        val circles = listOf(Point(-0.33268917F, 0.0071404874F, 0), Point(-0.30328888F, 0.100730404F, 0), Point(-0.24752969F, 0.18338999F, 0), Point(-0.17736441F, 0.25363362F, 0), Point(-0.09322922F, 0.307103F, 0), Point(-0.0025462452F, 0.3486008F, 0), Point(0.09390674F, 0.3726743F, 0), Point(0.19350547F, 0.3769079F, 0), Point(0.29091108F, 0.36158144F, 0), Point(0.37343854F, 0.30614817F, 0), Point(0.44288686F, 0.23472135F, 0), Point(0.49525958F, 0.14998208F, 0), Point(0.53161466F, 0.0574063F, 0), Point(0.54278415F, -0.041428357F, 0), Point(0.53491396F, -0.14021501F, 0), Point(0.4971187F, -0.2324753F, 0), Point(0.45065048F, -0.320595F, 0), Point(0.38664863F, -0.39677754F, 0), Point(0.30292666F, -0.4502465F, 0), Point(0.2089316F, -0.48261756F, 0), Point(0.1097568F, -0.49053392F, 0), Point(0.01179029F, -0.47878796F, 0), Point(-0.07817734F, -0.43626428F, 0), Point(-0.1546516F, -0.3728222F, 0), Point(-0.22115237F, -0.29850197F, 0), Point(-0.280329F, -0.21821615F, 0), Point(-0.3350837F, -0.13491054F, 0), Point(-0.38223612F, -0.046995796F, 0), Point(-0.41959643F, 0.045511086F, 0), Point(-0.44463867F, 0.14186944F, 0), Point(-0.4550447F, 0.24097157F, 0), Point(-0.41408452F, 0.3280707F, 0),)
+        val circlePures = Gesture(circles, "pureCircle")
+        gestureTemplates.add(circlePures)
 
         Log.d("GESTURE", "set up templates")
         for (temp in gestureTemplates) {
@@ -494,78 +500,6 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
-
-    private fun isUnderline(points: List<Point>): Boolean {
-
-        if(points != null){
-            val inputGesture = Gesture(points, "test")
-
-            if(inputGesture != null){
-                val result = classify(inputGesture, gestureTemplates)
-
-                if (result.name == "underline" && result.score >= 0.9) {
-                    Log.d("GESTURE", "gesture is underline (${result.score})")
-                    return true
-                } else {
-                    Log.d("GESTURE", "gesture is not underline (${result.score})")
-                    return false
-                }
-            }
-        }
-        return false
-    }
-
-
-    //checks for undo
-    private fun isFlippedCShape(points: List<Point>): Boolean {
-        val inputGesture = Gesture(points, "test")
-
-        val result = classify(inputGesture, gestureTemplates)
-
-        if (result.name == "flippedCShape" && result.score >= 0.85) {
-            Log.d("GESTURE", "gesture is flippedCShape (${result.score})")
-            return true
-        } else {
-            Log.d("GESTURE", "gesture is not flippedCShape (${result.score})")
-            return false
-        }
-    }
-
-    //checks for redo
-    private fun isCShape(points: List<Point>): Boolean {
-
-        val inputGesture = Gesture(points, "test")
-
-        val result = classify(inputGesture, gestureTemplates)
-
-        if (result.name == "CShape" && result.score >= 0.85) {
-            Log.d("GESTURE", "gesture is CShape (${result.score})")
-            return true
-        } else {
-            Log.d("GESTURE", "gesture is not CShape (${result.score})")
-            return false
-        }
-
-    }
-
-
-    //checks for checkmark
-    private fun isCheckmark(points: List<Point>): Boolean {
-
-        val inputGesture = Gesture(points, "test")
-
-        val result = classify(inputGesture, gestureTemplates)
-
-        if (result.name == "checkmark" && result.score >= 0.88) {
-            Log.d("GESTURE", "gesture is checkmark (${result.score})")
-            return true
-        } else {
-            Log.d("GESTURE", "gesture is not checkmark (${result.score})")
-            return false
-        }
-
-    }
-
 
     //what to do when it is detected
     private fun onUndoGestureDetected() {
@@ -746,6 +680,7 @@ class MainActivity : AppCompatActivity() {
     private fun onError(error: Error?) {
         if (error != null) {
             Log.e("MainActivity", error.toString(), error.exception)
+            CurrentBlockId.onError = true;
         }
         when (error?.severity) {
             null -> Unit
@@ -854,6 +789,8 @@ class MainActivity : AppCompatActivity() {
                     partState.dateCreated = formattedDate
                 }
 
+                viewModel.save()
+
                 intent.putExtra("partId", partState.partId)
                 intent.putExtra("isReady", partState.isReady)
                 intent.putExtra("partType", partState.partType.toString())
@@ -932,6 +869,7 @@ class MainActivity : AppCompatActivity() {
     //this sets the title and date on the action bar
     private fun onPartStateUpdate(state: PartState) {
         partState = state
+        partStateArrayList?.add(state)
         supportActionBar?.let {
             var (title, subtitle) = when (state.partId) {
                 null -> getString(R.string.app_name) to null

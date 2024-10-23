@@ -189,10 +189,10 @@ class PartEditor(
         }
 
         override fun selectionChanged(editor: Editor) {
-            // Available actions?
-        }
+             }
 
         override fun activeBlockChanged(editor: Editor, blockId: String) {
+            CurrentBlockId.priorBlockID = CurrentBlockId.currentBlockID
             CurrentBlockId.currentBlockID = blockId
         }
     }
@@ -644,6 +644,12 @@ class PartEditor(
     fun convertContent(content: ContentSelection? = null) {
         val conversionState = editor?.getSupportedTargetConversionStates(content)
 
+        Log.d("onError", CurrentBlockId.onError.toString())
+
+        if(CurrentBlockId.onError){
+            return
+        }
+
         if (!conversionState.isNullOrEmpty()) {
             if (content is ContentBlock) {
                 val originalBlock = content
@@ -671,9 +677,30 @@ class PartEditor(
                 }
             } else {
                 if (conversionState != null) {
-                    val originalBlock = editor?.getBlockById(CurrentBlockId.currentBlockID)
+                    var idBlock: String = null.toString()
+                    if(CurrentBlockId.currentBlockID != null){
+                        if (CurrentBlockId.currentBlockID == "Default Value" || CurrentBlockId.currentBlockID == ""){
+                            idBlock = CurrentBlockId.priorBlockID
+                        } else{
+                            idBlock = CurrentBlockId.currentBlockID
+                        }
+                    } else if (CurrentBlockId.priorBlockID != null){
+                        idBlock = CurrentBlockId.priorBlockID
+                    } else {
+                        return
+                    }
+                    Log.d("prior", CurrentBlockId.priorBlockID)
+                    Log.d("cur", CurrentBlockId.currentBlockID)
+                    Log.d("idblock", idBlock)
+
+
+                    if(editor?.getBlockById(idBlock) == null){
+                        return
+                    }
+                    val originalBlock = editor?.getBlockById(idBlock) as ContentBlock
+
                     val transform = editor?.renderer?.viewTransform
-                    val topLeft = transform?.apply(originalBlock?.box?.x!!, originalBlock?.box?.y!!)
+                    val topLeft = transform?.apply(originalBlock.box.x, originalBlock.box.y)
                     val x = topLeft?.x
                     val y = topLeft?.y
 
