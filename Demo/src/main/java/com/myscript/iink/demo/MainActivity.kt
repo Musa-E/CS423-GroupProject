@@ -3,7 +3,6 @@
 
 package com.myscript.iink.demo
 
-import CurrentBlockId
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
@@ -515,11 +514,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun onRedoGestureDetected() {
+        viewModel.redo()
         Handler(Looper.getMainLooper()).postDelayed({
             //listenerStateSaved.value = true
             viewModel.undo();
         }, 600)
-        viewModel.redo()
         Toast.makeText(this, "Redo action detected!", Toast.LENGTH_SHORT).show()
     }
 
