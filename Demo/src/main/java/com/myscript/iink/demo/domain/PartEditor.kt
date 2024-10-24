@@ -711,10 +711,11 @@ class PartEditor(
                     if (savedString != null) {
                         Log.d("converttextt", mainLabel)
                     }
-                    editor?.erase(originalBlock as ContentSelection)
-                    editor?.waitForIdle()
+
 
                     try {
+                        editor?.erase(originalBlock as ContentSelection)
+                        editor?.waitForIdle()
                         if (x != null && y != null) {
                             if (!mainLabel.contains("☐"))
                                 this.insertText(x, y, "☐$mainLabel")
