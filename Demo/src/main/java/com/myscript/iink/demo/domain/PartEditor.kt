@@ -714,11 +714,15 @@ class PartEditor(
                     editor?.erase(originalBlock as ContentSelection)
                     editor?.waitForIdle()
 
-                    if (x != null && y != null) {
-                        if (!mainLabel.contains("☐"))
-                            this.insertText(x, y, "☐$mainLabel")
-                        else
-                            this.insertText(x, y, mainLabel)
+                    try {
+                        if (x != null && y != null) {
+                            if (!mainLabel.contains("☐"))
+                                this.insertText(x, y, "☐$mainLabel")
+                            else
+                                this.insertText(x, y, mainLabel)
+                        }
+                    } catch (e: Exception){
+                        return
                     }
                 }
             }
