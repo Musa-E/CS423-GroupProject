@@ -502,13 +502,11 @@ class MainActivity : AppCompatActivity() {
 
     //what to do when it is detected
     private fun onUndoGestureDetected() {
-        if(isPenActivated){
             Handler(Looper.getMainLooper()).postDelayed({
                 //listenerStateSaved.value = true
                 viewModel.undo();
                 viewModel.undo();
             }, 600)
-        }
         //viewModel.undo()
         Toast.makeText(this, "Undo action detected!", Toast.LENGTH_SHORT).show()
     }

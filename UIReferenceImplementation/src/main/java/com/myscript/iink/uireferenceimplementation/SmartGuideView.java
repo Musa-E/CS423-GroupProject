@@ -473,7 +473,11 @@ public class SmartGuideView extends LinearLayout implements IEditorListener, IRe
 
                     editor.erase(activeBlock);
 
-                    editor.addBlock(x, y, "Text", MimeType.TEXT, strikeLabel);
+                    try {
+                      editor.addBlock(x, y, "Text", MimeType.TEXT, strikeLabel);
+                    } catch (Exception e) {
+                        contentChanged(editor, blockIds);
+                    }
                   }
                 }
               }, 1000);
