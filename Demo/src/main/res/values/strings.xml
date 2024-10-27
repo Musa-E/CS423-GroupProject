@@ -45,7 +45,6 @@ into this Android SDK and then edited by our team -->
     <string name="editor_action_copy">Copy</string>
     <string name="editor_action_paste">Paste</string>
     <string name="editor_action_delete">Delete</string>
-    <string name="editor_action_convert">Convert</string>
     <string name="editor_action_export">Export…</string>
     <string name="editor_action_add_block">Add…</string>
     <string name="editor_action_format_text">Format text…</string>
@@ -75,5 +74,7 @@ into this Android SDK and then edited by our team -->
     <string name="pen_brush_fountain_pen">Fountain Pen</string>
     <string name="pen_brush_calligraphic_brush">Calligraphic Brush</string>
     <string name="pen_brush_pencil_brush">Pencil Brush</string>
+
+    <string name="gestures_help_button">View the currently recognized gestures</string>
 
 </resources>
