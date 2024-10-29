@@ -70,6 +70,7 @@ public class TaskListView extends Activity {
                     (String) bundle.get("partDate"),
                     (String) bundle.get("partTitle")
             );
+            Log.d("LISTVIEW", (String) bundle.get("partId"));
 
             if(!repository.checkForPart(partState)){
                 repository.addPartState(partState);

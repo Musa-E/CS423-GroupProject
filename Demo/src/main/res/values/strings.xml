@@ -45,7 +45,6 @@ into this Android SDK and then edited by our team -->
     <string name="editor_action_copy">Copy</string>
     <string name="editor_action_paste">Paste</string>
     <string name="editor_action_delete">Delete</string>
-    <string name="editor_action_convert">Convert</string>
     <string name="editor_action_export">Export…</string>
     <string name="editor_action_add_block">Add…</string>
     <string name="editor_action_format_text">Format text…</string>

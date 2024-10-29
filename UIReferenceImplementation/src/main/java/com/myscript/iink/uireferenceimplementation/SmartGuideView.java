@@ -39,6 +39,7 @@ import com.myscript.iink.Editor;
 import com.myscript.iink.EditorError;
 import com.myscript.iink.Engine;
 import com.myscript.iink.IEditorListener;
+import com.myscript.iink.IImagePainter;
 import com.myscript.iink.IRendererListener;
 import com.myscript.iink.MimeType;
 import com.myscript.iink.ParameterSet;
@@ -47,6 +48,11 @@ import com.myscript.iink.graphics.Point;
 import com.myscript.iink.graphics.Rectangle;
 import com.myscript.iink.graphics.Transform;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -255,10 +261,13 @@ public class SmartGuideView extends LinearLayout implements IEditorListener, IRe
             {
               setText(newLabel);
               word.label = newLabel;
+              Log.e("onclick", activeBlock.getId());
             }
             else
             {
+              Log.e("changing", activeBlock.getId());
               update(null, UpdateCause.EDIT);
+              Log.e("changing", activeBlock.getId());
             }
           }
         }
@@ -413,10 +422,77 @@ public class SmartGuideView extends LinearLayout implements IEditorListener, IRe
       }
     }
 
-    if (activeBlock != null && Arrays.asList(blockIds).contains(activeBlock.getId()))
-    {
+    if (activeBlock != null && Arrays.asList(blockIds).contains(activeBlock.getId())) {
+        String savedString = null;
+        try {
+          savedString = editor.export_(activeBlock, MimeType.JIIX);
+        } catch (IOException e) {
+          throw new RuntimeException(e);
+        }
+
+        if (savedString != null) {
+          JSONObject jsonObject = null;
+          try {
+            jsonObject = new JSONObject(savedString);
+          } catch (JSONException e) {
+            throw new RuntimeException(e);
+          }
+
+          String mainLabel = null;
+          try {
+            mainLabel = jsonObject.getString("label");
+          } catch (JSONException e) {
+            throw new RuntimeException(e);
+          }
+
+          Log.d("before", "before");
+
+          if (mainLabel != null && mainLabel.contains("☒")) {
+            synchronized (editor) {
+              new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                  if (activeBlock != null) {
+                    editor.erase(activeBlock);
+                  }
+                }
+              }, 500);
+            }
+          } else if (mainLabel != null && mainLabel.contains("☑")) {
+            synchronized (editor) {
+              String finalMainLabel = mainLabel;
+              new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                  if (activeBlock != null) {
+                    String strikeLabel = applyStrikethrough(finalMainLabel);
+                    Transform transform = editor != null ? editor.getRenderer().getViewTransform() : null;
+                    Point topLeft = transform != null ? transform.apply(activeBlock.getBox().x, activeBlock.getBox().x) : null;
+                    Float x = topLeft != null ? topLeft.x : null;
+                    Float y = topLeft != null ? topLeft.y : null;
+
+                    try {
+                      editor.erase(activeBlock);
+                      editor.addBlock(x, y, "Text", MimeType.TEXT, strikeLabel);
+                    } catch (Exception e) {
+                        contentChanged(editor, blockIds);
+                    }
+                  }
+                }
+              }, 1000);
+            }
+          }
+        }
       update(activeBlock, UpdateCause.EDIT);
+      }
+  }
+
+  public static String applyStrikethrough(String text) {
+    StringBuilder strikethroughText = new StringBuilder();
+    for (char c : text.toCharArray()) {
+      strikethroughText.append(c).append('\u0336');  // Append each char followed by the combining tilde
     }
+    return strikethroughText.toString();
   }
 
   @Override
@@ -457,12 +533,6 @@ public class SmartGuideView extends LinearLayout implements IEditorListener, IRe
     }
 
     update(newSelectionBlock, UpdateCause.SELECTION);
-
-    if (selectedBlock != null)
-    {
-      selectedBlock.close();
-    }
-    selectedBlock = newSelectionBlock;
   }
 
   @Override

@@ -23,7 +23,7 @@ public enum ContextualActions {
      * Convert.
      * @see Editor#getSupportedTargetConversionStates(ContentSelection)
      */
-    CONVERT,
+    //CONVERT,
     /**
      * Copy block or selection
      */

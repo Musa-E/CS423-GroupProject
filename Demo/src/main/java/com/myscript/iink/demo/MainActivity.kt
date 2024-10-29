@@ -6,6 +6,7 @@ package com.myscript.iink.demo
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.graphics.PointF
 import android.net.Uri
 import android.os.Bundle
@@ -106,7 +107,7 @@ private val MenuAction.stringRes: Int
         MenuAction.COPY -> R.string.editor_action_copy
         MenuAction.PASTE -> R.string.editor_action_paste
         MenuAction.DELETE -> R.string.editor_action_delete
-        MenuAction.CONVERT -> R.string.editor_action_convert
+       // MenuAction.CONVERT -> R.string.editor_action_convert
         MenuAction.EXPORT -> R.string.editor_action_export
         MenuAction.ADD_BLOCK -> R.string.editor_action_add_block
         MenuAction.FORMAT_TEXT -> R.string.editor_action_format_text
@@ -135,7 +136,8 @@ class MainActivity : AppCompatActivity() {
     //variables for undo/redo gestures
     private var startTime: Long = 0
     private var endTime: Long = 0
-    val timer: Timer = Timer()
+
+    private var partStateArrayList: ArrayList<PartState> = ArrayList()
 
     private lateinit var gestureDetector: GestureDetector
     private val touchPoints = mutableListOf<Point>()
@@ -269,14 +271,6 @@ class MainActivity : AppCompatActivity() {
             true
         }
 
-        //this is a handler that pauses the time before an undo; trust me, it is needed *sobs*
-        listenerStateSaved.observe(this) { isSaved ->
-            if (isSaved) {
-                viewModel.undo();
-                listenerStateSaved.value = false
-            }
-        }
-
         editorData.editor?.let { editor ->
             viewModel.setEditor(editorData)
             setMargins(editor, R.dimen.editor_horizontal_margin, R.dimen.editor_vertical_margin)
@@ -313,6 +307,7 @@ class MainActivity : AppCompatActivity() {
         if (bundle != null) {
             //I created "blank" to mean it is a new entry; it is the title the user put in
             if(bundle.getString("blank") != null){
+                Log.d("BUNDLE", "ITS BLANK")
                 officialTitle = bundle["blank"] as String; //making the title equal what user put
 
                 viewModel.requestNewPart(); //this is the function that gets a new PartState
@@ -330,17 +325,26 @@ class MainActivity : AppCompatActivity() {
                     bundle["partDate"] as String,
                     bundle["partTitle"] as String
                 )
+                Log.d("BUNDLE", bundle["partId"] as String)
+                Log.d("BUNDLE", bundle["isReady"].toString())
+                Log.d("BUNDLE", partType.toString())
+                Log.d("BUNDLE", bundle["partDate"] as String)
+                Log.d("BUNDLE", bundle["partTitle"] as String)
 
                 officialTitle = bundle["partTitle"] as String
 
+               // viewModel.getPart(bundle["partId"].toString())
                 viewModel.getPart(partState) //function that gets the PartState you want to load
+
             }
         }
+        setUpGestureTemplates()
     }
 
     //here is our own custom touch event
     override fun onTouchEvent(event: MotionEvent?): Boolean {
-        if(isPenActivated && canGesture) {
+        if(canGesture) {
+            CurrentBlockId.onError = false;
             event?.let {
                 when (it.action) {
                     // this means when the user presses on the screen
@@ -348,7 +352,6 @@ class MainActivity : AppCompatActivity() {
                         // touchPoints.clear()
                         touchPoints.add(Point(it.x, it.y, strokeNum))
                         startTime = System.currentTimeMillis()
-                        Log.d("TouchEvent", "ACTION_DOWN at (${it.x}, ${it.y})")
                     }
                     // this means when their finger is moving, as you can imagine
                     MotionEvent.ACTION_MOVE -> {
@@ -356,11 +359,9 @@ class MainActivity : AppCompatActivity() {
                         touchPoints.add(
                             Point(it.x, it.y, strokeNum)
                         ) //adding points to an array to look at later
-                        Log.d("TouchEvent", "ACTION_MOVE at (${it.x}, ${it.y})")
                     }
                     // and then is when the user lifts their finger
                     MotionEvent.ACTION_UP -> {
-                        Log.d("TouchEvent", "ACTION_UP at (${it.x}, ${it.y})")
                         endTime = System.currentTimeMillis()
                         val duration = (endTime - startTime) / 1000.0
                         Log.d("Time", duration.toString())
@@ -377,75 +378,33 @@ class MainActivity : AppCompatActivity() {
 
                         val result = classify(inputGesture, gestureTemplates)
 
-                        // if an error happened
-                        if (result.score < 0) {
+                        if(result.score < 0){
                             Log.d("GESTURE", result.name)
-                        } else {
+                        } else{
 
-                            // check underline
-                            if (result.name == "underline" && result.score >= 0.9) {
-                                Log.d("GESTURE", "gesture is underline (${result.score})")
-                                // convert text
-                                viewModel.convertContent()
-                                if (isPenActivated) {
-                                    Handler(Looper.getMainLooper()).postDelayed({
-                                        listenerStateSaved.value = true
-                                    }, 200)
-                                }
-                            } else {
-                                Log.d("GESTURE", "gesture is not underline")
-                            }
+                            if ((result.name == "underline" || result.name == "pureCircle" || result.name == "oval") && result.score >= 0.9) {
+                                Log.d("GESTURE", "some sort of conversation was recognized")
+                                val sharedPreferences =
+                                    getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+                                val editor = sharedPreferences.edit()
+                                editor.putString("universal_value", "New Value")
+                                editor.apply() // or editor.commit()
+                                Handler(Looper.getMainLooper()).postDelayed({
+                                    viewModel.undo()
+                                    viewModel.convertContent()
+                                }, 500)
 
-                            // check flippedCShape
-                            if (result.name == "flippedCShape" && result.score >= 0.85) {
-                                Log.d("GESTURE", "gesture is flippedCShape (${result.score})")
-                                // undo
+                            } else if (result.name == "flippedCShape" && result.score >= 0.85) {
+                                Log.d("GESTURE", "undo was recognized")
                                 onUndoGestureDetected()
-                            } else {
-                                Log.d("GESTURE", "gesture is not flippedCShape")
-                            }
-
-                            // check CShape
-                            if (result.name == "CShape" && result.score >= 0.85) {
-                                Log.d("GESTURE", "gesture is CShape (${result.score})")
-                                // redo
+                            } else if (result.name == "CShape" && result.score >= 0.85) {
+                                Log.d("GESTURE", "redo was recognized")
                                 onRedoGestureDetected()
-                            } else {
-                                Log.d("GESTURE", "gesture is not CShape")
-                            }
-
-                            // check checkmark
-                            if (result.name == "checkmark" && result.score >= 0.88) {
+                            } else if (result.name == "checkmark" && result.score >= 0.88) {
                                 Log.d("GESTURE", "gesture is checkmark (${result.score})")
                                 // do whatever checkmark does
-                            } else {
-                                Log.d("GESTURE", "gesture is not checkmark")
                             }
-
-                            // check pureCircle
-                            if (result.name == "pureCircle" && result.score >= 0.88) {
-                                Log.d("GESTURE", "gesture is pureCircle (${result.score})")
-                                // do nothing
-                            } else {
-                                Log.d("GESTURE", "gesture is not pureCircle")
-                            }
-
-                            // check oval
-                            if (result.name == "oval" && result.score >= 0.9) {
-                                Log.d("GESTURE", "gesture is oval (${result.score})")
-                                // convert text
-                                viewModel.convertContent()
-                                if (isPenActivated) {
-                                    Handler(Looper.getMainLooper()).postDelayed({
-                                        listenerStateSaved.value = true
-                                    }, 200)
-                                }
-                            } else {
-                                Log.d("GESTURE", "gesture is not oval")
-                            }
-
-                        } // end else
-
+                        }
                         // resets things after gesture has been recognized
                         touchPoints.clear();
                         strokeNum = 0;
@@ -466,6 +425,15 @@ class MainActivity : AppCompatActivity() {
         val underline = Gesture(underlinePoints, "underline")
         gestureTemplates.add(underline)
 
+        //underlinetwo
+        val underlinePoints2 = listOf(Point(-0.526022F, 0.09176853F, 0), Point(-0.51204747F, 0.0614896F, 0), Point(-0.48397118F, 0.047224864F, 0), Point(-0.45206022F, 0.037627544F, 0), Point(-0.41924703F, 0.031678174F, 0), Point(-0.38643384F, 0.025728801F, 0), Point(-0.35362065F, 0.019779427F, 0), Point(-0.3204012F, 0.01834774F, 0), Point(-0.28705302F, 0.01834774F, 0), Point(-0.25370485F, 0.01834774F, 0), Point(-0.22035667F, 0.01834774F, 0), Point(-0.1870085F, 0.01834774F, 0), Point(-0.15366033F, 0.01834774F, 0), Point(-0.120457254F, 0.017074827F, 0), Point(-0.08796461F, 0.0095695695F, 0), Point(-0.055471964F, 0.0020643133F, 0), Point(-0.02219391F, 0.0014491305F, 0), Point(0.011154264F, 0.0014491305F, 0), Point(0.044329256F, -1.1608016E-4F, 0), Point(0.07687074F, -0.007406687F, 0), Point(0.10941222F, -0.014697294F, 0), Point(0.1419537F, -0.0219879F, 0), Point(0.17449518F, -0.029278506F, 0), Point(0.20719263F, -0.035159484F, 0), Point(0.2405408F, -0.035159484F, 0), Point(0.273889F, -0.035159484F, 0), Point(0.30723715F, -0.035159484F, 0), Point(0.34058535F, -0.035159484F, 0), Point(0.37393352F, -0.035159484F, 0), Point(0.4072817F, -0.035159484F, 0), Point(0.44062987F, -0.035159484F, 0), Point(0.47397798F, -0.035159484F, 0),)
+        val underline2 = Gesture(underlinePoints2, "underline")
+        gestureTemplates.add(underline2)
+
+        //underlinethree
+        val underlinePoints3 = listOf(Point(-0.5770349F, 0.04371051F, 0), Point(-0.5501463F, 0.02521147F, 0), Point(-0.5220856F, 0.010484086F, 0), Point(-0.48944807F, 0.010484086F, 0), Point(-0.45681047F, 0.010484086F, 0), Point(-0.42464033F, 0.0055766003F, 0), Point(-0.39258957F, -5.846403E-4F, 0), Point(-0.36033636F, -0.004619906F, 0), Point(-0.32769883F, -0.0046199067F, 0), Point(-0.29506126F, -0.004619907F, 0), Point(-0.26242366F, -0.0046199067F, 0), Point(-0.2297861F, -0.0046199067F, 0), Point(-0.19714853F, -0.0046199067F, 0), Point(-0.16451098F, -0.0046199067F, 0), Point(-0.13187341F, -0.0046199067F, 0), Point(-0.099235855F, -0.0046199067F, 0), Point(-0.06659829F, -0.0046199067F, 0), Point(-0.033960722F, -0.0046199067F, 0), Point(-0.0013231561F, -0.0046199067F, 0), Point(0.031314407F, -0.0046199067F, 0), Point(0.06395198F, -0.0046199067F, 0), Point(0.096589535F, -0.0046199067F, 0), Point(0.12922709F, -0.0046199067F, 0), Point(0.16186467F, -0.0046199067F, 0), Point(0.19450223F, -0.0046199067F, 0), Point(0.2271398F, -0.0046199067F, 0), Point(0.25977734F, -0.0046199067F, 0), Point(0.2924149F, -0.0046199067F, 0), Point(0.32505247F, -0.0046199067F, 0), Point(0.35769004F, -0.0046199067F, 0), Point(0.39032763F, -0.0046199067F, 0), Point(0.4229651F, -0.0046199067F, 0),)
+        val underline3 = Gesture(underlinePoints3, "underline")
+        gestureTemplates.add(underline3)
 
         // CShape
         val cShapePoints = listOf( Point(0.46F, -0.42F, 0), Point(0.42F, -0.45F, 0), Point(0.35F, -0.47F, 0), Point(0.28F, -0.48F, 0), Point(0.20F, -0.48F, 0), Point(0.13F, -0.48F, 0), Point(0.056F, -0.48F, 0), Point(-0.018F, -0.48F, 0), Point(-0.055F, -0.449F, 0), Point(-0.09F, -0.40F, 0), Point(-0.108F, -0.35F, 0), Point(-0.124F, -0.28F, 0), Point(-0.15F, -0.23F, 0), Point(-0.185F, -0.18F, 0), Point(-0.21F, -0.12F, 0), Point(-0.219F, -0.046F, 0), Point(-0.242F, 0.006F, 0), Point(-0.24F, 0.081F, 0), Point(-0.24F, 0.15F, 0), Point(-0.21F, 0.218F, 0), Point(-0.185F, 0.27F, 0), Point(-0.17F, 0.33F, 0), Point(-0.14F, 0.378F, 0), Point(-0.105F, 0.424F, 0), Point(-0.061F, 0.45F, 0), Point(0.014F, 0.455F, 0), Point(0.067F, 0.478F, 0), Point(0.131F, 0.49F, 0), Point(0.207F, 0.49F, 0), Point(0.259F, 0.512F, 0), Point(0.328F, 0.497F, 0), Point(0.40F, 0.49F, 0) )
@@ -503,7 +471,6 @@ class MainActivity : AppCompatActivity() {
         val flippedCShape4 = Gesture(flippedCShapePoints4, "flippedCShape")
         gestureTemplates.add(flippedCShape4)
 
-
         // checkmark
         val checkmarkPoints = listOf( Point(-0.437F, 0.075F, 0), Point(-0.419F, 0.12F, 0), Point(-0.39F, 0.157F, 0), Point(-0.38F, 0.218F, 0), Point(-0.35F, 0.25F, 0), Point(-0.327F, 0.296F, 0), Point(-0.303F, 0.337F, 0), Point(-0.25F, 0.367F, 0), Point(-0.216F, 0.399F, 0), Point(-0.182F, 0.430F, 0), Point(-0.167F, 0.379F, 0), Point(-0.128F, 0.332F, 0), Point(-0.114F, 0.27F, 0), Point(-0.0698F, 0.231F, 0), Point(-0.04F, 0.174F, 0), Point(-0.025F, 0.125F, 0), Point(0.018F, 0.078F, 0), Point(0.034F, 0.020F, 0), Point(0.061F, -0.036F, 0), Point(0.097F, -0.089F, 0), Point(0.126F, -0.132F, 0), Point(0.149F, -0.173F, 0), Point(0.189F, -0.204F, 0), Point(0.221F, -0.255F, 0), Point(0.269F, -0.286F, 0), Point(0.311F, -0.321F, 0), Point(0.333F, -0.366F, 0), Point(0.38F, -0.406F, 0), Point(0.403F, -0.464F, 0), Point(0.449F, -0.482F, 0), Point(0.465F, -0.531F, 0), Point(0.491F, -0.57F, 0) )
         val checkmark = Gesture(checkmarkPoints, "checkmark")
@@ -516,34 +483,40 @@ class MainActivity : AppCompatActivity() {
         val pureCircle = Gesture(pureCirclePoints, "pureCircle")
         gestureTemplates.add(pureCircle)
 
+        //another circle
+        val circle = listOf(Point(0.044942796F, -0.21606079F, 0), Point(-0.051692255F, -0.24786487F, 0), Point(-0.15403703F, -0.2545929F, 0), Point(-0.25010237F, -0.22446823F, 0), Point(-0.327656F, -0.15766697F, 0), Point(-0.37062344F, -0.06767777F, 0), Point(-0.37275344F, 0.034866817F, 0), Point(-0.347976F, 0.13388143F, 0), Point(-0.2937287F, 0.22072187F, 0), Point(-0.21787229F, 0.28965044F, 0), Point(-0.13211091F, 0.34591746F, 0), Point(-0.039127573F, 0.3891608F, 0), Point(0.059584588F, 0.41718835F, 0), Point(0.16181156F, 0.4243062F, 0), Point(0.26378942F, 0.41575113F, 0), Point(0.36073345F, 0.3820266F, 0), Point(0.45200515F, 0.33531114F, 0), Point(0.52432954F, 0.26315108F, 0), Point(0.5537817F, 0.16630082F, 0), Point(0.5488264F, 0.064231746F, 0), Point(0.5039629F, -0.027449803F, 0), Point(0.4431855F, -0.110158086F, 0), Point(0.37308457F, -0.18513231F, 0), Point(0.29454482F, -0.2512837F, 0), Point(0.20867337F, -0.30689883F, 0), Point(0.11033112F, -0.33539137F, 0), Point(0.007881339F, -0.3422763F, 0), Point(-0.09389658F, -0.33077335F, 0), Point(-0.1932391F, -0.3047585F, 0), Point(-0.2907721F, -0.27250552F, 0), Point(-0.38601267F, -0.23424092F, 0), Point(-0.4449654F, -0.15551046F, 0),)
+        val circlePure = Gesture(circle, "pureCircle")
+        gestureTemplates.add(circlePure)
 
-        // oval
-        val ovalPoints = listOf( Point(-0.0166F, -0.286F, 0), Point(-0.111F, -0.286F, 0), Point(-0.200F, -0.271F, 0), Point(-0.283F, -0.250F, 0), Point(-0.361F, -0.218F, 0), Point(-0.427F, -0.175F, 0), Point(-0.470F, -0.119F, 0), Point(-0.494F, -0.048F, 0), Point(-0.494F, 0.046F, 0), Point(-0.452F, 0.109F, 0), Point(-0.405F, 0.162F, 0), Point(-0.339F, 0.200F, 0), Point(-0.264F, 0.234F, 0), Point(-0.187F, 0.258F, 0), Point(-0.101F, 0.271F, 0), Point(-0.006F, 0.271F, 0), Point(0.0822F, 0.271F, 0), Point(0.166F, 0.289F, 0), Point(0.258F, 0.283F, 0), Point(0.340F, 0.260F, 0), Point(0.413F, 0.225F, 0), Point(0.467F, 0.166F, 0), Point(0.498F, 0.091F, 0), Point(0.492F, 0.008F, 0), Point(0.462F, -0.063F, 0), Point(0.424F, -0.130F, 0), Point(0.368F, -0.187F, 0), Point(0.308F, -0.237F, 0), Point(0.236F, -0.268F, 0), Point(0.148F, -0.275F, 0), Point(0.059F, -0.280F, 0), Point(-0.029F, -0.286F, 0))
-        val oval = Gesture(ovalPoints, "oval")
-        gestureTemplates.add(oval)
-
+        //another circles
+        val circles = listOf(Point(-0.33268917F, 0.0071404874F, 0), Point(-0.30328888F, 0.100730404F, 0), Point(-0.24752969F, 0.18338999F, 0), Point(-0.17736441F, 0.25363362F, 0), Point(-0.09322922F, 0.307103F, 0), Point(-0.0025462452F, 0.3486008F, 0), Point(0.09390674F, 0.3726743F, 0), Point(0.19350547F, 0.3769079F, 0), Point(0.29091108F, 0.36158144F, 0), Point(0.37343854F, 0.30614817F, 0), Point(0.44288686F, 0.23472135F, 0), Point(0.49525958F, 0.14998208F, 0), Point(0.53161466F, 0.0574063F, 0), Point(0.54278415F, -0.041428357F, 0), Point(0.53491396F, -0.14021501F, 0), Point(0.4971187F, -0.2324753F, 0), Point(0.45065048F, -0.320595F, 0), Point(0.38664863F, -0.39677754F, 0), Point(0.30292666F, -0.4502465F, 0), Point(0.2089316F, -0.48261756F, 0), Point(0.1097568F, -0.49053392F, 0), Point(0.01179029F, -0.47878796F, 0), Point(-0.07817734F, -0.43626428F, 0), Point(-0.1546516F, -0.3728222F, 0), Point(-0.22115237F, -0.29850197F, 0), Point(-0.280329F, -0.21821615F, 0), Point(-0.3350837F, -0.13491054F, 0), Point(-0.38223612F, -0.046995796F, 0), Point(-0.41959643F, 0.045511086F, 0), Point(-0.44463867F, 0.14186944F, 0), Point(-0.4550447F, 0.24097157F, 0), Point(-0.41408452F, 0.3280707F, 0),)
+        val circlePures = Gesture(circles, "pureCircle")
+        gestureTemplates.add(circlePures)
 
         Log.d("GESTURE", "set up templates")
         for (temp in gestureTemplates) {
             Log.d("GESTURE", "name: ${temp.Name}")
         }
 
-    } // end setUpGestureTemplates()
-
+    }
 
     //what to do when it is detected
     private fun onUndoGestureDetected() {
-        if(isPenActivated){
             Handler(Looper.getMainLooper()).postDelayed({
-                listenerStateSaved.value = true
-            }, 400)
-        }
-        viewModel.undo()
+                //listenerStateSaved.value = true
+                viewModel.undo();
+                viewModel.undo();
+            }, 600)
+        //viewModel.undo()
         Toast.makeText(this, "Undo action detected!", Toast.LENGTH_SHORT).show()
     }
 
     private fun onRedoGestureDetected() {
         viewModel.redo()
+        Handler(Looper.getMainLooper()).postDelayed({
+            //listenerStateSaved.value = true
+            viewModel.undo();
+        }, 600)
         Toast.makeText(this, "Redo action detected!", Toast.LENGTH_SHORT).show()
     }
 
@@ -704,27 +677,28 @@ class MainActivity : AppCompatActivity() {
     private fun onError(error: Error?) {
         if (error != null) {
             Log.e("MainActivity", error.toString(), error.exception)
+            CurrentBlockId.onError = true;
         }
         when (error?.severity) {
             null -> Unit
             Error.Severity.ERROR,
             Error.Severity.CRITICAL ->
                 AlertDialog.Builder(this)
-                        .setTitle(error.title)
-                        .setMessage(error.message)
-                        .setPositiveButton(R.string.dialog_ok, null)
-                        .show()
+                    .setTitle(error.title)
+                    .setMessage(error.message)
+                    .setPositiveButton(R.string.dialog_ok, null)
+                    .show()
             else ->
                 // Note: `EditorError` (if any) could be used to specialize the notification (adjust string, localize, notification nature, ...)
                 Snackbar.make(binding.root, getString(R.string.app_error_notification, error.severity.name, error.message), Snackbar.LENGTH_LONG)
-                        .setAnchorView(binding.editorToolbarSheet.toolbarSettingsBottomSheet)
-                        .addCallback(object : Snackbar.Callback() {
-                            override fun onDismissed(snackbar: Snackbar?, event: Int) {
-                                snackbar?.removeCallback(this)
-                                viewModel.dismissErrorMessage(error)
-                            }
-                        })
-                        .show()
+                    .setAnchorView(binding.editorToolbarSheet.toolbarSettingsBottomSheet)
+                    .addCallback(object : Snackbar.Callback() {
+                        override fun onDismissed(snackbar: Snackbar?, event: Int) {
+                            snackbar?.removeCallback(this)
+                            viewModel.dismissErrorMessage(error)
+                        }
+                    })
+                    .show()
         }
     }
 
@@ -779,8 +753,8 @@ class MainActivity : AppCompatActivity() {
 //            it.findItem(R.id.nav_menu_new_part).isEnabled = viewModel.requestPartTypes().isNotEmpty()
 //            it.findItem(R.id.nav_menu_previous_part).isEnabled = navigationState.hasPrevious
 //            it.findItem(R.id.nav_menu_next_part).isEnabled = navigationState.hasNext
-            it.findItem(R.id.editor_menu_convert).isEnabled = partState.isReady
-            it.findItem(R.id.editor_menu_prediction).isEnabled = true
+//            it.findItem(R.id.editor_menu_convert).isEnabled = partState.isReady
+//            it.findItem(R.id.editor_menu_prediction).isEnabled = true
             it.findItem(R.id.editor_menu_export).isEnabled = partState.isReady
             it.findItem(R.id.editor_menu_save).isEnabled = partState.isReady
             it.findItem(R.id.editor_menu_import_file).isEnabled = true
@@ -812,6 +786,8 @@ class MainActivity : AppCompatActivity() {
                     partState.dateCreated = formattedDate
                 }
 
+                viewModel.save()
+
                 intent.putExtra("partId", partState.partId)
                 intent.putExtra("isReady", partState.isReady)
                 intent.putExtra("partType", partState.partType.toString())
@@ -822,8 +798,8 @@ class MainActivity : AppCompatActivity() {
                 startActivity(intent)
                 finish()
             }
-            R.id.editor_menu_convert -> viewModel.convertContent()
-            R.id.editor_menu_prediction -> showPredictionSettingsDialog()
+//            R.id.editor_menu_convert -> viewModel.convertContent()
+//            R.id.editor_menu_prediction -> showPredictionSettingsDialog()
             R.id.editor_menu_export -> onExport(viewModel.getExportMimeTypes())
             R.id.editor_menu_save -> (partState as? PartState.Loaded)?.let { viewModel.save() }
             R.id.editor_menu_import_file -> importIInkFileRequest.launch("*/*")
@@ -839,9 +815,9 @@ class MainActivity : AppCompatActivity() {
             if (file != null) {
                 val uri = FileProvider.getUriForFile(this, "${BuildConfig.APPLICATION_ID}.export", file)
                 ShareCompat.IntentBuilder(this)
-                        .setType("application/octet-stream")
-                        .setStream(uri)
-                        .startChooser()
+                    .setType("application/octet-stream")
+                    .setStream(uri)
+                    .startChooser()
             }
         }
     }
@@ -890,6 +866,7 @@ class MainActivity : AppCompatActivity() {
     //this sets the title and date on the action bar
     private fun onPartStateUpdate(state: PartState) {
         partState = state
+        partStateArrayList?.add(state)
         supportActionBar?.let {
             var (title, subtitle) = when (state.partId) {
                 null -> getString(R.string.app_name) to null
