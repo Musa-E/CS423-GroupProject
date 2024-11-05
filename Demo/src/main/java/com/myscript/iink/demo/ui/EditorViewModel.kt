@@ -390,15 +390,15 @@ class EditorViewModel(
         return ContextualActionState.Action(x, y, actions)
     }
 
-    fun requestSmartGuideActions(x: Float, y: Float, contentBlockId: String): ContextualActionState {
-        val actions = partEditor.getMenuActions(contentBlockId)
-        return ContextualActionState.Action(x, y, actions)
-    }
-
-    fun requestContentBlockActions(x: Float, y: Float): ContextualActionState {
-        val actions = partEditor.getMenuActions(x, y)
-        return ContextualActionState.Action(x, y, actions)
-    }
+//    fun requestSmartGuideActions(x: Float, y: Float, contentBlockId: String): ContextualActionState {
+//        val actions = partEditor.getMenuActions(contentBlockId)
+//        return ContextualActionState.Action(x, y, actions)
+//    }
+//
+//    fun requestContentBlockActions(x: Float, y: Float): ContextualActionState {
+//        val actions = partEditor.getMenuActions(x, y)
+//        return ContextualActionState.Action(x, y, actions)
+//    }
 
     fun getExportMimeTypes(): List<MimeType> {
         return partEditor.getExportMimeTypes()

@@ -103,20 +103,23 @@ suspend fun Context.processUriFile(uri: Uri, file: File, logic: (File) -> Unit) 
 //menu option for the drop-down that, again, we probably are not going to use
 @get:StringRes
 private val MenuAction.stringRes: Int
-    get() = when (this) {
-        MenuAction.COPY -> R.string.editor_action_copy
-        MenuAction.PASTE -> R.string.editor_action_paste
-        MenuAction.DELETE -> R.string.editor_action_delete
-       // MenuAction.CONVERT -> R.string.editor_action_convert
-        MenuAction.EXPORT -> R.string.editor_action_export
-        MenuAction.ADD_BLOCK -> R.string.editor_action_add_block
-        MenuAction.FORMAT_TEXT -> R.string.editor_action_format_text
-        MenuAction.FORMAT_TEXT_H1 -> R.string.editor_action_format_text_as_heading1
-        MenuAction.FORMAT_TEXT_H2 -> R.string.editor_action_format_text_as_heading2
-        MenuAction.FORMAT_TEXT_PARAGRAPH -> R.string.editor_action_format_text_as_paragraph
-        MenuAction.FORMAT_TEXT_LIST_BULLET -> R.string.editor_action_format_text_as_list_bullet
-        MenuAction.FORMAT_TEXT_LIST_CHECKBOX -> R.string.editor_action_format_text_as_list_checkbox
-        MenuAction.FORMAT_TEXT_LIST_NUMBERED -> R.string.editor_action_format_text_as_list_numbered
+    get() {
+        return when (this) {
+    //        MenuAction.COPY -> R.string.editor_action_copy
+    //        MenuAction.PASTE -> R.string.editor_action_paste
+    //        MenuAction.DELETE -> R.string.editor_action_delete
+    //       // MenuAction.CONVERT -> R.string.editor_action_convert
+    //        MenuAction.EXPORT -> R.string.editor_action_export
+    //        MenuAction.ADD_BLOCK -> R.string.editor_action_add_block
+    //        MenuAction.FORMAT_TEXT -> R.string.editor_action_format_text
+    //        MenuAction.FORMAT_TEXT_H1 -> R.string.editor_action_format_text_as_heading1
+    //        MenuAction.FORMAT_TEXT_H2 -> R.string.editor_action_format_text_as_heading2
+    //        MenuAction.FORMAT_TEXT_PARAGRAPH -> R.string.editor_action_format_text_as_paragraph
+    //        MenuAction.FORMAT_TEXT_LIST_BULLET -> R.string.editor_action_format_text_as_list_bullet
+    //        MenuAction.FORMAT_TEXT_LIST_CHECKBOX -> R.string.editor_action_format_text_as_list_checkbox
+    //        MenuAction.FORMAT_TEXT_LIST_NUMBERED -> R.string.editor_action_format_text_as_list_numbered
+            else -> {return 0}
+        }
     }
 
 // Declares all the types of pens and their names for display
@@ -189,10 +192,10 @@ class MainActivity : AppCompatActivity() {
         const val DefaultMinimumPredictionDurationMs: Int = 16 // 1 frame @60Hz, 2 frames @120Hz
     }
 
-    private val onSmartGuideMenuAction = SmartGuideView.MenuListener { x, y, blockId ->
-        val actionState = viewModel.requestSmartGuideActions(x, y, blockId)
-        showContextualActionDialog(actionState, blockId)
-    }
+//    private val onSmartGuideMenuAction = SmartGuideView.MenuListener { x, y, blockId ->
+//        val actionState = viewModel.requestSmartGuideActions(x, y, blockId)
+//        showContextualActionDialog(actionState, blockId)
+//    }
 
     private val onBottomSheetStateChanged = object : BottomSheetBehavior.BottomSheetCallback() {
         @SuppressLint("SwitchIntDef")
@@ -279,7 +282,6 @@ class MainActivity : AppCompatActivity() {
             }
             smartGuideView?.setEditor(editor)
         }
-        smartGuideView?.setMenuListener(onSmartGuideMenuAction)
         smartGuideView?.setTypeface(IInkApplication.DemoModule.defaultTypeface)
 
         with(binding.editorToolbarSheet) {
@@ -755,10 +757,10 @@ class MainActivity : AppCompatActivity() {
 //            it.findItem(R.id.nav_menu_next_part).isEnabled = navigationState.hasNext
 //            it.findItem(R.id.editor_menu_convert).isEnabled = partState.isReady
 //            it.findItem(R.id.editor_menu_prediction).isEnabled = true
-            it.findItem(R.id.editor_menu_export).isEnabled = partState.isReady
-            it.findItem(R.id.editor_menu_save).isEnabled = partState.isReady
-            it.findItem(R.id.editor_menu_import_file).isEnabled = true
-            it.findItem(R.id.editor_menu_share_file).isEnabled = partState.isReady
+//            it.findItem(R.id.editor_menu_export).isEnabled = partState.isReady
+//            it.findItem(R.id.editor_menu_save).isEnabled = partState.isReady
+//            it.findItem(R.id.editor_menu_import_file).isEnabled = true
+//            it.findItem(R.id.editor_menu_share_file).isEnabled = partState.isReady
         }
         return super.onPrepareOptionsMenu(menu)
     }
@@ -800,10 +802,10 @@ class MainActivity : AppCompatActivity() {
             }
 //            R.id.editor_menu_convert -> viewModel.convertContent()
 //            R.id.editor_menu_prediction -> showPredictionSettingsDialog()
-            R.id.editor_menu_export -> onExport(viewModel.getExportMimeTypes())
-            R.id.editor_menu_save -> (partState as? PartState.Loaded)?.let { viewModel.save() }
-            R.id.editor_menu_import_file -> importIInkFileRequest.launch("*/*")
-            R.id.editor_menu_share_file -> (partState as? PartState.Loaded)?.let { onShareFile(it.partId) }
+//            R.id.editor_menu_export -> onExport(viewModel.getExportMimeTypes())
+//            R.id.editor_menu_save -> (partState as? PartState.Loaded)?.let { viewModel.save() }
+//            R.id.editor_menu_import_file -> importIInkFileRequest.launch("*/*")
+//            R.id.editor_menu_share_file -> (partState as? PartState.Loaded)?.let { onShareFile(it.partId) }
             else -> return super.onOptionsItemSelected(item)
         }
         return true

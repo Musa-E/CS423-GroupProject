@@ -20,21 +20,21 @@ into this Android SDK and then edited by our team -->
 <!--        android:id="@+id/editor_menu_prediction"-->
 <!--        app:showAsAction="never"-->
 <!--        android:title="@string/editor_menu_prediction"/>-->
-    <item
-        android:id="@+id/editor_menu_export"
-        app:showAsAction="never"
-        android:title="@string/editor_menu_export"/>
-    <item
-        android:id="@+id/editor_menu_save"
-        app:showAsAction="never"
-        android:title="@string/editor_menu_save"/>
-    <item
-        android:id="@+id/editor_menu_import_file"
-        app:showAsAction="never"
-        android:title="@string/editor_menu_import_file"/>
-    <item
-        android:id="@+id/editor_menu_share_file"
-        app:showAsAction="never"
-        android:title="@string/editor_menu_share_file"/>
+<!--    <item-->
+<!--        android:id="@+id/editor_menu_export"-->
+<!--        app:showAsAction="never"-->
+<!--        android:title="@string/editor_menu_export"/>-->
+<!--    <item-->
+<!--        android:id="@+id/editor_menu_save"-->
+<!--        app:showAsAction="never"-->
+<!--        android:title="@string/editor_menu_save"/>-->
+<!--    <item-->
+<!--        android:id="@+id/editor_menu_import_file"-->
+<!--        app:showAsAction="never"-->
+<!--        android:title="@string/editor_menu_import_file"/>-->
+<!--    <item-->
+<!--        android:id="@+id/editor_menu_share_file"-->
+<!--        app:showAsAction="never"-->
+<!--        android:title="@string/editor_menu_share_file"/>-->
 
 </menu>
