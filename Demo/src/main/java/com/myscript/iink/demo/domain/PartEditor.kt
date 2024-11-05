@@ -490,7 +490,7 @@ class PartEditor(
         return editor.supportedAddBlockTypes.mapNotNull(BlockType::fromString)
     }
 
-    fun getMenuActions(x: Float, y: Float): List<MenuAction> {
+    fun getMenuActions(x: Float, y: Float): List<Unit> {
         val editor = editor ?: return emptyList()
 
         // priority chain to choose the right subject (ContentSelection > ContentBlock > root ContentBlock)
@@ -502,7 +502,7 @@ class PartEditor(
         return actions.mapNotNull(ContextualActions::toMenuAction).toList()
     }
 
-    fun getMenuActions(contentBlockId: String): List<MenuAction> {
+    fun getMenuActions(contentBlockId: String): List<Unit> {
         val editor = editor ?: return emptyList()
 
         return editor.getBlockById(contentBlockId)?.use { block ->
@@ -548,42 +548,43 @@ class PartEditor(
 
         try {
             when (action) {
-                MenuAction.COPY -> editor.copy(content)
-                MenuAction.PASTE -> editor.paste(x, y)
-                MenuAction.DELETE -> if (content != null) editor.erase(content)
-                //MenuAction.CONVERT -> convertContent(content)
-                MenuAction.EXPORT -> {}
-                MenuAction.ADD_BLOCK -> {}
-                MenuAction.FORMAT_TEXT -> {}
-                MenuAction.FORMAT_TEXT_H1 -> if (content != null) editor.setTextFormat(
-                    content,
-                    TextFormat.H1
-                )
-
-                MenuAction.FORMAT_TEXT_H2 -> if (content != null) editor.setTextFormat(
-                    content,
-                    TextFormat.H2
-                )
-
-                MenuAction.FORMAT_TEXT_PARAGRAPH -> if (content != null) editor.setTextFormat(
-                    content,
-                    TextFormat.PARAGRAPH
-                )
-
-                MenuAction.FORMAT_TEXT_LIST_BULLET -> if (content != null) editor.setTextFormat(
-                    content,
-                    TextFormat.LIST_BULLET
-                )
-
-                MenuAction.FORMAT_TEXT_LIST_CHECKBOX -> if (content != null) editor.setTextFormat(
-                    content,
-                    TextFormat.LIST_CHECKBOX
-                )
-
-                MenuAction.FORMAT_TEXT_LIST_NUMBERED -> if (content != null) editor.setTextFormat(
-                    content,
-                    TextFormat.LIST_NUMBERED
-                )
+//                MenuAction.COPY -> editor.copy(content)
+//                MenuAction.PASTE -> editor.paste(x, y)
+//                MenuAction.DELETE -> if (content != null) editor.erase(content)
+//                //MenuAction.CONVERT -> convertContent(content)
+//                MenuAction.EXPORT -> {}
+//                MenuAction.ADD_BLOCK -> {}
+//                MenuAction.FORMAT_TEXT -> {}
+//                MenuAction.FORMAT_TEXT_H1 -> if (content != null) editor.setTextFormat(
+//                    content,
+//                    TextFormat.H1
+//                )
+//
+//                MenuAction.FORMAT_TEXT_H2 -> if (content != null) editor.setTextFormat(
+//                    content,
+//                    TextFormat.H2
+//                )
+//
+//                MenuAction.FORMAT_TEXT_PARAGRAPH -> if (content != null) editor.setTextFormat(
+//                    content,
+//                    TextFormat.PARAGRAPH
+//                )
+//
+//                MenuAction.FORMAT_TEXT_LIST_BULLET -> if (content != null) editor.setTextFormat(
+//                    content,
+//                    TextFormat.LIST_BULLET
+//                )
+//
+//                MenuAction.FORMAT_TEXT_LIST_CHECKBOX -> if (content != null) editor.setTextFormat(
+//                    content,
+//                    TextFormat.LIST_CHECKBOX
+//                )
+//
+//                MenuAction.FORMAT_TEXT_LIST_NUMBERED -> if (content != null) editor.setTextFormat(
+//                    content,
+//                    TextFormat.LIST_NUMBERED
+//                )
+                else -> {}
             }
         } catch (e: Exception) {
             listener?.actionError(e, (content as? ContentBlock)?.id)
@@ -783,14 +784,17 @@ private fun TextFormat.toMenuAction(): MenuAction = when (this) {
     TextFormat.LIST_NUMBERED -> MenuAction.FORMAT_TEXT_LIST_NUMBERED
 }
 
-private fun ContextualActions.toMenuAction(): MenuAction = when (this) {
-    ContextualActions.COPY -> MenuAction.COPY
-    //ContextualActions.CONVERT -> MenuAction.CONVERT
-    ContextualActions.REMOVE -> MenuAction.DELETE
-    ContextualActions.EXPORT -> MenuAction.EXPORT
-    ContextualActions.ADD_BLOCK -> MenuAction.ADD_BLOCK
-    ContextualActions.PASTE -> MenuAction.PASTE
-    ContextualActions.FORMAT_TEXT -> MenuAction.FORMAT_TEXT
+private fun ContextualActions.toMenuAction() {
+    when (this) {
+//    ContextualActions.COPY -> MenuAction.COPY
+//    //ContextualActions.CONVERT -> MenuAction.CONVERT
+//    ContextualActions.REMOVE -> MenuAction.DELETE
+//    ContextualActions.EXPORT -> MenuAction.EXPORT
+//    ContextualActions.ADD_BLOCK -> MenuAction.ADD_BLOCK
+//    ContextualActions.PASTE -> MenuAction.PASTE
+//    ContextualActions.FORMAT_TEXT -> MenuAction.FORMAT_TEXT
+        else -> {return;}
+    }
 }
 
 private fun ToolType.toPointerTool(): PointerTool = when (this) {

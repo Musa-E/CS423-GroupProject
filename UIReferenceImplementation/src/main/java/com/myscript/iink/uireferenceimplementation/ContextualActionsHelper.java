@@ -39,13 +39,13 @@ public final class ContextualActionsHelper
             boolean displayExport = editor.getSupportedExportMimeTypes(block).length > 0;
             boolean displayFormatText = editor.getSupportedTextFormats(block).size() > 0;
 
-            if (displayAddBlock) actions.add(ContextualActions.ADD_BLOCK);
-            if (displayRemove) actions.add(ContextualActions.REMOVE);
-           // if (displayConvert) actions.add(ContextualActions.CONVERT);
-            if (displayCopy) actions.add(ContextualActions.COPY);
-            if (isRootBlock) actions.add(ContextualActions.PASTE);
-            if (displayExport) actions.add(ContextualActions.EXPORT);
-            if (displayFormatText) actions.add(ContextualActions.FORMAT_TEXT);
+//            if (displayAddBlock) actions.add(ContextualActions.ADD_BLOCK);
+//            if (displayRemove) actions.add(ContextualActions.REMOVE);
+//           // if (displayConvert) actions.add(ContextualActions.CONVERT);
+//            if (displayCopy) actions.add(ContextualActions.COPY);
+//            if (isRootBlock) actions.add(ContextualActions.PASTE);
+//            if (displayExport) actions.add(ContextualActions.EXPORT);
+//            if (displayFormatText) actions.add(ContextualActions.FORMAT_TEXT);
         }
         return actions;
     }
@@ -59,11 +59,11 @@ public final class ContextualActionsHelper
         boolean displayExport = editor.getSupportedExportMimeTypes(selection).length > 0;
         boolean displayFormatText = selection != null && !editor.getSupportedTextFormats(selection).isEmpty();
 
-        actions.add(ContextualActions.REMOVE);
-        //if (displayConvert) actions.add(ContextualActions.CONVERT);
-        actions.add(ContextualActions.COPY);
-        if (displayExport) actions.add(ContextualActions.EXPORT);
-        if (displayFormatText) actions.add(ContextualActions.FORMAT_TEXT);
+//        actions.add(ContextualActions.REMOVE);
+//        //if (displayConvert) actions.add(ContextualActions.CONVERT);
+//        actions.add(ContextualActions.COPY);
+//        if (displayExport) actions.add(ContextualActions.EXPORT);
+//        if (displayFormatText) actions.add(ContextualActions.FORMAT_TEXT);
 
         return actions;
     }
