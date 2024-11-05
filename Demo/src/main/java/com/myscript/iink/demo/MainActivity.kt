@@ -247,7 +247,7 @@ class MainActivity : AppCompatActivity() {
 
         //sets up the entire viewmodel, do not touch
         viewModel.enableActivePen.observe(this) { activePenEnabled ->
-            binding.editorToolbar.switchActivePen.isChecked = !activePenEnabled
+            binding.editorToolbar.switchActivePen.isChecked = true
             isPenActivated = activePenEnabled;
         }
 
