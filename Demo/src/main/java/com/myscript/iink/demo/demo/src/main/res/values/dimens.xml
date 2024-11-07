@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--AI STATEMENT: AI was not used in this. This file was imported from https://github.com/MyScript/interactive-ink-examples-android
+into this Android SDK and then edited by our team -->
+<resources>
+
+    <!-- MUSA CHANGE: I updated the vertical margin to 256 from 64; this has some limited
+    success in increasing the handwriting canvas area.  There are still some issues with it though.
+    -->
+    <dimen name="editor_vertical_margin">256dp</dimen>
+    <dimen name="editor_horizontal_margin">24dp</dimen>
+
+</resources>
