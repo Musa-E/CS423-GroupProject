@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:ns1="http://schemas.android.com/tools">
+    <color name="black">#000000</color>
+    <color name="colorAccent">#009fe3</color>
+    <color name="colorPrimary">#F5F6F7</color>
+    <color name="green">#4CAF50</color>
+    <color name="ic_launcher_background">#FFFFFF</color>
+    <color name="light_green">#7CC34A</color>
+    <color name="white">#FFFFFF</color>
+    <dimen name="editor_horizontal_margin">24dp</dimen>
+    <dimen name="editor_vertical_margin">256dp</dimen>
+    <item name="title" type="id"/>
+    <string name="app_error_add_image_title">Error while inserting image</string>
+    <string name="app_error_invalid_certificate_message">Please check certificate data provided at Engine creation.</string>
+    <string name="app_error_invalid_certificate_title">Invalid certificate</string>
+    <string name="app_error_notification">[%1$s] %2$s</string>
+    <string name="app_error_unsupported_file_type_title">Unsupported file type</string>
+    <string name="app_error_unsupported_iink_file_type_message">%s not supported (only iink content).</string>
+    <string name="app_error_unsupported_image_type_message">%s not supported (only image content).</string>
+    <string name="app_name" translatable="false">To-Do App</string>
+    <string name="dialog_cancel">Cancel</string>
+    <string name="dialog_ok">OK</string>
+    <string name="editor_action_add_block">Add…</string>
+    <string name="editor_action_convert">Convert</string>
+    <string name="editor_action_copy">Copy</string>
+    <string name="editor_action_delete">Delete</string>
+    <string name="editor_action_export">Export…</string>
+    <string name="editor_action_format_text">Format text…</string>
+    <string name="editor_action_format_text_as_heading1">As heading level 1</string>
+    <string name="editor_action_format_text_as_heading2">As heading level 2</string>
+    <string name="editor_action_format_text_as_list_bullet">As bullet list</string>
+    <string name="editor_action_format_text_as_list_checkbox">As check list</string>
+    <string name="editor_action_format_text_as_list_numbered">As numbered list</string>
+    <string name="editor_action_format_text_as_paragraph">As paragraph</string>
+    <string name="editor_action_paste">Paste</string>
+    <string name="editor_clear">Clear content</string>
+    <string name="editor_dialog_color_picker_title">Choose a color</string>
+    <string name="editor_dialog_insert_text_action">Insert</string>
+    <string name="editor_dialog_insert_text_title">Add text block</string>
+    <string name="editor_dialog_prediction_duration">Duration (%d ms)</string>
+    <string name="editor_dialog_prediction_enable">Enable</string>
+    <string name="editor_dialog_prediction_title">Prediction settings</string>
+    <string name="editor_dialog_thickness_choice_title">Tool thickness</string>
+    <string name="editor_enable_active_pen">Active pen</string>
+    <string name="editor_export_failed">Export error</string>
+    <string name="editor_export_type_label">%1$s (%2$s)</string>
+    <string name="editor_menu_convert">Convert</string>
+    <string name="editor_menu_export">Export…</string>
+    <string name="editor_menu_import_file">Import file…</string>
+    <string name="editor_menu_prediction">Prediction…</string>
+    <string name="editor_menu_save">Save</string>
+    <string name="editor_menu_share_file">Share file…</string>
+    <string name="editor_redo">Redo</string>
+    <string name="editor_resetView">Reset view</string>
+    <string name="editor_undo">Undo</string>
+    <string name="editor_zoom_in">Zoom in</string>
+    <string name="editor_zoom_out">Zoom out</string>
+    <string name="gestures_help_button">View the currently recognized gestures</string>
+    <string name="nav_menu_new_part">New part…</string>
+    <string name="nav_menu_next_part">Next part</string>
+    <string name="nav_menu_previous_part">Previous part</string>
+    <string name="nav_new_part_dialog_title">New part type</string>
+    <string name="pen_brush_calligraphic_brush">Calligraphic Brush</string>
+    <string name="pen_brush_felt_pen">Felt Pen</string>
+    <string name="pen_brush_fountain_pen">Fountain Pen</string>
+    <string name="pen_brush_pencil_brush">Pencil Brush</string>
+    <string name="tool_configuration_pen_brush_section_title">Brush</string>
+    <string name="tool_eraser">Eraser</string>
+    <string name="tool_hand">Hand</string>
+    <string name="tool_highlighter">Highlighter</string>
+    <string name="tool_lasso">Lasso</string>
+    <string name="tool_pen">Pen</string>
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:colorPrimary">@color/colorPrimary</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowBackground">@android:color/white</item>
+        <item name="android:colorBackground">@android:color/white</item>
+        <item name="android:statusBarColor">@color/colorPrimary</item>
+        <item name="android:windowLightStatusBar" ns1:targetApi="m">true</item>
+    </style>
+    <style name="SCBSwitch" parent="Theme.AppCompat.Light">
+        <item name="colorControlActivated">@color/white</item>
+
+        <item name="colorSwitchThumbNormal">#673AB7</item>
+
+        <item name="android:colorForeground">#5BDFD8D8</item>
+    </style>
+</resources>
