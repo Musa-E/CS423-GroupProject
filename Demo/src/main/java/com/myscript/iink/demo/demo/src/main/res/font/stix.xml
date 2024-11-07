@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--AI STATEMENT: AI was not used in this. This file was imported from https://github.com/MyScript/interactive-ink-examples-android
+into this Android SDK and then edited by our team -->
+<font-family
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+  <font
+      app:fontStyle="normal"
+      app:fontWeight="400"
+      app:font="@font/stix_regular" />
+  <font
+      app:fontStyle="italic"
+      app:fontWeight="400"
+      app:font="@font/stix_italic" />
+</font-family>
