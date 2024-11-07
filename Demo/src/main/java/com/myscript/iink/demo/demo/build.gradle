@@ -1,0 +1,108 @@
+//<!--AI STATEMENT: AI was not used in this. This file was imported from https://github.com/MyScript/interactive-ink-examples-android
+//into this Android SDK and then edited by our team -->
+import org.apache.commons.io.FileUtils
+import org.apache.commons.io.filefilter.FileFilterUtils
+
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+}
+
+android {
+    namespace 'com.myscript.iink.demo'
+
+    compileSdk project.ext.compileSdk
+
+    buildFeatures {
+        viewBinding true
+        buildConfig true
+    }
+
+    defaultConfig {
+        minSdk project.ext.minSdk
+        targetSdk project.ext.targetSdk
+
+        applicationId 'com.myscript.iink.demo'
+        versionCode 3110
+        versionName '3.1.1'
+
+        vectorDrawables.useSupportLibrary true
+    }
+}
+
+dependencies {
+    implementation "androidx.appcompat:appcompat:${project.ext.appcompatVersion}"
+    implementation 'androidx.core:core-ktx:1.12.0'
+    implementation 'androidx.activity:activity-ktx:1.8.2'
+    implementation 'androidx.documentfile:documentfile:1.0.1'
+    implementation 'androidx.cardview:cardview:1.0.0'
+    implementation 'androidx.preference:preference-ktx:1.2.1'
+    implementation 'com.google.android.material:material:1.11.0'
+
+    def lifecycle_version = '2.7.0'
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
+
+    implementation project(':UIReferenceImplementation')
+}
+
+task DownloadAndExtractAssets(type: Copy) {
+    def sourceUrls = ['https://download.myscript.com/iink/recognitionAssets_iink_3.1/myscript-iink-recognition-diagram.zip',
+                      'https://download.myscript.com/iink/recognitionAssets_iink_3.1/myscript-iink-recognition-raw-content.zip',
+                      'https://download.myscript.com/iink/recognitionAssets_iink_3.1/myscript-iink-recognition-math.zip',
+                      'https://download.myscript.com/iink/recognitionAssets_iink_3.1/myscript-iink-recognition-text-en_US.zip']
+    def targetDir = new File(projectDir, "src/main/assets/")
+    def diagramConf = new File(targetDir, "conf/diagram.conf")
+    def rawContentConf = new File(targetDir, "conf/raw-content.conf")
+    def mathConf = new File(targetDir, "conf/math.conf")
+    def textConf = new File(targetDir, "conf/en_US.conf")
+
+    if (!diagramConf.exists() || !rawContentConf.exists() || !mathConf.exists() || !textConf.exists()) {
+        def tmpAssetsDir = new File(projectDir, "tmp-assets/")
+        def zipDir = new File(tmpAssetsDir, "zips")
+
+        if (!tmpAssetsDir.isDirectory())
+            tmpAssetsDir.mkdirs()
+
+        if (!zipDir.isDirectory())
+            zipDir.mkdirs()
+
+        sourceUrls.each { sourceUrl ->
+            ant.get(src: sourceUrl, dest: zipDir.getPath())
+        }
+
+        File[] zipFiles = FileUtils.listFiles(zipDir, FileFilterUtils.suffixFileFilter("zip"), FileFilterUtils.trueFileFilter())
+        zipFiles.each { File zipFile ->
+            from zipTree(zipFile)
+            into tmpAssetsDir
+        }
+    }
+}
+
+task CopyAssets(type: Copy, dependsOn: DownloadAndExtractAssets) {
+    def targetDir = new File(projectDir, "src/main/assets/")
+    def diagramConf = new File(targetDir, "conf/diagram.conf")
+    def rawContentConf = new File(targetDir, "conf/raw-content.conf")
+    def mathConf = new File(targetDir, "conf/math.conf")
+    def textConf = new File(targetDir, "conf/en_US.conf")
+
+    if (!diagramConf.exists() || !rawContentConf.exists() || !mathConf.exists() || !textConf.exists()) {
+        def tmpAssetsDir = new File(projectDir, "tmp-assets/")
+
+        if (!tmpAssetsDir.isDirectory())
+            tmpAssetsDir.mkdirs()
+
+        def recognitionAssetDir = new File(tmpAssetsDir, "recognition-assets/")
+
+        println "Copying downloaded assets from $recognitionAssetDir to $targetDir"
+        from recognitionAssetDir
+        into targetDir
+
+        doLast {
+            tmpAssetsDir.deleteDir()
+        }
+    }
+}
+
+preBuild.dependsOn(CopyAssets)

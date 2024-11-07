@@ -1,0 +1,29 @@
+Musa's notes on adjusting the size of the writable canvas area:
+
+I looked at the following files:
+
+Demo/src/main/res/values/dimens.xml
+
+
+For /values/dimens.xml: I changed the vertical padding to use 256dp instead of 64.
+
+In LayerView.java, in the onSizeChanged() function;
+in general, I modified the value for metrics.ydpi so that it's now "metric.ydpi = metric.ydpi + 40;"
+
+I also looked in anyplace that mentioned height or width, and I found some potential paths:
+localUpdateArea.height (and width) in the onDraw function
+canvasWidth in onSizeChanged function
+canvasHeight in onSizeChanged function
+
+I added "// MUSA CHANGED" or "// MUSA NOTE" near areas I modified/noted, so you can try searching for that.
+
+
+Lastly, I looked through the Renderer class file.  To get there, go to one of the above mentioned functions.
+There should be a Renderer object called renderer.  Right-Click on it and "Go To" -> Implementations.  This will
+take you to the class file.  Scroll down through the class to grasp how it works; the function(s) of note for me
+were the getDpiX() and getDpiY() functions and how they pulled the data for the dpi stuff.  I tried following the
+function calls those functions used, but I can't modify anything since the files are marked as read-only.  That said,
+tracing it back could provide a good chance to understand how it works.  Not to mention that I think I managed to either
+get rid of or significantly reduce the chances of getting the "TOO BIG" stroke error when handwriting.  The main issue
+now is that when you use large strokes, it breaks the strokes over the multiple lines.  If you were to draw a large "W",
+there could be several lines, one containing "V" and another line containing "V"; the "W" was split over the lines.
