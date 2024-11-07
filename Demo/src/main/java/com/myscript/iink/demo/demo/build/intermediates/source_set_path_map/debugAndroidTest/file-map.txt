@@ -1,0 +1,4 @@
+com.myscript.iink.demo.test.Demo-androidTest-0 D:\UIC\Fall2024\CS423\CS423-GroupProject-Musa-gestureHelpScreen\Demo\build\generated\res\resValues\androidTest\debug
+com.myscript.iink.demo.test.Demo-mergeDebugAndroidTestResources-1 D:\UIC\Fall2024\CS423\CS423-GroupProject-Musa-gestureHelpScreen\Demo\build\intermediates\incremental\debugAndroidTest\mergeDebugAndroidTestResources\merged.dir
+com.myscript.iink.demo.test.Demo-mergeDebugAndroidTestResources-2 D:\UIC\Fall2024\CS423\CS423-GroupProject-Musa-gestureHelpScreen\Demo\build\intermediates\incremental\debugAndroidTest\mergeDebugAndroidTestResources\stripped.dir
+com.myscript.iink.demo.test.Demo-merged_res-3 D:\UIC\Fall2024\CS423\CS423-GroupProject-Musa-gestureHelpScreen\Demo\build\intermediates\merged_res\debugAndroidTest
