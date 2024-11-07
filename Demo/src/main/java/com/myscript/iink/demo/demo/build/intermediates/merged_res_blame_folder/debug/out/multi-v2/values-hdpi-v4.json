@@ -1,0 +1,20 @@
+{
+    "logs": [
+        {
+            "outputFile": "com.myscript.iink.demo.Demo-mergeDebugResources-39:/values-hdpi-v4/values-hdpi-v4.xml",
+            "map": [
+                {
+                    "source": "C:\\Users\\fbipe\\.gradle\\caches\\transforms-3\\f13a89ea353a5b55de16c78cf4b224b2\\transformed\\appcompat-1.6.1\\res\\values-hdpi-v4\\values-hdpi-v4.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endLines": "6",
+                        "endColumns": "13",
+                        "endOffsets": "327"
+                    }
+                }
+            ]
+        }
+    ]
+}

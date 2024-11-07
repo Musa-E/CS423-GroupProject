@@ -1,0 +1,382 @@
+[
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\mipmap-anydpi-v26_ic_launcher.xml.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\mipmap-anydpi-v26\\ic_launcher.xml"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\drawable_ic_pen_outlined.xml.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\drawable\\ic_pen_outlined.xml"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\mipmap-mdpi_ic_add_round.webp.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\mipmap-mdpi\\ic_add_round.webp"
+    },
+    {
+        "merged": "com.myscript.iink.demo.Demo-merged_res-41:/drawable_delete_gesture_help_icon.png.flat",
+        "source": "com.myscript.iink.demo.Demo-main-43:/drawable/delete_gesture_help_icon.png"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\mipmap-anydpi-v26_ic_back.xml.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\mipmap-anydpi-v26\\ic_back.xml"
+    },
+    {
+        "merged": "com.myscript.iink.demo.Demo-merged_res-41:/drawable_redo_gesture_help_icon.png.flat",
+        "source": "com.myscript.iink.demo.Demo-main-43:/drawable/redo_gesture_help_icon.png"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\drawable_ic_add_background.xml.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\drawable\\ic_add_background.xml"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\xml_file_paths.xml.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\xml\\file_paths.xml"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\menu_main_menu.xml.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\menu\\main_menu.xml"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\layout_editor_toolbar.xml.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\layout\\editor_toolbar.xml"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\mipmap-xxhdpi_ic_back.webp.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\mipmap-xxhdpi\\ic_back.webp"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\mipmap-anydpi-v26_ic_launcher_round.xml.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\mipmap-anydpi-v26\\ic_launcher_round.xml"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\mipmap-hdpi_ic_launcher.png.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\mipmap-hdpi\\ic_launcher.png"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\drawable_ic_zoom_out.xml.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\drawable\\ic_zoom_out.xml"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\layout_main_menu_task_list.xml.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\layout\\main_menu_task_list.xml"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\mipmap-anydpi-v26_ic_add.xml.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\mipmap-anydpi-v26\\ic_add.xml"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\mipmap-xxxhdpi_ic_add_round.webp.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\mipmap-xxxhdpi\\ic_add_round.webp"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\font_stix_regular.otf.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\font\\stix_regular.otf"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\drawable_ic_eraser.xml.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\drawable\\ic_eraser.xml"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\drawable_ic_reset_view.xml.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\drawable\\ic_reset_view.xml"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\drawable_texture_stamp.png.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\drawable\\texture_stamp.png"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\drawable_ic_chevron_right.xml.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\drawable\\ic_chevron_right.xml"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\drawable_texture_background.png.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\drawable\\texture_background.png"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\drawable_ic_hand_outlined.xml.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\drawable\\ic_hand_outlined.xml"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\drawable_ic_redo.xml.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\drawable\\ic_redo.xml"
+    },
+    {
+        "merged": "com.myscript.iink.demo.Demo-merged_res-41:/drawable_highlight_gesture_help_icon.png.flat",
+        "source": "com.myscript.iink.demo.Demo-main-43:/drawable/highlight_gesture_help_icon.png"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\mipmap-mdpi_ic_back_round.webp.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\mipmap-mdpi\\ic_back_round.webp"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\drawable_ic_back_foreground.xml.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\drawable\\ic_back_foreground.xml"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\mipmap-hdpi_ic_back.webp.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\mipmap-hdpi\\ic_back.webp"
+    },
+    {
+        "merged": "com.myscript.iink.demo.Demo-merged_res-41:/drawable_touch_to_edit_gesture_help_icon.png.flat",
+        "source": "com.myscript.iink.demo.Demo-main-43:/drawable/touch_to_edit_gesture_help_icon.png"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\drawable_ic_zoom_in.xml.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\drawable\\ic_zoom_in.xml"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\drawable_ic_colorize_outlined.xml.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\drawable\\ic_colorize_outlined.xml"
+    },
+    {
+        "merged": "com.myscript.iink.demo.Demo-merged_res-41:/drawable_undo_gesture_help_icon.png.flat",
+        "source": "com.myscript.iink.demo.Demo-main-43:/drawable/undo_gesture_help_icon.png"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\drawable_ic_add.xml.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\drawable\\ic_add.xml"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\drawable_ic_lasso.xml.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\drawable\\ic_lasso.xml"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\mipmap-xxxhdpi_ic_back_round.webp.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\mipmap-xxxhdpi\\ic_back_round.webp"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\mipmap-xxhdpi_ic_add_round.webp.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\mipmap-xxhdpi\\ic_add_round.webp"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\drawable_ic_undo.xml.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\drawable\\ic_undo.xml"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\mipmap-anydpi-v26_ic_back_round.xml.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\mipmap-anydpi-v26\\ic_back_round.xml"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\mipmap-xxxhdpi_ic_back.webp.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\mipmap-xxxhdpi\\ic_back.webp"
+    },
+    {
+        "merged": "com.myscript.iink.demo.Demo-merged_res-41:/drawable_convert_gesture_help_icon.png.flat",
+        "source": "com.myscript.iink.demo.Demo-main-43:/drawable/convert_gesture_help_icon.png"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\layout_toolbar_pen_brush_row.xml.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\layout\\toolbar_pen_brush_row.xml"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\drawable_ic_back_background.xml.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\drawable\\ic_back_background.xml"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\mipmap-hdpi_ic_add_round.webp.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\mipmap-hdpi\\ic_add_round.webp"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\drawable_disc.xml.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\drawable\\disc.xml"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\layout_list_view_item.xml.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\layout\\list_view_item.xml"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\mipmap-xhdpi_ic_back_round.webp.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\mipmap-xhdpi\\ic_back_round.webp"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\mipmap-xxxhdpi_ic_launcher_round.png.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\mipmap-xxxhdpi\\ic_launcher_round.png"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\layout_toolbar_thickness_cell.xml.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\layout\\toolbar_thickness_cell.xml"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\mipmap-xxhdpi_ic_add.webp.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\mipmap-xxhdpi\\ic_add.webp"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\font_stix.xml.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\font\\stix.xml"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\layout_editor_text_input_layout.xml.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\layout\\editor_text_input_layout.xml"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\layout_toolbar_settings_sheet_layout.xml.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\layout\\toolbar_settings_sheet_layout.xml"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\mipmap-mdpi_ic_add.webp.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\mipmap-mdpi\\ic_add.webp"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\layout_main_activity.xml.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\layout\\main_activity.xml"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\mipmap-hdpi_ic_launcher_round.png.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\mipmap-hdpi\\ic_launcher_round.png"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\mipmap-hdpi_ic_back_round.webp.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\mipmap-hdpi\\ic_back_round.webp"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\mipmap-mdpi_ic_launcher_round.png.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\mipmap-mdpi\\ic_launcher_round.png"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\drawable_action_bar_background.xml.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\drawable\\action_bar_background.xml"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\mipmap-hdpi_ic_add.webp.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\mipmap-hdpi\\ic_add.webp"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\mipmap-xxxhdpi_ic_launcher.png.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\mipmap-xxxhdpi\\ic_launcher.png"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\drawable_tool_background.xml.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\drawable\\tool_background.xml"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\layout_editor_prediction_layout.xml.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\layout\\editor_prediction_layout.xml"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\font_myscriptinter_bold.otf.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\font\\myscriptinter_bold.otf"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\drawable_rounded_corners.xml.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\drawable\\rounded_corners.xml"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\font_myscriptinter.xml.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\font\\myscriptinter.xml"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\drawable_tool_background_selected.xml.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\drawable\\tool_background_selected.xml"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\drawable_ic_brush_outlined.xml.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\drawable\\ic_brush_outlined.xml"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\mipmap-xhdpi_ic_add.webp.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\mipmap-xhdpi\\ic_add.webp"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\drawable_ic_chevron_left.xml.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\drawable\\ic_chevron_left.xml"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\drawable_rounded_corner_white.xml.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\drawable\\rounded_corner_white.xml"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\drawable_bottom_sheet_handle.xml.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\drawable\\bottom_sheet_handle.xml"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\drawable_ic_launcher_foreground.xml.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\drawable\\ic_launcher_foreground.xml"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\mipmap-xhdpi_ic_add_round.webp.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\mipmap-xhdpi\\ic_add_round.webp"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\mipmap-xhdpi_ic_launcher_round.png.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\mipmap-xhdpi\\ic_launcher_round.png"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\drawable_ic_add_foreground.xml.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\drawable\\ic_add_foreground.xml"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\mipmap-xxhdpi_ic_back_round.webp.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\mipmap-xxhdpi\\ic_back_round.webp"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\mipmap-xhdpi_ic_launcher.png.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\mipmap-xhdpi\\ic_launcher.png"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\layout_toolbar_tool_cell.xml.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\layout\\toolbar_tool_cell.xml"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\mipmap-xxxhdpi_ic_add.webp.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\mipmap-xxxhdpi\\ic_add.webp"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\mipmap-anydpi-v26_ic_add_round.xml.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\mipmap-anydpi-v26\\ic_add_round.xml"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\font_stix_italic.otf.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\font\\stix_italic.otf"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\menu_bottom_nav_menu.xml.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\menu\\bottom_nav_menu.xml"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\mipmap-xxhdpi_ic_launcher.png.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\mipmap-xxhdpi\\ic_launcher.png"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\mipmap-mdpi_ic_back.webp.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\mipmap-mdpi\\ic_back.webp"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\drawable_ic_delete.xml.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\drawable\\ic_delete.xml"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\mipmap-mdpi_ic_launcher.png.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\mipmap-mdpi\\ic_launcher.png"
+    },
+    {
+        "merged": "com.myscript.iink.demo.Demo-merged_res-41:/drawable_complete_gesture_help_icon.png.flat",
+        "source": "com.myscript.iink.demo.Demo-main-43:/drawable/complete_gesture_help_icon.png"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\raw_theme.css.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\raw\\theme.css"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\mipmap-xhdpi_ic_back.webp.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\mipmap-xhdpi\\ic_back.webp"
+    },
+    {
+        "merged": "com.myscript.iink.demo.Demo-merged_res-41:/layout_gesture_help_dialog.xml.flat",
+        "source": "com.myscript.iink.demo.Demo-main-43:/layout/gesture_help_dialog.xml"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\font_myscriptinter_regular.otf.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\font\\myscriptinter_regular.otf"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\mipmap-xxhdpi_ic_launcher_round.png.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\mipmap-xxhdpi\\ic_launcher_round.png"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\layout_toolbar_color_cell.xml.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\layout\\toolbar_color_cell.xml"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-merged_res-41:\\drawable_less_extreme_corners.xml.flat",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\drawable\\less_extreme_corners.xml"
+    }
+]

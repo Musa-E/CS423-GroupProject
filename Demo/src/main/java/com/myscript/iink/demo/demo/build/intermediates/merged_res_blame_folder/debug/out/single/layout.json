@@ -1,0 +1,50 @@
+[
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-mergeDebugResources-40:\\layout\\toolbar_thickness_cell.xml",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\layout\\toolbar_thickness_cell.xml"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-mergeDebugResources-40:\\layout\\toolbar_settings_sheet_layout.xml",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\layout\\toolbar_settings_sheet_layout.xml"
+    },
+    {
+        "merged": "com.myscript.iink.demo.Demo-mergeDebugResources-40:/layout/gesture_help_dialog.xml",
+        "source": "com.myscript.iink.demo.Demo-main-43:/layout/gesture_help_dialog.xml"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-mergeDebugResources-40:\\layout\\toolbar_pen_brush_row.xml",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\layout\\toolbar_pen_brush_row.xml"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-mergeDebugResources-40:\\layout\\main_activity.xml",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\layout\\main_activity.xml"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-mergeDebugResources-40:\\layout\\main_menu_task_list.xml",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\layout\\main_menu_task_list.xml"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-mergeDebugResources-40:\\layout\\editor_toolbar.xml",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\layout\\editor_toolbar.xml"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-mergeDebugResources-40:\\layout\\list_view_item.xml",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\layout\\list_view_item.xml"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-mergeDebugResources-40:\\layout\\editor_prediction_layout.xml",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\layout\\editor_prediction_layout.xml"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-mergeDebugResources-40:\\layout\\toolbar_color_cell.xml",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\layout\\toolbar_color_cell.xml"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-mergeDebugResources-40:\\layout\\editor_text_input_layout.xml",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\layout\\editor_text_input_layout.xml"
+    },
+    {
+        "merged": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-mergeDebugResources-40:\\layout\\toolbar_tool_cell.xml",
+        "source": "C:\\Users\\fbipe\\.gradle\\daemon\\8.2\\com.myscript.iink.demo.Demo-main-43:\\layout\\toolbar_tool_cell.xml"
+    }
+]

@@ -1,0 +1,19 @@
+{
+    "logs": [
+        {
+            "outputFile": "com.myscript.iink.demo.Demo-mergeDebugResources-39:/values-v18/values-v18.xml",
+            "map": [
+                {
+                    "source": "C:\\Users\\fbipe\\.gradle\\caches\\transforms-3\\f13a89ea353a5b55de16c78cf4b224b2\\transformed\\appcompat-1.6.1\\res\\values-v18\\values-v18.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "48",
+                        "endOffsets": "99"
+                    }
+                }
+            ]
+        }
+    ]
+}
