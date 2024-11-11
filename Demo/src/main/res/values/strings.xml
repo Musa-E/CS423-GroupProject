@@ -75,4 +75,6 @@ into this Android SDK and then edited by our team -->
     <string name="pen_brush_calligraphic_brush">Calligraphic Brush</string>
     <string name="pen_brush_pencil_brush">Pencil Brush</string>
 
+    <string name="gestures_help_button">View the currently recognized gestures</string>
+
 </resources>

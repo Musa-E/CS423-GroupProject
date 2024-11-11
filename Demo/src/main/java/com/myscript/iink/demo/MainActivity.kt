@@ -4,6 +4,7 @@
 package com.myscript.iink.demo
 
 import android.annotation.SuppressLint
+import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -20,6 +21,9 @@ import android.view.MotionEvent
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.Button
+import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -152,6 +156,18 @@ class MainActivity : AppCompatActivity() {
     private val listenerStateSaved = MutableLiveData<Boolean>()
     private var canGesture = false;
 
+    // Array of gesture help resources (they show which gestures are accepted)
+    private val images = arrayOf(
+        R.drawable.undo_gesture_help_icon,
+        R.drawable.redo_gesture_help_icon,
+        R.drawable.convert_gesture_help_icon,
+        R.drawable.complete_gesture_help_icon,
+        R.drawable.delete_gesture_help_icon,
+        R.drawable.highlight_gesture_help_icon,
+        R.drawable.touch_to_edit_gesture_help_icon
+    )
+    private var currentImageIndex = 0 // Keep track of which element in the above array the dialog box is in
+
     private var officialTitle: String = null.toString() //title of page that gets added to PartState.title
     private val exportsDir: File
         get() = File(cacheDir, "exports").apply(File::mkdirs) //variable we prob wont need
@@ -236,6 +252,13 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         canGesture = true
+
+        // gestureHelpButton event handler; when the button is pressed, a dialog box will be shown
+        val gestureHelpButton = findViewById<ImageButton>(R.id.gesturesHelpButton)
+        gestureHelpButton.setOnClickListener {
+            // Show the dialog
+            showGestureHelpDialog()
+        }
 
         //gestureDetector prof was walking about in class
         gestureDetector = GestureDetector(this, GestureListener())
@@ -933,6 +956,69 @@ class MainActivity : AppCompatActivity() {
         val currentSettings = viewModel.predictionSettings
         launchPredictionDialog(currentSettings.enabled, currentSettings.durationMs) { enabled, durationMs ->
             viewModel.changePredictionSettings(enabled, durationMs)
+        }
+    }
+
+    /**
+     * showGestureHelpDialog()
+     * @return Displays a dialog box with information on the different recognizable gestures
+     */
+    private fun showGestureHelpDialog() {
+        // Create and set up the dialog
+        val dialog = Dialog(this)
+        dialog.setContentView(R.layout.gesture_help_dialog)
+
+        // Set dialog width and height (e.g., 80% of the screen width and wrap content height)
+        dialog.window?.setLayout(
+            (resources.displayMetrics.widthPixels * 0.8).toInt(), // 80% width
+            (resources.displayMetrics.heightPixels * 0.5).toInt() // 50% width
+        )
+
+        // Allow the user to tap outside the dialog to dismiss it
+        dialog.setCancelable(true)
+        dialog.setCanceledOnTouchOutside(true)
+
+        // References to the UI elements in the dialog
+        val gestureImage = dialog.findViewById<ImageView>(R.id.gestureImage)
+        val previousButton = dialog.findViewById<Button>(R.id.previousButton)
+        val nextButton = dialog.findViewById<Button>(R.id.nextButton)
+
+        // Initialize the image display
+        gestureImage.setImageResource(images[currentImageIndex])
+        updateButtonVisibility(previousButton, nextButton)
+
+        // Handle "Next" button click
+        nextButton.setOnClickListener {
+            currentImageIndex++
+            gestureImage.setImageResource(images[currentImageIndex])
+            updateButtonVisibility(previousButton, nextButton)
+        }
+
+        // Handle "Previous" button click
+        previousButton.setOnClickListener {
+            currentImageIndex--
+            gestureImage.setImageResource(images[currentImageIndex])
+            updateButtonVisibility(previousButton, nextButton)
+        }
+
+        dialog.show() // actually show the dialog box
+    }
+
+    // Function to handle hiding/showing buttons based on the image index
+    private fun updateButtonVisibility(previousButton: Button, nextButton: Button) {
+
+        // Hide previous button if on the first image
+        if (currentImageIndex == 0) {
+            previousButton.visibility = Button.GONE
+        } else {
+            previousButton.visibility = Button.VISIBLE
+        }
+
+        // Hide next button if on the last image
+        if (currentImageIndex == images.size - 1) {
+            nextButton.visibility = Button.GONE
+        } else {
+            nextButton.visibility = Button.VISIBLE
         }
     }
 
