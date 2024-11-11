@@ -56,10 +56,6 @@ into this Android SDK and then edited by our team -->
 
             <include layout="@layout/smart_guide_layout" />
 
-            <!-- Adds the button for the gesture help screen
-                Worth noting that while it's above the pen brush toolbar when it's all the way
-                down, when the user pulls up the brush menu, this button will be hidden behind it.
-            -->
             <ImageButton
                 android:id="@+id/gesturesHelpButton"
                 android:layout_width="wrap_content"
@@ -67,9 +63,9 @@ into this Android SDK and then edited by our team -->
                 android:layout_gravity="bottom|end"
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="72dp"
-                android:backgroundTint="@color/control_gray"
+                android:backgroundTint="@color/colorAccent"
                 android:contentDescription="@string/gestures_help_button"
-                android:src="@android:drawable/ic_menu_help" />
+                android:src="@android:drawable/ic_menu_help"/>
 
         </FrameLayout>
     </LinearLayout>
@@ -77,6 +73,5 @@ into this Android SDK and then edited by our team -->
     <include
         android:id="@+id/editor_toolbar_sheet"
         layout="@layout/toolbar_settings_sheet_layout" />
-
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

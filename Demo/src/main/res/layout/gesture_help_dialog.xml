@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--AI STATEMENT: AI was not used in this. This file was imported from https://github.com/MyScript/interactive-ink-examples-android
+into this Android SDK and then edited by our team -->
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
