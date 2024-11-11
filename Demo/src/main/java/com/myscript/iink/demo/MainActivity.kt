@@ -19,7 +19,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
-import android.view.WindowManager
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
@@ -958,6 +957,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+
     /**
      * showGestureHelpDialog()
      * @return Displays a dialog box with information on the different recognizable gestures
@@ -1020,6 +1020,5 @@ class MainActivity : AppCompatActivity() {
             nextButton.visibility = Button.VISIBLE
         }
     }
-
 
 }
