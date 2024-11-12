@@ -406,9 +406,9 @@ class MainActivity : AppCompatActivity() {
                         if(result.score < 0){
                             Log.d("GESTURE", result.name)
                         } else{
-                            Log.d("GESTURE", "score" + result.score)
+                            Log.d("GESTURE", "score: " + result.score)
 
-                            if ((result.name == "underline" || result.name == "pureCircle" || result.name == "oval") && result.score >= 0.94) {
+                            if ((result.name == "underline" || result.name == "pureCircle" || result.name == "oval") && result.score >= 0.93) {
                                 Log.d("GESTURE", "some sort of conversation was recognized")
                                 val sharedPreferences =
                                     getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
@@ -562,7 +562,7 @@ class MainActivity : AppCompatActivity() {
         gestureTemplates.add(checkmark5)
 
         // checkmark six
-        val checkmarkPoints6 = listOf(Point(-0.35F, -0.35F, 0), Point(-0.30F, -0.30F, 0), Point(-0.26F, -0.26F, 0), Point(-0.22F, -0.22F, 0), Point(-0.18F, -0.18F, 0), Point(-0.15F, -0.15F, 0), Point(-0.12F, -0.12F, 0), Point(-0.09F, -0.09F, 0), Point(-0.06F, -0.06F, 0), Point(-0.04F, -0.04F, 0), Point(-0.01F, -0.01F, 0), Point(0.01F, 0.01F, 0), Point(0.01F, 0.01F, 0), Point(0.03F, 0.03F, 0), Point(0.05F, 0.05F, 0), Point(0.07F, 0.07F, 0), Point(0.08F, 0.08F, 0), Point(0.08F, 0.08F, 0), Point(0.09F, 0.09F, 0), Point(0.10F, 0.10F, 0), Point(0.11F, 0.11F, 0), Point(0.12F, 0.12F, 0), Point(0.12F, 0.12F, 0), Point(0.13F, 0.13F, 0), Point(0.15F, 0.15F, 0), Point(0.16F, 0.16F, 0), Point(0.17F, 0.17F, 0), Point(0.17F, 0.17F, 0), Point(0.20F, 0.20F, 0), Point(0.21F, 0.21F, 0), Point(0.22F, 0.22F, 0), Point(0.24F, 0.24F, 0))
+        val checkmarkPoints6 = listOf(Point(-0.28F, -0.28F, 0), Point(-0.28F, -0.28F, 0), Point(-0.28F, -0.28F, 0), Point(-0.25F, -0.25F, 0), Point(-0.21F, -0.21F, 0), Point(-0.18F, -0.18F, 0), Point(-0.16F, -0.16F, 0), Point(-0.13F, -0.13F, 0), Point(-0.10F, -0.10F, 0), Point(-0.08F, -0.08F, 0), Point(-0.06F, -0.06F, 0), Point(-0.06F, -0.06F, 0), Point(-0.04F, -0.04F, 0), Point(-0.02F, -0.02F, 0), Point(-0.00F, -0.00F, 0), Point(0.01F, 0.01F, 0), Point(0.03F, 0.03F, 0), Point(0.03F, 0.03F, 0), Point(0.05F, 0.05F, 0), Point(0.07F, 0.07F, 0), Point(0.08F, 0.08F, 0), Point(0.10F, 0.10F, 0), Point(0.11F, 0.11F, 0), Point(0.12F, 0.12F, 0), Point(0.12F, 0.12F, 0), Point(0.14F, 0.14F, 0), Point(0.14F, 0.14F, 0), Point(0.16F, 0.16F, 0), Point(0.17F, 0.17F, 0), Point(0.20F, 0.20F, 0), Point(0.22F, 0.22F, 0), Point(0.25F, 0.25F, 0))
         val checkmark6 = Gesture(checkmarkPoints6, "checkmark")
         gestureTemplates.add(checkmark6)
 
