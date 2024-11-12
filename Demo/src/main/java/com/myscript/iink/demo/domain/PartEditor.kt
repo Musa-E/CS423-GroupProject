@@ -168,7 +168,7 @@ class PartEditor(
     private var currentIndex: Int = -1
     private var listener: Listener? = null
     private var allParts: List<String> = emptyList()
-    var isActivePenEnabled: Boolean = true
+    var isActivePenEnabled: Boolean = false
     var inputController: InputController? = null
 
     private val editorListener: IEditorListener = object : IEditorListener {

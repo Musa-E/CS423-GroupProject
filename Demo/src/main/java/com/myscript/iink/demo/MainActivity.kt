@@ -247,7 +247,7 @@ class MainActivity : AppCompatActivity() {
 
         //sets up the entire viewmodel, do not touch
         viewModel.enableActivePen.observe(this) { activePenEnabled ->
-            binding.editorToolbar.switchActivePen.isChecked = true
+            binding.editorToolbar.switchActivePen.isChecked = !activePenEnabled
             isPenActivated = activePenEnabled;
         }
 
@@ -383,8 +383,9 @@ class MainActivity : AppCompatActivity() {
                         if(result.score < 0){
                             Log.d("GESTURE", result.name)
                         } else{
+                            Log.d("GESTURE", "score" + result.score)
 
-                            if ((result.name == "underline" || result.name == "pureCircle" || result.name == "oval") && result.score >= 0.9) {
+                            if ((result.name == "underline" || result.name == "pureCircle" || result.name == "oval") && result.score >= 0.94) {
                                 Log.d("GESTURE", "some sort of conversation was recognized")
                                 val sharedPreferences =
                                     getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
@@ -396,13 +397,13 @@ class MainActivity : AppCompatActivity() {
                                     viewModel.convertContent()
                                 }, 500)
 
-                            } else if (result.name == "flippedCShape" && result.score >= 0.85) {
+                            } else if (result.name == "flippedCShape" && result.score >= 0.87) {
                                 Log.d("GESTURE", "undo was recognized")
                                 onUndoGestureDetected()
-                            } else if (result.name == "CShape" && result.score >= 0.85) {
+                            } else if (result.name == "CShape" && result.score >= 0.89) {
                                 Log.d("GESTURE", "redo was recognized")
                                 onRedoGestureDetected()
-                            } else if (result.name == "checkmark" && result.score >= 0.88) {
+                            } else if (result.name == "checkmark" && result.score >= 0.9) {
                                 Log.d("GESTURE", "gesture is checkmark (${result.score})")
                                 // do whatever checkmark does
                             }
@@ -422,78 +423,156 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setUpGestureTemplates() {
-        // underline
+        // underline one
         val underlinePoints = listOf( Point(-0.56F, 0.0F, 0), Point(-0.53F, 0.0F, 0), Point(-0.50F, 0.0F, 0), Point(-0.46F, 0.0F, 0), Point(-0.43F, 0.0F, 0), Point(-0.40F, 0.0F, 0), Point(-0.36F, 0.0F, 0), Point(-0.33F, 0.0F, 0), Point(-0.30F, 0.0F, 0), Point(-0.26F, 0.0F, 0), Point(-0.24F, 0.0F, 0), Point(-0.21F, 0.0F, 0), Point(-0.18F, 0.0F, 0), Point(-0.16F, 0.0F, 0), Point(-0.13F, 0.0F, 0), Point(-0.094F, 0.0F, 0), Point(-0.061F, 0.0F, 0), Point(-0.028F, 0.0F, 0), Point(0.005F, 0.0F, 0), Point(0.038F, 0.0F, 0), Point(0.071F, 0.0F, 0), Point(0.105F, 0.0F, 0), Point(0.138F, 0.0F, 0), Point(0.171F, 0.0F, 0), Point(0.205F, 0.0F, 0), Point(0.238F, 0.0F, 0), Point(0.272F, 0.0F, 0), Point(0.305F, 0.0F, 0), Point(0.338F, 0.0F, 0), Point(0.372F, 0.0F, 0), Point(0.404F, 0.0F, 0), Point(0.436F, 0.0F, 0) )
         val underline = Gesture(underlinePoints, "underline")
         gestureTemplates.add(underline)
 
-        //underlinetwo
+        //underline two
         val underlinePoints2 = listOf(Point(-0.526022F, 0.09176853F, 0), Point(-0.51204747F, 0.0614896F, 0), Point(-0.48397118F, 0.047224864F, 0), Point(-0.45206022F, 0.037627544F, 0), Point(-0.41924703F, 0.031678174F, 0), Point(-0.38643384F, 0.025728801F, 0), Point(-0.35362065F, 0.019779427F, 0), Point(-0.3204012F, 0.01834774F, 0), Point(-0.28705302F, 0.01834774F, 0), Point(-0.25370485F, 0.01834774F, 0), Point(-0.22035667F, 0.01834774F, 0), Point(-0.1870085F, 0.01834774F, 0), Point(-0.15366033F, 0.01834774F, 0), Point(-0.120457254F, 0.017074827F, 0), Point(-0.08796461F, 0.0095695695F, 0), Point(-0.055471964F, 0.0020643133F, 0), Point(-0.02219391F, 0.0014491305F, 0), Point(0.011154264F, 0.0014491305F, 0), Point(0.044329256F, -1.1608016E-4F, 0), Point(0.07687074F, -0.007406687F, 0), Point(0.10941222F, -0.014697294F, 0), Point(0.1419537F, -0.0219879F, 0), Point(0.17449518F, -0.029278506F, 0), Point(0.20719263F, -0.035159484F, 0), Point(0.2405408F, -0.035159484F, 0), Point(0.273889F, -0.035159484F, 0), Point(0.30723715F, -0.035159484F, 0), Point(0.34058535F, -0.035159484F, 0), Point(0.37393352F, -0.035159484F, 0), Point(0.4072817F, -0.035159484F, 0), Point(0.44062987F, -0.035159484F, 0), Point(0.47397798F, -0.035159484F, 0),)
         val underline2 = Gesture(underlinePoints2, "underline")
         gestureTemplates.add(underline2)
 
-        //underlinethree
+        //underline three
         val underlinePoints3 = listOf(Point(-0.5770349F, 0.04371051F, 0), Point(-0.5501463F, 0.02521147F, 0), Point(-0.5220856F, 0.010484086F, 0), Point(-0.48944807F, 0.010484086F, 0), Point(-0.45681047F, 0.010484086F, 0), Point(-0.42464033F, 0.0055766003F, 0), Point(-0.39258957F, -5.846403E-4F, 0), Point(-0.36033636F, -0.004619906F, 0), Point(-0.32769883F, -0.0046199067F, 0), Point(-0.29506126F, -0.004619907F, 0), Point(-0.26242366F, -0.0046199067F, 0), Point(-0.2297861F, -0.0046199067F, 0), Point(-0.19714853F, -0.0046199067F, 0), Point(-0.16451098F, -0.0046199067F, 0), Point(-0.13187341F, -0.0046199067F, 0), Point(-0.099235855F, -0.0046199067F, 0), Point(-0.06659829F, -0.0046199067F, 0), Point(-0.033960722F, -0.0046199067F, 0), Point(-0.0013231561F, -0.0046199067F, 0), Point(0.031314407F, -0.0046199067F, 0), Point(0.06395198F, -0.0046199067F, 0), Point(0.096589535F, -0.0046199067F, 0), Point(0.12922709F, -0.0046199067F, 0), Point(0.16186467F, -0.0046199067F, 0), Point(0.19450223F, -0.0046199067F, 0), Point(0.2271398F, -0.0046199067F, 0), Point(0.25977734F, -0.0046199067F, 0), Point(0.2924149F, -0.0046199067F, 0), Point(0.32505247F, -0.0046199067F, 0), Point(0.35769004F, -0.0046199067F, 0), Point(0.39032763F, -0.0046199067F, 0), Point(0.4229651F, -0.0046199067F, 0),)
         val underline3 = Gesture(underlinePoints3, "underline")
         gestureTemplates.add(underline3)
 
-        // CShape
+        //underline four
+        val underlinePoints4 = listOf(Point(-0.53F, -0.53F, 0), Point(-0.53F, -0.53F, 0), Point(-0.50F, -0.50F, 0), Point(-0.46F, -0.46F, 0), Point(-0.43F, -0.43F, 0), Point(-0.40F, -0.40F, 0), Point(-0.37F, -0.37F, 0), Point(-0.33F, -0.33F, 0), Point(-0.30F, -0.30F, 0), Point(-0.27F, -0.27F, 0), Point(-0.24F, -0.24F, 0), Point(-0.20F, -0.20F, 0), Point(-0.17F, -0.17F, 0), Point(-0.14F, -0.14F, 0), Point(-0.10F, -0.10F, 0), Point(-0.07F, -0.07F, 0), Point(-0.04F, -0.04F, 0), Point(-0.01F, -0.01F, 0), Point(0.03F, 0.03F, 0), Point(0.06F, 0.06F, 0), Point(0.09F, 0.09F, 0), Point(0.13F, 0.13F, 0), Point(0.16F, 0.16F, 0), Point(0.19F, 0.19F, 0), Point(0.23F, 0.23F, 0), Point(0.25F, 0.25F, 0), Point(0.29F, 0.29F, 0), Point(0.32F, 0.32F, 0), Point(0.35F, 0.35F, 0), Point(0.38F, 0.38F, 0), Point(0.42F, 0.42F, 0), Point(0.45F, 0.45F, 0),)
+        val underline4 = Gesture(underlinePoints4, "underline")
+        gestureTemplates.add(underline4)
+
+        //underline five
+        val underlinePoints5 = listOf(Point(-0.61F, -0.61F, 0), Point(-0.57F, -0.57F, 0), Point(-0.54F, -0.54F, 0), Point(-0.51F, -0.51F, 0), Point(-0.48F, -0.48F, 0), Point(-0.45F, -0.45F, 0), Point(-0.41F, -0.41F, 0), Point(-0.38F, -0.38F, 0), Point(-0.35F, -0.35F, 0), Point(-0.32F, -0.32F, 0), Point(-0.28F, -0.28F, 0), Point(-0.25F, -0.25F, 0), Point(-0.22F, -0.22F, 0), Point(-0.19F, -0.19F, 0), Point(-0.16F, -0.16F, 0), Point(-0.12F, -0.12F, 0), Point(-0.09F, -0.09F, 0), Point(-0.06F, -0.06F, 0), Point(-0.03F, -0.03F, 0), Point(0.01F, 0.01F, 0), Point(0.04F, 0.04F, 0), Point(0.07F, 0.07F, 0), Point(0.10F, 0.10F, 0), Point(0.14F, 0.14F, 0), Point(0.17F, 0.17F, 0), Point(0.20F, 0.20F, 0), Point(0.23F, 0.23F, 0), Point(0.26F, 0.26F, 0), Point(0.30F, 0.30F, 0), Point(0.33F, 0.33F, 0), Point(0.36F, 0.36F, 0), Point(0.39F, 0.39F, 0),)
+        val underline5 = Gesture(underlinePoints5, "underline")
+        gestureTemplates.add(underline5)
+
+        //underline six
+        val underlinePoints6 = listOf(Point(-0.63F, -0.63F, 0), Point(-0.60F, -0.60F, 0), Point(-0.57F, -0.57F, 0), Point(-0.53F, -0.53F, 0), Point(-0.50F, -0.50F, 0), Point(-0.47F, -0.47F, 0), Point(-0.44F, -0.44F, 0), Point(-0.40F, -0.40F, 0), Point(-0.37F, -0.37F, 0), Point(-0.34F, -0.34F, 0), Point(-0.31F, -0.31F, 0), Point(-0.27F, -0.27F, 0), Point(-0.24F, -0.24F, 0), Point(-0.21F, -0.21F, 0), Point(-0.18F, -0.18F, 0), Point(-0.14F, -0.14F, 0), Point(-0.11F, -0.11F, 0), Point(-0.08F, -0.08F, 0), Point(-0.05F, -0.05F, 0), Point(-0.02F, -0.02F, 0), Point(0.02F, 0.02F, 0), Point(0.05F, 0.05F, 0), Point(0.08F, 0.08F, 0), Point(0.11F, 0.11F, 0), Point(0.15F, 0.15F, 0), Point(0.18F, 0.18F, 0), Point(0.21F, 0.21F, 0), Point(0.24F, 0.24F, 0), Point(0.28F, 0.28F, 0), Point(0.31F, 0.31F, 0), Point(0.34F, 0.34F, 0), Point(0.37F, 0.37F, 0),)
+        val underline6 = Gesture(underlinePoints6, "underline")
+        gestureTemplates.add(underline6)
+
+        // CShape one
         val cShapePoints = listOf( Point(0.46F, -0.42F, 0), Point(0.42F, -0.45F, 0), Point(0.35F, -0.47F, 0), Point(0.28F, -0.48F, 0), Point(0.20F, -0.48F, 0), Point(0.13F, -0.48F, 0), Point(0.056F, -0.48F, 0), Point(-0.018F, -0.48F, 0), Point(-0.055F, -0.449F, 0), Point(-0.09F, -0.40F, 0), Point(-0.108F, -0.35F, 0), Point(-0.124F, -0.28F, 0), Point(-0.15F, -0.23F, 0), Point(-0.185F, -0.18F, 0), Point(-0.21F, -0.12F, 0), Point(-0.219F, -0.046F, 0), Point(-0.242F, 0.006F, 0), Point(-0.24F, 0.081F, 0), Point(-0.24F, 0.15F, 0), Point(-0.21F, 0.218F, 0), Point(-0.185F, 0.27F, 0), Point(-0.17F, 0.33F, 0), Point(-0.14F, 0.378F, 0), Point(-0.105F, 0.424F, 0), Point(-0.061F, 0.45F, 0), Point(0.014F, 0.455F, 0), Point(0.067F, 0.478F, 0), Point(0.131F, 0.49F, 0), Point(0.207F, 0.49F, 0), Point(0.259F, 0.512F, 0), Point(0.328F, 0.497F, 0), Point(0.40F, 0.49F, 0) )
         val CShape = Gesture(cShapePoints, "CShape")
         gestureTemplates.add(CShape)
 
-        // another CShape
+        // CShape two
         val cShapePoints2 = listOf( Point(0.528F, 0.353F, 0), Point(0.473F, 0.40F, 0), Point(0.401F, 0.430F, 0), Point(0.326F, 0.450F, 0), Point(0.250F, 0.467F, 0), Point(0.177F, 0.497F, 0), Point(0.103F, 0.526F, 0), Point(0.025F, 0.53F, 0), Point(-0.055F, 0.532F, 0), Point(-0.134F, 0.532F, 0), Point(-0.213F, 0.532F, 0), Point(-0.277F, 0.487F, 0), Point(-0.321F, 0.422F, 0), Point(-0.362F, 0.354F, 0), Point(-0.403F, 0.286F, 0), Point(-0.443F, 0.218F, 0), Point(-0.452F, 0.141F, 0), Point(-0.452F, 0.0615F, 0), Point(-0.426F, -0.011F, 0), Point(-0.385F, -0.079F, 0), Point(-0.354F, -0.151F, 0), Point(-0.298F, -0.194F, 0), Point(-0.245F, -0.251F, 0), Point(-0.185F, -0.302F, 0), Point(-0.120F, -0.346F, 0), Point(-0.044F, -0.368F, 0), Point(0.0309F, -0.391F, 0), Point(0.102F, -0.425F, 0), Point(0.169F, -0.468F, 0), Point(0.248F, -0.468F, 0), Point(0.327F, -0.468F, 0), Point(0.407F, -0.468F, 0) )
         val CShape2 = Gesture(cShapePoints2, "CShape")
         gestureTemplates.add(CShape2)
 
-        // another CShape
+        // CShape three
         val cShapePoints3 = listOf(Point(0.25880083F, 0.30661562F, 0), Point(0.19568273F, 0.30661562F, 0), Point(0.13256463F, 0.30661562F, 0), Point(0.069446534F, 0.30661562F, 0), Point(0.0064835404F, 0.305745F, 0), Point(-0.052751042F, 0.28394687F, 0), Point(-0.11198562F, 0.26214874F, 0), Point(-0.17503355F, 0.2617549F, 0), Point(-0.23431057F, 0.2442413F, 0), Point(-0.29071933F, 0.21616642F, 0), Point(-0.3436231F, 0.18174133F, 0), Point(-0.39652684F, 0.14731623F, 0), Point(-0.4515484F, 0.11646409F, 0), Point(-0.49125397F, 0.07708108F, 0), Point(-0.4679516F, 0.020880407F, 0), Point(-0.43351257F, -0.032014273F, 0), Point(-0.39328146F, -0.07821383F, 0), Point(-0.33598176F, -0.104683384F, 0), Point(-0.27754068F, -0.12848327F, 0), Point(-0.21881518F, -0.15161783F, 0), Point(-0.16008966F, -0.1747524F, 0), Point(-0.10128024F, -0.19766805F, 0), Point(-0.04213333F, -0.21970299F, 0), Point(0.017013572F, -0.24173793F, 0), Point(0.076160476F, -0.26377288F, 0), Point(0.13530737F, -0.28580785F, 0), Point(0.19445428F, -0.30784276F, 0), Point(0.25627375F, -0.3150485F, 0), Point(0.31939185F, -0.31504846F, 0), Point(0.38250995F, -0.31504846F, 0), Point(0.44562805F, -0.3150485F, 0), Point(0.508746F, -0.3150485F, 0), )
         val CShape3 = Gesture(cShapePoints3, "CShape")
         gestureTemplates.add(CShape3)
 
+        // CShape four
+        val cShapePoints4 = listOf(Point(0.42F, 0.42F, 0), Point(0.37F, 0.37F, 0), Point(0.29F, 0.29F, 0), Point(0.22F, 0.22F, 0), Point(0.14F, 0.14F, 0), Point(0.08F, 0.08F, 0), Point(0.03F, 0.03F, 0), Point(-0.02F, -0.02F, 0), Point(-0.08F, -0.08F, 0), Point(-0.14F, -0.14F, 0), Point(-0.19F, -0.19F, 0), Point(-0.22F, -0.22F, 0), Point(-0.25F, -0.25F, 0), Point(-0.27F, -0.27F, 0), Point(-0.29F, -0.29F, 0), Point(-0.32F, -0.32F, 0), Point(-0.32F, -0.32F, 0), Point(-0.32F, -0.32F, 0), Point(-0.31F, -0.31F, 0), Point(-0.29F, -0.29F, 0), Point(-0.24F, -0.24F, 0), Point(-0.17F, -0.17F, 0), Point(-0.11F, -0.11F, 0), Point(-0.04F, -0.04F, 0), Point(0.02F, 0.02F, 0), Point(0.08F, 0.08F, 0), Point(0.14F, 0.14F, 0), Point(0.21F, 0.21F, 0), Point(0.29F, 0.29F, 0), Point(0.36F, 0.36F, 0), Point(0.44F, 0.44F, 0), Point(0.52F, 0.52F, 0), )
+        val CShape4 = Gesture(cShapePoints4, "CShape")
+        gestureTemplates.add(CShape4)
 
-        // flippedCShape
+        // CShape five
+        val cShapePoints5 = listOf(Point(0.25F, 0.25F, 0), Point(0.19F, 0.19F, 0), Point(0.13F, 0.13F, 0), Point(0.07F, 0.07F, 0), Point(0.03F, 0.03F, 0), Point(-0.01F, -0.01F, 0), Point(-0.06F, -0.06F, 0), Point(-0.09F, -0.09F, 0), Point(-0.11F, -0.11F, 0), Point(-0.13F, -0.13F, 0), Point(-0.15F, -0.15F, 0), Point(-0.16F, -0.16F, 0), Point(-0.18F, -0.18F, 0), Point(-0.20F, -0.20F, 0), Point(-0.20F, -0.20F, 0), Point(-0.18F, -0.18F, 0), Point(-0.18F, -0.18F, 0), Point(-0.15F, -0.15F, 0), Point(-0.14F, -0.14F, 0), Point(-0.11F, -0.11F, 0), Point(-0.09F, -0.09F, 0), Point(-0.07F, -0.07F, 0), Point(-0.05F, -0.05F, 0), Point(-0.01F, -0.01F, 0), Point(0.02F, 0.02F, 0), Point(0.06F, 0.06F, 0), Point(0.12F, 0.12F, 0), Point(0.18F, 0.18F, 0), Point(0.23F, 0.23F, 0), Point(0.29F, 0.29F, 0), Point(0.35F, 0.35F, 0), Point(0.41F, 0.41F, 0), )
+        val CShape5 = Gesture(cShapePoints5, "CShape")
+        gestureTemplates.add(CShape5)
+
+        // CShape six
+        val cShapePoints6 = listOf(Point(0.61F, 0.61F, 0), Point(0.53F, 0.53F, 0), Point(0.44F, 0.44F, 0), Point(0.36F, 0.36F, 0), Point(0.29F, 0.29F, 0), Point(0.21F, 0.21F, 0), Point(0.14F, 0.14F, 0), Point(0.06F, 0.06F, 0), Point(-0.02F, -0.02F, 0), Point(-0.10F, -0.10F, 0), Point(-0.16F, -0.16F, 0), Point(-0.22F, -0.22F, 0), Point(-0.28F, -0.28F, 0), Point(-0.32F, -0.32F, 0), Point(-0.36F, -0.36F, 0), Point(-0.37F, -0.37F, 0), Point(-0.37F, -0.37F, 0), Point(-0.39F, -0.39F, 0), Point(-0.38F, -0.38F, 0), Point(-0.34F, -0.34F, 0), Point(-0.30F, -0.30F, 0), Point(-0.24F, -0.24F, 0), Point(-0.17F, -0.17F, 0), Point(-0.10F, -0.10F, 0), Point(-0.01F, -0.01F, 0), Point(0.06F, 0.06F, 0), Point(0.14F, 0.14F, 0), Point(0.22F, 0.22F, 0), Point(0.31F, 0.31F, 0), Point(0.39F, 0.39F, 0), Point(0.48F, 0.48F, 0), Point(0.56F, 0.56F, 0), )
+        val CShape6 = Gesture(cShapePoints6, "CShape")
+        gestureTemplates.add(CShape6)
+
+        // flippedCShape one
         val flippedCShapePoints = listOf( Point(-0.48F, -0.43F, 0), Point(-0.42F, -0.47F, 0), Point(-0.36F, -0.49F, 0), Point(-0.28F, -0.49F, 0), Point(-0.206F, -0.49F, 0), Point(-0.127F, -0.493F, 0), Point(-0.047F, -0.493F, 0), Point(-0.007F, -0.45F, 0), Point(0.066F, -0.439F, 0), Point(0.143F, -0.434F, 0), Point(0.18F, -0.39F, 0), Point(0.227F, -0.36F, 0), Point(0.247F, -0.288F, 0), Point(0.247F, -0.209F, 0), Point(0.247F, -0.13F, 0), Point(0.247F, -0.05F, 0), Point(0.247F, 0.029F, 0), Point(0.247F, 0.108F, 0), Point(0.227F, 0.168F, 0), Point(0.227F, 0.247F, 0), Point(0.227F, 0.327F, 0), Point(0.188F, 0.367F, 0), Point(0.132F, 0.39F, 0), Point(0.11F, 0.447F, 0), Point(0.052F, 0.468F, 0), Point(-0.0038F, 0.507F, 0), Point(-0.083F, 0.507F, 0), Point(-0.16F, 0.507F, 0), Point(-0.242F, 0.507F, 0), Point(-0.32F, 0.507F, 0), Point(-0.4F, 0.507F, 0), Point(-0.48F, 0.507F, 0) )
         val flippedCShape = Gesture(flippedCShapePoints, "flippedCShape")
         gestureTemplates.add(flippedCShape)
 
-        // another flippedCShape
+        // flippedCShape two
         val flippedCShapePoints2 = listOf( Point(-0.35F, 0.757F, 0), Point(-0.340F, 0.717F, 0), Point(-0.269F, 0.677F, 0), Point(-0.229F, 0.636F, 0), Point(-0.189F, 0.596F, 0), Point(-0.149F, 0.556F, 0), Point(-0.108F, 0.515F, 0), Point(-0.0696F, 0.474F, 0), Point(-0.0307F, 0.432F, 0), Point(0.0046F, 0.387F, 0), Point(0.0375F, 0.341F, 0), Point(0.0706F, 0.295F, 0), Point(0.111F, 0.254F, 0), Point(0.146F, 0.209F, 0), Point(0.174F, 0.160F, 0), Point(0.188F, 0.106F, 0), Point(0.188F, 0.049F, 0), Point(0.188F, -0.008F, 0), Point(0.188F, -0.065F, 0), Point(0.188F, -0.122F, 0), Point(0.188F, -0.179F, 0), Point(0.157F, -0.211F, 0), Point(0.114F, -0.243F, 0), Point(0.057F, -0.243F, 0), Point(-0.0004F, -0.243F, 0), Point(-0.057F, -0.243F, 0), Point(-0.114F, -0.243F, 0), Point(-0.171F, -0.243F, 0), Point(-0.217F, -0.215F, 0), Point(-0.257F, -0.175F, 0), Point(-0.297F, -0.135F, 0), Point(-0.35F, -0.124F, 0) )
         val flippedCShape2 = Gesture(flippedCShapePoints2, "flippedCShape")
         gestureTemplates.add(flippedCShape2)
 
-        //another flippedCShape
+        // flippedCShape three
         val flippedCShapePoints3 = listOf(Point(-0.28652596F, 0.25841972F, 0), Point(-0.22315463F, 0.25841972F, 0), Point(-0.1597833F, 0.25841972F, 0), Point(-0.09641197F, 0.25841972F, 0), Point(-0.033040643F, 0.25841972F, 0), Point(0.030330688F, 0.25841972F, 0), Point(0.09304829F, 0.2561376F, 0), Point(0.14680806F, 0.22258447F, 0), Point(0.20782867F, 0.21670032F, 0), Point(0.2658179F, 0.2036871F, 0), Point(0.31800964F, 0.1795552F, 0), Point(0.36389947F, 0.1358511F, 0), Point(0.40269804F, 0.087003335F, 0), Point(0.42885804F, 0.029554524F, 0), Point(0.4079797F, -0.025164299F, 0), Point(0.3631532F, -0.06995837F, 0), Point(0.31832668F, -0.114752434F, 0), Point(0.26491153F, -0.14867303F, 0), Point(0.2106954F, -0.18146607F, 0), Point(0.15533376F, -0.21230458F, 0), Point(0.09997214F, -0.24314308F, 0), Point(0.041042354F, -0.26606444F, 0), Point(-0.018730462F, -0.28711522F, 0), Point(-0.07850327F, -0.308166F, 0), Point(-0.13827609F, -0.3292168F, 0), Point(-0.19804892F, -0.3502676F, 0), Point(-0.25797245F, -0.37087864F, 0), Point(-0.31889415F, -0.38810408F, 0), Point(-0.38102818F, -0.39864254F, 0), Point(-0.44439948F, -0.39864254F, 0), Point(-0.50777084F, -0.3986425F, 0), Point(-0.57114196F, -0.3986425F, 0),)
         val flippedCShape3 = Gesture(flippedCShapePoints3, "flippedCShape")
         gestureTemplates.add(flippedCShape3)
 
-        //another flippedCShape
+        // flippedCShape four
         val flippedCShapePoints4 = listOf(Point(-0.47812015F, 0.39006054F, 0), Point(-0.41237044F, 0.3599987F, 0), Point(-0.3442252F, 0.33554554F, 0), Point(-0.27607995F, 0.31109235F, 0), Point(-0.20945852F, 0.2830779F, 0), Point(-0.13907316F, 0.2745527F, 0), Point(-0.06915256F, 0.26973504F, 0), Point(-0.027069978F, 0.21082163F, 0), Point(0.02833762F, 0.17780183F, 0), Point(0.10073742F, 0.17780185F, 0), Point(0.16693884F, 0.1520445F, 0), Point(0.22858438F, 0.11407666F, 0), Point(0.29120204F, 0.07824401F, 0), Point(0.3580269F, 0.053993266F, 0), Point(0.38485897F, -0.012791132F, 0), Point(0.40166295F, -0.08321385F, 0), Point(0.40204275F, -0.15556897F, 0), Point(0.38012674F, -0.22302191F, 0), Point(0.3401795F, -0.27746692F, 0), Point(0.26974866F, -0.29423678F, 0), Point(0.19778968F, -0.3009991F, 0), Point(0.12556367F, -0.30601272F, 0), Point(0.05333767F, -0.31102636F, 0), Point(-0.01888832F, -0.31603998F, 0), Point(-0.09115888F, -0.319768F, 0), Point(-0.16355868F, -0.31976798F, 0), Point(-0.23595849F, -0.31976798F, 0), Point(-0.30835828F, -0.319768F, 0), Point(-0.38075808F, -0.319768F, 0), Point(-0.45315784F, -0.319768F, 0), Point(-0.52555764F, -0.319768F, 0), Point(-0.59795725F, -0.319768F, 0),)
         val flippedCShape4 = Gesture(flippedCShapePoints4, "flippedCShape")
         gestureTemplates.add(flippedCShape4)
 
-        // checkmark
-        val checkmarkPoints = listOf( Point(-0.437F, 0.075F, 0), Point(-0.419F, 0.12F, 0), Point(-0.39F, 0.157F, 0), Point(-0.38F, 0.218F, 0), Point(-0.35F, 0.25F, 0), Point(-0.327F, 0.296F, 0), Point(-0.303F, 0.337F, 0), Point(-0.25F, 0.367F, 0), Point(-0.216F, 0.399F, 0), Point(-0.182F, 0.430F, 0), Point(-0.167F, 0.379F, 0), Point(-0.128F, 0.332F, 0), Point(-0.114F, 0.27F, 0), Point(-0.0698F, 0.231F, 0), Point(-0.04F, 0.174F, 0), Point(-0.025F, 0.125F, 0), Point(0.018F, 0.078F, 0), Point(0.034F, 0.020F, 0), Point(0.061F, -0.036F, 0), Point(0.097F, -0.089F, 0), Point(0.126F, -0.132F, 0), Point(0.149F, -0.173F, 0), Point(0.189F, -0.204F, 0), Point(0.221F, -0.255F, 0), Point(0.269F, -0.286F, 0), Point(0.311F, -0.321F, 0), Point(0.333F, -0.366F, 0), Point(0.38F, -0.406F, 0), Point(0.403F, -0.464F, 0), Point(0.449F, -0.482F, 0), Point(0.465F, -0.531F, 0), Point(0.491F, -0.57F, 0) )
+        // flippedCShape five
+        val flippedCShapePoints5 = listOf(Point(-0.48F, -0.48F, 0), Point(-0.40F, -0.40F, 0), Point(-0.32F, -0.32F, 0), Point(-0.23F, -0.23F, 0), Point(-0.15F, -0.15F, 0), Point(-0.06F, -0.06F, 0), Point(-0.02F, -0.02F, 0), Point(0.03F, 0.03F, 0), Point(0.09F, 0.09F, 0), Point(0.15F, 0.15F, 0), Point(0.20F, 0.20F, 0), Point(0.25F, 0.25F, 0), Point(0.28F, 0.28F, 0), Point(0.30F, 0.30F, 0), Point(0.33F, 0.33F, 0), Point(0.36F, 0.36F, 0), Point(0.36F, 0.36F, 0), Point(0.34F, 0.34F, 0), Point(0.31F, 0.31F, 0), Point(0.28F, 0.28F, 0), Point(0.22F, 0.22F, 0), Point(0.17F, 0.17F, 0), Point(0.11F, 0.11F, 0), Point(0.03F, 0.03F, 0), Point(-0.02F, -0.02F, 0), Point(-0.10F, -0.10F, 0), Point(-0.17F, -0.17F, 0), Point(-0.25F, -0.25F, 0), Point(-0.34F, -0.34F, 0), Point(-0.42F, -0.42F, 0), Point(-0.47F, -0.47F, 0), Point(-0.53F, -0.53F, 0),)
+        val flippedCShape5 = Gesture(flippedCShapePoints5, "flippedCShape")
+        gestureTemplates.add(flippedCShape5)
+
+        // flippedCShape six
+        val flippedCShapePoints6 = listOf(Point(-0.59F, -0.59F, 0), Point(-0.51F, -0.51F, 0), Point(-0.43F, -0.43F, 0), Point(-0.36F, -0.36F, 0), Point(-0.28F, -0.28F, 0), Point(-0.20F, -0.20F, 0), Point(-0.12F, -0.12F, 0), Point(-0.04F, -0.04F, 0), Point(0.04F, 0.04F, 0), Point(0.10F, 0.10F, 0), Point(0.16F, 0.16F, 0), Point(0.22F, 0.22F, 0), Point(0.28F, 0.28F, 0), Point(0.32F, 0.32F, 0), Point(0.35F, 0.35F, 0), Point(0.39F, 0.39F, 0), Point(0.41F, 0.41F, 0), Point(0.39F, 0.39F, 0), Point(0.35F, 0.35F, 0), Point(0.31F, 0.31F, 0), Point(0.26F, 0.26F, 0), Point(0.20F, 0.20F, 0), Point(0.14F, 0.14F, 0), Point(0.08F, 0.08F, 0), Point(-0.00F, -0.00F, 0), Point(-0.08F, -0.08F, 0), Point(-0.16F, -0.16F, 0), Point(-0.24F, -0.24F, 0), Point(-0.31F, -0.31F, 0), Point(-0.39F, -0.39F, 0), Point(-0.47F, -0.47F, 0), Point(-0.55F, -0.55F, 0),)
+        val flippedCShape6 = Gesture(flippedCShapePoints6, "flippedCShape")
+        gestureTemplates.add(flippedCShape6)
+
+        // checkmark one
+        val checkmarkPoints = listOf(Point(-0.437F, 0.075F, 0), Point(-0.419F, 0.12F, 0), Point(-0.39F, 0.157F, 0), Point(-0.38F, 0.218F, 0), Point(-0.35F, 0.25F, 0), Point(-0.327F, 0.296F, 0), Point(-0.303F, 0.337F, 0), Point(-0.25F, 0.367F, 0), Point(-0.216F, 0.399F, 0), Point(-0.182F, 0.430F, 0), Point(-0.167F, 0.379F, 0), Point(-0.128F, 0.332F, 0), Point(-0.114F, 0.27F, 0), Point(-0.0698F, 0.231F, 0), Point(-0.04F, 0.174F, 0), Point(-0.025F, 0.125F, 0), Point(0.018F, 0.078F, 0), Point(0.034F, 0.020F, 0), Point(0.061F, -0.036F, 0), Point(0.097F, -0.089F, 0), Point(0.126F, -0.132F, 0), Point(0.149F, -0.173F, 0), Point(0.189F, -0.204F, 0), Point(0.221F, -0.255F, 0), Point(0.269F, -0.286F, 0), Point(0.311F, -0.321F, 0), Point(0.333F, -0.366F, 0), Point(0.38F, -0.406F, 0), Point(0.403F, -0.464F, 0), Point(0.449F, -0.482F, 0), Point(0.465F, -0.531F, 0), Point(0.491F, -0.57F, 0) )
         val checkmark = Gesture(checkmarkPoints, "checkmark")
         gestureTemplates.add(checkmark)
 
+        // checkmark two
+        val checkmarkPoints2 = listOf(Point(-0.23F, -0.23F, 0), Point(-0.21F, -0.21F, 0), Point(-0.21F, -0.21F, 0), Point(-0.18F, -0.18F, 0), Point(-0.15F, -0.15F, 0), Point(-0.13F, -0.13F, 0), Point(-0.11F, -0.11F, 0), Point(-0.09F, -0.09F, 0), Point(-0.07F, -0.07F, 0), Point(-0.06F, -0.06F, 0), Point(-0.03F, -0.03F, 0), Point(-0.01F, -0.01F, 0), Point(-0.01F, -0.01F, 0), Point(-0.01F, -0.01F, 0), Point(-0.01F, -0.01F, 0), Point(0.02F, 0.02F, 0), Point(0.02F, 0.02F, 0), Point(0.05F, 0.05F, 0), Point(0.05F, 0.05F, 0), Point(0.07F, 0.07F, 0), Point(0.08F, 0.08F, 0), Point(0.08F, 0.08F, 0), Point(0.09F, 0.09F, 0), Point(0.11F, 0.11F, 0), Point(0.11F, 0.11F, 0), Point(0.14F, 0.14F, 0), Point(0.14F, 0.14F, 0), Point(0.14F, 0.14F, 0), Point(0.17F, 0.17F, 0), Point(0.17F, 0.17F, 0), Point(0.19F, 0.19F, 0), Point(0.19F, 0.19F, 0))
+        val checkmark2 = Gesture(checkmarkPoints2, "checkmark")
+        gestureTemplates.add(checkmark2)
 
-        // pureCircle
+        // checkmark three
+        val checkmarkPoints3 = listOf(Point(-0.14F, -0.14F, 0), Point(-0.16F, -0.16F, 0), Point(-0.15F, -0.15F, 0), Point(-0.14F, -0.14F, 0), Point(-0.12F, -0.12F, 0), Point(-0.10F, -0.10F, 0), Point(-0.09F, -0.09F, 0), Point(-0.05F, -0.05F, 0), Point(-0.03F, -0.03F, 0), Point(-0.02F, -0.02F, 0), Point(-0.00F, -0.00F, 0), Point(-0.00F, -0.00F, 0), Point(0.01F, 0.01F, 0), Point(0.01F, 0.01F, 0), Point(0.03F, 0.03F, 0), Point(0.04F, 0.04F, 0), Point(0.05F, 0.05F, 0), Point(0.06F, 0.06F, 0), Point(0.06F, 0.06F, 0), Point(0.06F, 0.06F, 0), Point(0.06F, 0.06F, 0), Point(0.07F, 0.07F, 0), Point(0.09F, 0.09F, 0), Point(0.10F, 0.10F, 0), Point(0.11F, 0.11F, 0), Point(0.11F, 0.11F, 0), Point(0.12F, 0.12F, 0), Point(0.13F, 0.13F, 0), Point(0.14F, 0.14F, 0), Point(0.15F, 0.15F, 0), Point(0.16F, 0.16F, 0), Point(0.17F, 0.17F, 0))
+        val checkmark3 = Gesture(checkmarkPoints3, "checkmark")
+        gestureTemplates.add(checkmark3)
+
+        // checkmark four
+        val checkmarkPoints4 = listOf(Point(-0.26F, -0.26F, 0), Point(-0.24F, -0.24F, 0), Point(-0.21F, -0.21F, 0), Point(-0.19F, -0.19F, 0), Point(-0.15F, -0.15F, 0), Point(-0.13F, -0.13F, 0), Point(-0.11F, -0.11F, 0), Point(-0.09F, -0.09F, 0), Point(-0.06F, -0.06F, 0), Point(-0.05F, -0.05F, 0), Point(-0.03F, -0.03F, 0), Point(-0.02F, -0.02F, 0), Point(-0.01F, -0.01F, 0), Point(0.00F, 0.00F, 0), Point(0.01F, 0.01F, 0), Point(0.01F, 0.01F, 0), Point(0.02F, 0.02F, 0), Point(0.04F, 0.04F, 0), Point(0.05F, 0.05F, 0), Point(0.07F, 0.07F, 0), Point(0.08F, 0.08F, 0), Point(0.09F, 0.09F, 0), Point(0.10F, 0.10F, 0), Point(0.12F, 0.12F, 0), Point(0.14F, 0.14F, 0), Point(0.15F, 0.15F, 0), Point(0.15F, 0.15F, 0), Point(0.17F, 0.17F, 0), Point(0.19F, 0.19F, 0), Point(0.19F, 0.19F, 0), Point(0.21F, 0.21F, 0), Point(0.23F, 0.23F, 0))
+        val checkmark4 = Gesture(checkmarkPoints4, "checkmark")
+        gestureTemplates.add(checkmark4)
+
+        // checkmark five
+        val checkmarkPoints5 = listOf(Point(-0.31F, -0.31F, 0), Point(-0.29F, -0.29F, 0), Point(-0.25F, -0.25F, 0), Point(-0.22F, -0.22F, 0), Point(-0.20F, -0.20F, 0), Point(-0.18F, -0.18F, 0), Point(-0.16F, -0.16F, 0), Point(-0.14F, -0.14F, 0), Point(-0.11F, -0.11F, 0), Point(-0.11F, -0.11F, 0), Point(-0.09F, -0.09F, 0), Point(-0.07F, -0.07F, 0), Point(-0.05F, -0.05F, 0), Point(-0.04F, -0.04F, 0), Point(-0.03F, -0.03F, 0), Point(-0.01F, -0.01F, 0), Point(0.01F, 0.01F, 0), Point(0.04F, 0.04F, 0), Point(0.05F, 0.05F, 0), Point(0.06F, 0.06F, 0), Point(0.08F, 0.08F, 0), Point(0.10F, 0.10F, 0), Point(0.10F, 0.10F, 0), Point(0.12F, 0.12F, 0), Point(0.15F, 0.15F, 0), Point(0.16F, 0.16F, 0), Point(0.18F, 0.18F, 0), Point(0.20F, 0.20F, 0), Point(0.21F, 0.21F, 0), Point(0.23F, 0.23F, 0), Point(0.25F, 0.25F, 0), Point(0.27F, 0.27F, 0))
+        val checkmark5 = Gesture(checkmarkPoints5, "checkmark")
+        gestureTemplates.add(checkmark5)
+
+        // checkmark six
+        val checkmarkPoints6 = listOf(Point(-0.35F, -0.35F, 0), Point(-0.30F, -0.30F, 0), Point(-0.26F, -0.26F, 0), Point(-0.22F, -0.22F, 0), Point(-0.18F, -0.18F, 0), Point(-0.15F, -0.15F, 0), Point(-0.12F, -0.12F, 0), Point(-0.09F, -0.09F, 0), Point(-0.06F, -0.06F, 0), Point(-0.04F, -0.04F, 0), Point(-0.01F, -0.01F, 0), Point(0.01F, 0.01F, 0), Point(0.01F, 0.01F, 0), Point(0.03F, 0.03F, 0), Point(0.05F, 0.05F, 0), Point(0.07F, 0.07F, 0), Point(0.08F, 0.08F, 0), Point(0.08F, 0.08F, 0), Point(0.09F, 0.09F, 0), Point(0.10F, 0.10F, 0), Point(0.11F, 0.11F, 0), Point(0.12F, 0.12F, 0), Point(0.12F, 0.12F, 0), Point(0.13F, 0.13F, 0), Point(0.15F, 0.15F, 0), Point(0.16F, 0.16F, 0), Point(0.17F, 0.17F, 0), Point(0.17F, 0.17F, 0), Point(0.20F, 0.20F, 0), Point(0.21F, 0.21F, 0), Point(0.22F, 0.22F, 0), Point(0.24F, 0.24F, 0))
+        val checkmark6 = Gesture(checkmarkPoints6, "checkmark")
+        gestureTemplates.add(checkmark6)
+
+        // pureCircle one
         // does not correspond with a gesture, but 'O'/'o' kept being read as undo/redo
         val pureCirclePoints = listOf( Point(-0.221F, -0.418F, 0), Point(-0.311F, -0.386F, 0), Point(-0.374F, -0.328F, 0), Point(-0.407F, -0.238F, 0), Point(-0.448F, -0.145F, 0), Point(-0.448F, -0.023F, 0), Point(-0.448F, 0.099F, 0), Point(-0.448F, 0.221F, 0), Point(-0.413F, 0.307F, 0), Point(-0.359F, 0.394F, 0), Point(-0.269F, 0.449F, 0), Point(-0.189F, 0.492F, 0), Point(-0.067F, 0.492F, 0), Point(0.054F, 0.492F, 0), Point(0.176F, 0.492F, 0), Point(0.251F, 0.444F, 0), Point(0.324F, 0.396F, 0), Point(0.357F, 0.307F, 0), Point(0.417F, 0.243F, 0), Point(0.456F, 0.151F, 0), Point(0.472F, 0.045F, 0), Point(0.456F, -0.061F, 0), Point(0.414F, -0.152F, 0), Point(0.366F, -0.249F, 0), Point(0.324F, -0.328F, 0), Point(0.276F, -0.402F, 0), Point(0.212F, -0.460F, 0), Point(0.138F, -0.508F, 0), Point(0.016F, -0.508F, 0), Point(-0.105F, -0.508F, 0), Point(-0.179F, -0.459F, 0), Point(-0.269F, -0.418F, 0) )
         val pureCircle = Gesture(pureCirclePoints, "pureCircle")
         gestureTemplates.add(pureCircle)
 
-        //another circle
-        val circle = listOf(Point(0.044942796F, -0.21606079F, 0), Point(-0.051692255F, -0.24786487F, 0), Point(-0.15403703F, -0.2545929F, 0), Point(-0.25010237F, -0.22446823F, 0), Point(-0.327656F, -0.15766697F, 0), Point(-0.37062344F, -0.06767777F, 0), Point(-0.37275344F, 0.034866817F, 0), Point(-0.347976F, 0.13388143F, 0), Point(-0.2937287F, 0.22072187F, 0), Point(-0.21787229F, 0.28965044F, 0), Point(-0.13211091F, 0.34591746F, 0), Point(-0.039127573F, 0.3891608F, 0), Point(0.059584588F, 0.41718835F, 0), Point(0.16181156F, 0.4243062F, 0), Point(0.26378942F, 0.41575113F, 0), Point(0.36073345F, 0.3820266F, 0), Point(0.45200515F, 0.33531114F, 0), Point(0.52432954F, 0.26315108F, 0), Point(0.5537817F, 0.16630082F, 0), Point(0.5488264F, 0.064231746F, 0), Point(0.5039629F, -0.027449803F, 0), Point(0.4431855F, -0.110158086F, 0), Point(0.37308457F, -0.18513231F, 0), Point(0.29454482F, -0.2512837F, 0), Point(0.20867337F, -0.30689883F, 0), Point(0.11033112F, -0.33539137F, 0), Point(0.007881339F, -0.3422763F, 0), Point(-0.09389658F, -0.33077335F, 0), Point(-0.1932391F, -0.3047585F, 0), Point(-0.2907721F, -0.27250552F, 0), Point(-0.38601267F, -0.23424092F, 0), Point(-0.4449654F, -0.15551046F, 0),)
-        val circlePure = Gesture(circle, "pureCircle")
-        gestureTemplates.add(circlePure)
+        // pureCircle two
+        val pureCirclePoints2 = listOf(Point(0.044942796F, -0.21606079F, 0), Point(-0.051692255F, -0.24786487F, 0), Point(-0.15403703F, -0.2545929F, 0), Point(-0.25010237F, -0.22446823F, 0), Point(-0.327656F, -0.15766697F, 0), Point(-0.37062344F, -0.06767777F, 0), Point(-0.37275344F, 0.034866817F, 0), Point(-0.347976F, 0.13388143F, 0), Point(-0.2937287F, 0.22072187F, 0), Point(-0.21787229F, 0.28965044F, 0), Point(-0.13211091F, 0.34591746F, 0), Point(-0.039127573F, 0.3891608F, 0), Point(0.059584588F, 0.41718835F, 0), Point(0.16181156F, 0.4243062F, 0), Point(0.26378942F, 0.41575113F, 0), Point(0.36073345F, 0.3820266F, 0), Point(0.45200515F, 0.33531114F, 0), Point(0.52432954F, 0.26315108F, 0), Point(0.5537817F, 0.16630082F, 0), Point(0.5488264F, 0.064231746F, 0), Point(0.5039629F, -0.027449803F, 0), Point(0.4431855F, -0.110158086F, 0), Point(0.37308457F, -0.18513231F, 0), Point(0.29454482F, -0.2512837F, 0), Point(0.20867337F, -0.30689883F, 0), Point(0.11033112F, -0.33539137F, 0), Point(0.007881339F, -0.3422763F, 0), Point(-0.09389658F, -0.33077335F, 0), Point(-0.1932391F, -0.3047585F, 0), Point(-0.2907721F, -0.27250552F, 0), Point(-0.38601267F, -0.23424092F, 0), Point(-0.4449654F, -0.15551046F, 0),)
+        val pureCircle2 = Gesture(pureCirclePoints2, "pureCircle")
+        gestureTemplates.add(pureCircle2)
 
-        //another circles
-        val circles = listOf(Point(-0.33268917F, 0.0071404874F, 0), Point(-0.30328888F, 0.100730404F, 0), Point(-0.24752969F, 0.18338999F, 0), Point(-0.17736441F, 0.25363362F, 0), Point(-0.09322922F, 0.307103F, 0), Point(-0.0025462452F, 0.3486008F, 0), Point(0.09390674F, 0.3726743F, 0), Point(0.19350547F, 0.3769079F, 0), Point(0.29091108F, 0.36158144F, 0), Point(0.37343854F, 0.30614817F, 0), Point(0.44288686F, 0.23472135F, 0), Point(0.49525958F, 0.14998208F, 0), Point(0.53161466F, 0.0574063F, 0), Point(0.54278415F, -0.041428357F, 0), Point(0.53491396F, -0.14021501F, 0), Point(0.4971187F, -0.2324753F, 0), Point(0.45065048F, -0.320595F, 0), Point(0.38664863F, -0.39677754F, 0), Point(0.30292666F, -0.4502465F, 0), Point(0.2089316F, -0.48261756F, 0), Point(0.1097568F, -0.49053392F, 0), Point(0.01179029F, -0.47878796F, 0), Point(-0.07817734F, -0.43626428F, 0), Point(-0.1546516F, -0.3728222F, 0), Point(-0.22115237F, -0.29850197F, 0), Point(-0.280329F, -0.21821615F, 0), Point(-0.3350837F, -0.13491054F, 0), Point(-0.38223612F, -0.046995796F, 0), Point(-0.41959643F, 0.045511086F, 0), Point(-0.44463867F, 0.14186944F, 0), Point(-0.4550447F, 0.24097157F, 0), Point(-0.41408452F, 0.3280707F, 0),)
-        val circlePures = Gesture(circles, "pureCircle")
-        gestureTemplates.add(circlePures)
+        // pureCircle three
+        val pureCirclePoints3 = listOf(Point(-0.33268917F, 0.0071404874F, 0), Point(-0.30328888F, 0.100730404F, 0), Point(-0.24752969F, 0.18338999F, 0), Point(-0.17736441F, 0.25363362F, 0), Point(-0.09322922F, 0.307103F, 0), Point(-0.0025462452F, 0.3486008F, 0), Point(0.09390674F, 0.3726743F, 0), Point(0.19350547F, 0.3769079F, 0), Point(0.29091108F, 0.36158144F, 0), Point(0.37343854F, 0.30614817F, 0), Point(0.44288686F, 0.23472135F, 0), Point(0.49525958F, 0.14998208F, 0), Point(0.53161466F, 0.0574063F, 0), Point(0.54278415F, -0.041428357F, 0), Point(0.53491396F, -0.14021501F, 0), Point(0.4971187F, -0.2324753F, 0), Point(0.45065048F, -0.320595F, 0), Point(0.38664863F, -0.39677754F, 0), Point(0.30292666F, -0.4502465F, 0), Point(0.2089316F, -0.48261756F, 0), Point(0.1097568F, -0.49053392F, 0), Point(0.01179029F, -0.47878796F, 0), Point(-0.07817734F, -0.43626428F, 0), Point(-0.1546516F, -0.3728222F, 0), Point(-0.22115237F, -0.29850197F, 0), Point(-0.280329F, -0.21821615F, 0), Point(-0.3350837F, -0.13491054F, 0), Point(-0.38223612F, -0.046995796F, 0), Point(-0.41959643F, 0.045511086F, 0), Point(-0.44463867F, 0.14186944F, 0), Point(-0.4550447F, 0.24097157F, 0), Point(-0.41408452F, 0.3280707F, 0),)
+        val pureCircle3 = Gesture(pureCirclePoints3, "pureCircle")
+        gestureTemplates.add(pureCircle3)
+
+        // pureCircle four
+        val pureCirclePoints4 = listOf(Point(-0.07F, -0.07F, 0), Point(-0.18F, -0.18F, 0), Point(-0.29F, -0.29F, 0), Point(-0.36F, -0.36F, 0), Point(-0.42F, -0.42F, 0), Point(-0.45F, -0.45F, 0), Point(-0.47F, -0.47F, 0), Point(-0.49F, -0.49F, 0), Point(-0.49F, -0.49F, 0), Point(-0.48F, -0.48F, 0), Point(-0.43F, -0.43F, 0), Point(-0.38F, -0.38F, 0), Point(-0.32F, -0.32F, 0), Point(-0.21F, -0.21F, 0), Point(-0.11F, -0.11F, 0), Point(0.00F, 0.00F, 0), Point(0.11F, 0.11F, 0), Point(0.22F, 0.22F, 0), Point(0.29F, 0.29F, 0), Point(0.37F, 0.37F, 0), Point(0.42F, 0.42F, 0), Point(0.46F, 0.46F, 0), Point(0.49F, 0.49F, 0), Point(0.51F, 0.51F, 0), Point(0.51F, 0.51F, 0), Point(0.48F, 0.48F, 0), Point(0.40F, 0.40F, 0), Point(0.31F, 0.31F, 0), Point(0.23F, 0.23F, 0), Point(0.13F, 0.13F, 0), Point(0.04F, 0.04F, 0), Point(-0.05F, -0.05F, 0))
+        val pureCircle4 = Gesture(pureCirclePoints4, "pureCircle")
+        gestureTemplates.add(pureCircle4)
+
+        // pureCircle five
+        val pureCirclePoints5 = listOf(Point(-0.16F, -0.16F, 0), Point(-0.27F, -0.27F, 0), Point(-0.36F, -0.36F, 0), Point(-0.43F, -0.43F, 0), Point(-0.47F, -0.47F, 0), Point(-0.49F, -0.49F, 0), Point(-0.52F, -0.52F, 0), Point(-0.52F, -0.52F, 0), Point(-0.47F, -0.47F, 0), Point(-0.43F, -0.43F, 0), Point(-0.38F, -0.38F, 0), Point(-0.29F, -0.29F, 0), Point(-0.19F, -0.19F, 0), Point(-0.08F, -0.08F, 0), Point(0.03F, 0.03F, 0), Point(0.14F, 0.14F, 0), Point(0.24F, 0.24F, 0), Point(0.32F, 0.32F, 0), Point(0.37F, 0.37F, 0), Point(0.42F, 0.42F, 0), Point(0.46F, 0.46F, 0), Point(0.48F, 0.48F, 0), Point(0.48F, 0.48F, 0), Point(0.48F, 0.48F, 0), Point(0.46F, 0.46F, 0), Point(0.40F, 0.40F, 0), Point(0.32F, 0.32F, 0), Point(0.22F, 0.22F, 0), Point(0.11F, 0.11F, 0), Point(0.00F, 0.00F, 0), Point(-0.10F, -0.10F, 0), Point(-0.20F, -0.20F, 0))
+        val pureCircle5 = Gesture(pureCirclePoints5, "pureCircle")
+        gestureTemplates.add(pureCircle5)
+
+        // pureCircle six
+        val pureCirclePoints6 = listOf(Point(0.31F, 0.31F, 0), Point(0.33F, 0.33F, 0), Point(0.29F, 0.29F, 0), Point(0.23F, 0.23F, 0), Point(0.17F, 0.17F, 0), Point(0.10F, 0.10F, 0), Point(0.01F, 0.01F, 0), Point(-0.10F, -0.10F, 0), Point(-0.18F, -0.18F, 0), Point(-0.24F, -0.24F, 0), Point(-0.30F, -0.30F, 0), Point(-0.33F, -0.33F, 0), Point(-0.37F, -0.37F, 0), Point(-0.39F, -0.39F, 0), Point(-0.39F, -0.39F, 0), Point(-0.39F, -0.39F, 0), Point(-0.37F, -0.37F, 0), Point(-0.34F, -0.34F, 0), Point(-0.29F, -0.29F, 0), Point(-0.22F, -0.22F, 0), Point(-0.13F, -0.13F, 0), Point(-0.03F, -0.03F, 0), Point(0.08F, 0.08F, 0), Point(0.18F, 0.18F, 0), Point(0.27F, 0.27F, 0), Point(0.32F, 0.32F, 0), Point(0.35F, 0.35F, 0), Point(0.39F, 0.39F, 0), Point(0.40F, 0.40F, 0), Point(0.38F, 0.38F, 0), Point(0.35F, 0.35F, 0), Point(0.33F, 0.33F, 0))
+        val pureCircle6 = Gesture(pureCirclePoints6, "pureCircle")
+        gestureTemplates.add(pureCircle6)
 
         Log.d("GESTURE", "set up templates")
         for (temp in gestureTemplates) {
