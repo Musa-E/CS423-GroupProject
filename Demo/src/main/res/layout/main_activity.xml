@@ -56,6 +56,17 @@ into this Android SDK and then edited by our team -->
 
             <include layout="@layout/smart_guide_layout" />
 
+            <ImageButton
+                android:id="@+id/gesturesHelpButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|end"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="72dp"
+                android:backgroundTint="@color/colorAccent"
+                android:contentDescription="@string/gestures_help_button"
+                android:src="@android:drawable/ic_menu_help"/>
+
         </FrameLayout>
     </LinearLayout>
 
