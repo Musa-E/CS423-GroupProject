@@ -107,22 +107,7 @@ suspend fun Context.processUriFile(uri: Uri, file: File, logic: (File) -> Unit) 
 @get:StringRes
 private val MenuAction.stringRes: Int
     get() {
-        return when (this) {
-    //        MenuAction.COPY -> R.string.editor_action_copy
-    //        MenuAction.PASTE -> R.string.editor_action_paste
-    //        MenuAction.DELETE -> R.string.editor_action_delete
-    //       // MenuAction.CONVERT -> R.string.editor_action_convert
-    //        MenuAction.EXPORT -> R.string.editor_action_export
-    //        MenuAction.ADD_BLOCK -> R.string.editor_action_add_block
-    //        MenuAction.FORMAT_TEXT -> R.string.editor_action_format_text
-    //        MenuAction.FORMAT_TEXT_H1 -> R.string.editor_action_format_text_as_heading1
-    //        MenuAction.FORMAT_TEXT_H2 -> R.string.editor_action_format_text_as_heading2
-    //        MenuAction.FORMAT_TEXT_PARAGRAPH -> R.string.editor_action_format_text_as_paragraph
-    //        MenuAction.FORMAT_TEXT_LIST_BULLET -> R.string.editor_action_format_text_as_list_bullet
-    //        MenuAction.FORMAT_TEXT_LIST_CHECKBOX -> R.string.editor_action_format_text_as_list_checkbox
-    //        MenuAction.FORMAT_TEXT_LIST_NUMBERED -> R.string.editor_action_format_text_as_list_numbered
-            else -> {return 0}
-        }
+        return 0
     }
 
 // Declares all the types of pens and their names for display
@@ -178,29 +163,9 @@ class MainActivity : AppCompatActivity() {
     private val editorBinding = IInkApplication.DemoModule.editorBinding
     private var smartGuideView: SmartGuideView? = null
     private var toolsAdapter = ToolsAdapter { viewModel.changeTool(it) }
-    // private var colorsAdapter = ColorsAdapter { viewModel.changeColor(it) }
-    // private var thicknessesAdapter = ThicknessesAdapter { viewModel.changeThickness(it) }
     private val penBrushesAdapter by lazy {
         ArrayAdapter<String>(this, R.layout.toolbar_pen_brush_row, R.id.toolbar_pen_brush_row_label)
     }
-    //listens for pen brush to be changed
-//    private val penBrushSelectedListener = object : AdapterView.OnItemSelectedListener {
-//        override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-//            val penBrushLabel = penBrushesAdapter.getItem(position) ?: return
-//            val penBrush = when (penBrushLabel) {
-//                getString(R.string.pen_brush_felt_pen) -> PenBrush.FELT_PEN
-//                getString(R.string.pen_brush_fountain_pen) -> PenBrush.FOUNTAIN_PEN
-//                getString(R.string.pen_brush_calligraphic_brush) -> PenBrush.CALLIGRAPHIC_BRUSH
-//                getString(R.string.pen_brush_pencil_brush) -> PenBrush.PENCIL
-//                else -> null
-//            }
-//            if (penBrush != null) {
-//                viewModel.changePenBrush(PenBrushState(penBrush, true))
-//            }
-//        }
-//
-//        override fun onNothingSelected(parent: AdapterView<*>?) = Unit
-//    }
 
     private companion object {
         const val EnableCapturePredictionByDefault: Boolean = true
@@ -308,11 +273,6 @@ class MainActivity : AppCompatActivity() {
 
         with(binding.editorToolbarSheet) {
             toolbarTools.adapter = toolsAdapter
-            // toolbarColors.itemAnimator = null
-            // toolbarColors.adapter = colorsAdapter
-            // toolbarThicknesses.adapter = thicknessesAdapter
-            // penBrushDropdown.adapter = penBrushesAdapter
-            // penBrushDropdown.onItemSelectedListener = penBrushSelectedListener
         }
 
         //just an error response, dont touch
@@ -820,18 +780,21 @@ class MainActivity : AppCompatActivity() {
 
     //updating the colors in the toolsheet
     private fun onAvailableColorsUpdate(colorStates: List<ColorState>) {
+        // none colors
         // colorsAdapter.submitList(colorStates)
         // binding.editorToolbarSheet.toolbarColors.isVisible = colorStates.isNotEmpty()
     }
 
     //updating the thickness in the toolsheet
     private fun onAvailableThicknessesUpdate(thicknessStates: List<ThicknessState>) {
+        // none thicknesses
         // thicknessesAdapter.submitList(thicknessStates)
         // binding.editorToolbarSheet.toolbarThicknesses.isVisible = thicknessStates.isNotEmpty()
     }
 
     //updating the toolsheet brushes
     private fun onAvailablePenBrushesUpdate(penBrushStates: List<PenBrushState>) {
+        // I (Asher) didn't want to mess with this too much
         penBrushesAdapter.clear()
         if (penBrushStates.isNotEmpty()) {
             // penBrushesAdapter.addAll(penBrushStates.map { getString(it.penBrush.label) })
