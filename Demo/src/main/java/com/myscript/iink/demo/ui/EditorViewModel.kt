@@ -218,7 +218,7 @@ class EditorViewModel(
         }
 
     private fun thicknessesByTools(toolType: ToolType?, selectedThickness: Float): List<ThicknessState> {
-        return if (toolType == ToolType.HIGHLIGHTER || toolType == ToolType.PEN) {
+        return if (toolType == ToolType.PEN) {
             Thickness.entries.map {
                 ThicknessState(it, it == selectedThickness.toThickness(toolType))
             }
