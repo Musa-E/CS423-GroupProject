@@ -147,7 +147,7 @@ class MainActivity : AppCompatActivity() {
         R.drawable.convert_gesture_help_icon,
         R.drawable.complete_gesture_help_icon,
         R.drawable.delete_gesture_help_icon,
-        R.drawable.highlight_gesture_help_icon,
+        R.drawable.circle_convert_gesture_help_icon,
         R.drawable.touch_to_edit_gesture_help_icon
     )
     private var currentImageIndex = 0 // Keep track of which element in the above array the dialog box is in
@@ -255,9 +255,9 @@ class MainActivity : AppCompatActivity() {
         editorData.inputController?.setViewListener(editorView)
 
         //the touch listener for the editor view to include custom one
-         editorView?.setOnTouchListener { _, event ->
+        editorView?.setOnTouchListener { _, event ->
             editorData.inputController?.onTouch(editorView, event)
-             onTouchEvent(event)
+            onTouchEvent(event)
             true
         }
 
@@ -317,7 +317,7 @@ class MainActivity : AppCompatActivity() {
 
                 officialTitle = bundle["partTitle"] as String
 
-               // viewModel.getPart(bundle["partId"].toString())
+                // viewModel.getPart(bundle["partId"].toString())
                 viewModel.getPart(partState) //function that gets the PartState you want to load
 
             }
@@ -565,11 +565,11 @@ class MainActivity : AppCompatActivity() {
 
     //what to do when it is detected
     private fun onUndoGestureDetected() {
-            Handler(Looper.getMainLooper()).postDelayed({
-                //listenerStateSaved.value = true
-                viewModel.undo();
-                viewModel.undo();
-            }, 600)
+        Handler(Looper.getMainLooper()).postDelayed({
+            //listenerStateSaved.value = true
+            viewModel.undo();
+            viewModel.undo();
+        }, 600)
         //viewModel.undo()
         Toast.makeText(this, "Undo action detected!", Toast.LENGTH_SHORT).show()
     }
@@ -909,9 +909,9 @@ class MainActivity : AppCompatActivity() {
                             startActivity(Intent.createChooser(intent, uri.lastPathSegment))
                         } else {
                             ShareCompat.IntentBuilder(this)
-                                    .setType(mimeType.typeName)
-                                    .setStream(uri)
-                                    .startChooser()
+                                .setType(mimeType.typeName)
+                                .setStream(uri)
+                                .startChooser()
                         }
                     } else {
                         Toast.makeText(this, R.string.editor_export_failed, Toast.LENGTH_LONG).show()
@@ -963,8 +963,8 @@ class MainActivity : AppCompatActivity() {
 
             }
             else{
-                    it.subtitle = partState.dateCreated
-                }
+                it.subtitle = partState.dateCreated
+            }
         }
 
         editorView?.isVisible = state.isReady
