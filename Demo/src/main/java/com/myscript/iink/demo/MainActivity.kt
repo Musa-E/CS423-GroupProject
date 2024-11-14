@@ -376,7 +376,11 @@ class MainActivity : AppCompatActivity() {
                                 editor.apply() // or editor.commit()
                                 Handler(Looper.getMainLooper()).postDelayed({
                                     viewModel.undo()
-                                    viewModel.convertContent()
+                                    try{
+                                        viewModel.convertContent()
+                                    } catch (e: Exception){
+                                        Log.e("dfdf", "dfdf");
+                                    }
                                 }, 500)
 
                             } else if (result.name == "flippedCShape" && result.score >= 0.87) {
