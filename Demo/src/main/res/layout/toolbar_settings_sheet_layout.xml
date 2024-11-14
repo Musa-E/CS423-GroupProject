@@ -41,31 +41,7 @@ into this Android SDK and then edited by our team -->
         tools:listitem="@layout/toolbar_tool_cell"
         tools:itemCount="5" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:contentDescription="color of pen"
-        android:id="@+id/toolbar_colors"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:orientation="horizontal"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/toolbar_color_cell"
-        tools:itemCount="4"
-        android:visibility="gone"
-        tools:visibility="visible"/>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:contentDescription="pen thickness"
-        android:id="@+id/toolbar_thicknesses"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:orientation="horizontal"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/toolbar_thickness_cell"
-        tools:itemCount="3"
-        android:visibility="gone"
-        tools:visibility="visible"/>
 
     <LinearLayout
         android:background="@drawable/rounded_corner_white"
@@ -76,26 +52,6 @@ into this Android SDK and then edited by our team -->
         tools:visibility="visible"
         android:orientation="vertical">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="15dp"
-            android:text="@string/tool_configuration_pen_brush_section_title"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="@color/control_gray"
-            android:textSize="20dp"
-            android:textStyle="bold" />
 
-        <androidx.appcompat.widget.AppCompatSpinner
-            android:layout_gravity="start"
-            android:id="@+id/pen_brush_dropdown"
-            android:layout_width="match_parent"
-            tools:minWidth="200dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            tools:minHeight="?attr/listPreferredItemHeightSmall"
-            tools:listitem="@layout/toolbar_pen_brush_row"/>
     </LinearLayout>
 </LinearLayout>

@@ -218,7 +218,7 @@ class EditorViewModel(
         }
 
     private fun thicknessesByTools(toolType: ToolType?, selectedThickness: Float): List<ThicknessState> {
-        return if (toolType == ToolType.HIGHLIGHTER || toolType == ToolType.PEN) {
+        return if (toolType == ToolType.PEN) {
             Thickness.entries.map {
                 ThicknessState(it, it == selectedThickness.toThickness(toolType))
             }
@@ -390,15 +390,15 @@ class EditorViewModel(
         return ContextualActionState.Action(x, y, actions)
     }
 
-    fun requestSmartGuideActions(x: Float, y: Float, contentBlockId: String): ContextualActionState {
-        val actions = partEditor.getMenuActions(contentBlockId)
-        return ContextualActionState.Action(x, y, actions)
-    }
-
-    fun requestContentBlockActions(x: Float, y: Float): ContextualActionState {
-        val actions = partEditor.getMenuActions(x, y)
-        return ContextualActionState.Action(x, y, actions)
-    }
+//    fun requestSmartGuideActions(x: Float, y: Float, contentBlockId: String): ContextualActionState {
+//        val actions = partEditor.getMenuActions(contentBlockId)
+//        return ContextualActionState.Action(x, y, actions)
+//    }
+//
+//    fun requestContentBlockActions(x: Float, y: Float): ContextualActionState {
+//        val actions = partEditor.getMenuActions(x, y)
+//        return ContextualActionState.Action(x, y, actions)
+//    }
 
     fun getExportMimeTypes(): List<MimeType> {
         return partEditor.getExportMimeTypes()

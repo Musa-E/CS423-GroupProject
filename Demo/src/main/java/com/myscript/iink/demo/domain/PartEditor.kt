@@ -55,17 +55,14 @@ enum class PartType(private val stringValue: String) {
 }
 
 enum class ToolType {
-    HAND, PEN, ERASER, HIGHLIGHTER, LASSO
+    PEN, ERASER
 }
 
 
 val ToolType.storageKey: String
     get() = when (this) {
-        ToolType.HAND -> "hand"
         ToolType.PEN -> "pen"
         ToolType.ERASER -> "eraser"
-        ToolType.HIGHLIGHTER -> "highlighter"
-        ToolType.LASSO -> "lasso"
     }
 
 enum class PenBrush(val styleValue: String) {
@@ -168,7 +165,7 @@ class PartEditor(
     private var currentIndex: Int = -1
     private var listener: Listener? = null
     private var allParts: List<String> = emptyList()
-    var isActivePenEnabled: Boolean = true
+    var isActivePenEnabled: Boolean = false
     var inputController: InputController? = null
 
     private val editorListener: IEditorListener = object : IEditorListener {
@@ -375,7 +372,7 @@ class PartEditor(
     // Toolbar
     fun enableActivePen(enableActivePen: Boolean) {
         isActivePenEnabled = enableActivePen
-        if (isActivePenEnabled && selectedTool == ToolType.HAND) {
+        if (isActivePenEnabled) {
             selectedTool = ToolType.PEN
         }
         selectedTool?.let { changeTool(it) }
@@ -490,7 +487,7 @@ class PartEditor(
         return editor.supportedAddBlockTypes.mapNotNull(BlockType::fromString)
     }
 
-    fun getMenuActions(x: Float, y: Float): List<MenuAction> {
+    fun getMenuActions(x: Float, y: Float): List<Unit> {
         val editor = editor ?: return emptyList()
 
         // priority chain to choose the right subject (ContentSelection > ContentBlock > root ContentBlock)
@@ -502,7 +499,7 @@ class PartEditor(
         return actions.mapNotNull(ContextualActions::toMenuAction).toList()
     }
 
-    fun getMenuActions(contentBlockId: String): List<MenuAction> {
+    fun getMenuActions(contentBlockId: String): List<Unit> {
         val editor = editor ?: return emptyList()
 
         return editor.getBlockById(contentBlockId)?.use { block ->
@@ -548,42 +545,43 @@ class PartEditor(
 
         try {
             when (action) {
-                MenuAction.COPY -> editor.copy(content)
-                MenuAction.PASTE -> editor.paste(x, y)
-                MenuAction.DELETE -> if (content != null) editor.erase(content)
-                //MenuAction.CONVERT -> convertContent(content)
-                MenuAction.EXPORT -> {}
-                MenuAction.ADD_BLOCK -> {}
-                MenuAction.FORMAT_TEXT -> {}
-                MenuAction.FORMAT_TEXT_H1 -> if (content != null) editor.setTextFormat(
-                    content,
-                    TextFormat.H1
-                )
-
-                MenuAction.FORMAT_TEXT_H2 -> if (content != null) editor.setTextFormat(
-                    content,
-                    TextFormat.H2
-                )
-
-                MenuAction.FORMAT_TEXT_PARAGRAPH -> if (content != null) editor.setTextFormat(
-                    content,
-                    TextFormat.PARAGRAPH
-                )
-
-                MenuAction.FORMAT_TEXT_LIST_BULLET -> if (content != null) editor.setTextFormat(
-                    content,
-                    TextFormat.LIST_BULLET
-                )
-
-                MenuAction.FORMAT_TEXT_LIST_CHECKBOX -> if (content != null) editor.setTextFormat(
-                    content,
-                    TextFormat.LIST_CHECKBOX
-                )
-
-                MenuAction.FORMAT_TEXT_LIST_NUMBERED -> if (content != null) editor.setTextFormat(
-                    content,
-                    TextFormat.LIST_NUMBERED
-                )
+//                MenuAction.COPY -> editor.copy(content)
+//                MenuAction.PASTE -> editor.paste(x, y)
+//                MenuAction.DELETE -> if (content != null) editor.erase(content)
+//                //MenuAction.CONVERT -> convertContent(content)
+//                MenuAction.EXPORT -> {}
+//                MenuAction.ADD_BLOCK -> {}
+//                MenuAction.FORMAT_TEXT -> {}
+//                MenuAction.FORMAT_TEXT_H1 -> if (content != null) editor.setTextFormat(
+//                    content,
+//                    TextFormat.H1
+//                )
+//
+//                MenuAction.FORMAT_TEXT_H2 -> if (content != null) editor.setTextFormat(
+//                    content,
+//                    TextFormat.H2
+//                )
+//
+//                MenuAction.FORMAT_TEXT_PARAGRAPH -> if (content != null) editor.setTextFormat(
+//                    content,
+//                    TextFormat.PARAGRAPH
+//                )
+//
+//                MenuAction.FORMAT_TEXT_LIST_BULLET -> if (content != null) editor.setTextFormat(
+//                    content,
+//                    TextFormat.LIST_BULLET
+//                )
+//
+//                MenuAction.FORMAT_TEXT_LIST_CHECKBOX -> if (content != null) editor.setTextFormat(
+//                    content,
+//                    TextFormat.LIST_CHECKBOX
+//                )
+//
+//                MenuAction.FORMAT_TEXT_LIST_NUMBERED -> if (content != null) editor.setTextFormat(
+//                    content,
+//                    TextFormat.LIST_NUMBERED
+//                )
+                else -> {}
             }
         } catch (e: Exception) {
             listener?.actionError(e, (content as? ContentBlock)?.id)
@@ -783,21 +781,21 @@ private fun TextFormat.toMenuAction(): MenuAction = when (this) {
     TextFormat.LIST_NUMBERED -> MenuAction.FORMAT_TEXT_LIST_NUMBERED
 }
 
-private fun ContextualActions.toMenuAction(): MenuAction = when (this) {
-    ContextualActions.COPY -> MenuAction.COPY
-    //ContextualActions.CONVERT -> MenuAction.CONVERT
-    ContextualActions.REMOVE -> MenuAction.DELETE
-    ContextualActions.EXPORT -> MenuAction.EXPORT
-    ContextualActions.ADD_BLOCK -> MenuAction.ADD_BLOCK
-    ContextualActions.PASTE -> MenuAction.PASTE
-    ContextualActions.FORMAT_TEXT -> MenuAction.FORMAT_TEXT
+private fun ContextualActions.toMenuAction() {
+    when (this) {
+//    ContextualActions.COPY -> MenuAction.COPY
+//    //ContextualActions.CONVERT -> MenuAction.CONVERT
+//    ContextualActions.REMOVE -> MenuAction.DELETE
+//    ContextualActions.EXPORT -> MenuAction.EXPORT
+//    ContextualActions.ADD_BLOCK -> MenuAction.ADD_BLOCK
+//    ContextualActions.PASTE -> MenuAction.PASTE
+//    ContextualActions.FORMAT_TEXT -> MenuAction.FORMAT_TEXT
+        else -> {return;}
+    }
 }
 
 private fun ToolType.toPointerTool(): PointerTool = when (this) {
-    ToolType.HAND -> PointerTool.HAND
     ToolType.PEN -> PointerTool.PEN
-    ToolType.HIGHLIGHTER -> PointerTool.HIGHLIGHTER
-    ToolType.LASSO -> PointerTool.SELECTOR
     ToolType.ERASER -> PointerTool.ERASER
 }
 
@@ -814,18 +812,12 @@ private fun Editor.newBlockScreenPosition(): Point {
  * Define the list of available tools depending on the part's type and active pen mode (stylus vs touch).
  */
 private fun PartType.availableTools(tools: List<ToolType>, enableActivePen: Boolean): Map<ToolType, Boolean> {
-    val toolHand = tools.first { it == ToolType.HAND }
     val toolPen = tools.first { it == ToolType.PEN }
-    val toolHighlighter = tools.first { it == ToolType.HIGHLIGHTER }
-    val toolLasso = tools.first { it == ToolType.LASSO }
     val toolEraser = tools.first { it == ToolType.ERASER }
 
     return when (this) {
         PartType.TextDocument -> mapOf(
-            toolHand to !enableActivePen,
             toolPen to true,
-            toolHighlighter to true,
-            toolLasso to true,
             toolEraser to true
         )
     }

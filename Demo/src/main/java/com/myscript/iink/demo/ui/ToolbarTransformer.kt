@@ -34,11 +34,6 @@ fun Thickness.toFloat(toolType: ToolType) = when (toolType) {
         Thickness.MEDIUM -> .65f
         Thickness.LARGE -> 1.65f
     }
-    ToolType.HIGHLIGHTER -> when (this) {
-        Thickness.THIN -> 1.67f
-        Thickness.MEDIUM -> 5f
-        Thickness.LARGE -> 15f
-    }
     else -> 0f
 }
 
@@ -48,12 +43,6 @@ fun Float.toThickness(toolType: ToolType?) = when (toolType) {
         this == .65f -> Thickness.MEDIUM
         this >= 1.65f -> Thickness.LARGE
         else -> Thickness.THIN
-    }
-    ToolType.HIGHLIGHTER -> when {
-        this <= 1.67f -> Thickness.THIN
-        this == 5f -> Thickness.MEDIUM
-        this >= 15f -> Thickness.LARGE
-        else -> null
     }
     else -> Thickness.MEDIUM
 }
