@@ -4,9 +4,9 @@ into this Android SDK and then edited by our team -->
 
 <resources>
     <style name="SCBSwitch" parent="Theme.AppCompat.Light">
-        <item name="colorControlActivated">@color/white</item>
+        <item name="colorControlActivated">#673AB7</item>
 
-        <item name="colorSwitchThumbNormal">#673AB7</item>
+        <item name="colorSwitchThumbNormal">@color/white</item>
 
         <item name="android:colorForeground">#5BDFD8D8</item>
     </style>

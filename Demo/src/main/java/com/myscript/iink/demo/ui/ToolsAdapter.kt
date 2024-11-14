@@ -19,21 +19,15 @@ import com.myscript.iink.demo.util.setTooltipText
 @get:DrawableRes
 private val ToolType.asDrawable: Int
     get() = when (this) {
-        ToolType.HAND -> R.drawable.ic_hand_outlined
         ToolType.PEN -> R.drawable.ic_pen_outlined
         ToolType.ERASER -> R.drawable.ic_eraser
-        ToolType.HIGHLIGHTER -> R.drawable.ic_brush_outlined
-        ToolType.LASSO -> R.drawable.ic_lasso
     }
 
 @get:StringRes
 private val ToolType.label: Int
     get() = when (this) {
-        ToolType.HAND -> R.string.tool_hand
         ToolType.PEN -> R.string.tool_pen
         ToolType.ERASER -> R.string.tool_eraser
-        ToolType.HIGHLIGHTER -> R.string.tool_highlighter
-        ToolType.LASSO -> R.string.tool_lasso
     }
 
 class ToolStateViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder(

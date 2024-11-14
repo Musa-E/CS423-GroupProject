@@ -55,17 +55,14 @@ enum class PartType(private val stringValue: String) {
 }
 
 enum class ToolType {
-    HAND, PEN, ERASER, HIGHLIGHTER, LASSO
+    PEN, ERASER
 }
 
 
 val ToolType.storageKey: String
     get() = when (this) {
-        ToolType.HAND -> "hand"
         ToolType.PEN -> "pen"
         ToolType.ERASER -> "eraser"
-        ToolType.HIGHLIGHTER -> "highlighter"
-        ToolType.LASSO -> "lasso"
     }
 
 enum class PenBrush(val styleValue: String) {
@@ -375,7 +372,7 @@ class PartEditor(
     // Toolbar
     fun enableActivePen(enableActivePen: Boolean) {
         isActivePenEnabled = enableActivePen
-        if (isActivePenEnabled && selectedTool == ToolType.HAND) {
+        if (isActivePenEnabled) {
             selectedTool = ToolType.PEN
         }
         selectedTool?.let { changeTool(it) }
@@ -798,10 +795,7 @@ private fun ContextualActions.toMenuAction() {
 }
 
 private fun ToolType.toPointerTool(): PointerTool = when (this) {
-    ToolType.HAND -> PointerTool.HAND
     ToolType.PEN -> PointerTool.PEN
-    ToolType.HIGHLIGHTER -> PointerTool.HIGHLIGHTER
-    ToolType.LASSO -> PointerTool.SELECTOR
     ToolType.ERASER -> PointerTool.ERASER
 }
 
@@ -818,18 +812,12 @@ private fun Editor.newBlockScreenPosition(): Point {
  * Define the list of available tools depending on the part's type and active pen mode (stylus vs touch).
  */
 private fun PartType.availableTools(tools: List<ToolType>, enableActivePen: Boolean): Map<ToolType, Boolean> {
-    val toolHand = tools.first { it == ToolType.HAND }
     val toolPen = tools.first { it == ToolType.PEN }
-    val toolHighlighter = tools.first { it == ToolType.HIGHLIGHTER }
-    val toolLasso = tools.first { it == ToolType.LASSO }
     val toolEraser = tools.first { it == ToolType.ERASER }
 
     return when (this) {
         PartType.TextDocument -> mapOf(
-            toolHand to !enableActivePen,
             toolPen to true,
-            toolHighlighter to true,
-            toolLasso to true,
             toolEraser to true
         )
     }

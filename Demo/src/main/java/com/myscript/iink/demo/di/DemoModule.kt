@@ -128,17 +128,6 @@ class DemoModule(application: Application) {
                 toolRepository.saveToolThickness(storageKey, Thickness.MEDIUM.toFloat(this))
             }
         }
-        with(ToolType.HIGHLIGHTER) {
-            val color = toolRepository.getToolColor(storageKey)
-            if (color == Color.TRANSPARENT) {
-                val defaultColor = colorPalette.getColors(this).firstOrNull() ?: return@with
-                toolRepository.saveToolColor(storageKey, defaultColor)
-            }
-            val thickness = toolRepository.getToolThickness(storageKey)
-            if (thickness == 0f) {
-                toolRepository.saveToolThickness(storageKey, Thickness.MEDIUM.toFloat(this))
-            }
-        }
         return toolRepository
     }
 
@@ -156,12 +145,6 @@ class DemoModule(application: Application) {
                         0x34A853.opaque,
                         0x4285F4.opaque,
                 ),
-                ToolType.HIGHLIGHTER to listOf(
-                        0xFBBC05.opaque,
-                        0xEA4335.opaque,
-                        0x34A853.opaque,
-                        0x4285F4.opaque,
-                )
         ))
     }
 
