@@ -10,5 +10,6 @@
   - When you click "Device Manager" again, it should show your new phone "Pixel 5 API 34". Click play! (represented by the arrow).
 
 ### Step Four: Run our App
-- Now that the Pixel device is running, we need to actually run our program! In the top of the page, you will see the following: ![image](https://github.com/user-attachments/assets/9e8730c7-8917-499a-930d-d60a1fff3807)
+- Now that the Pixel device is running, we need to actually run our program! In the top of the page, you will see the following: ![image](https://github.com/user-attachments/assets/9e8730c7-8917-499a-930d-d60a1fff3807) Make sure that is how it looks; otherwise, click the dropdown until it looks like that. Then, click play (![image](https://github.com/user-attachments/assets/492493b8-7e1b-4dab-b190-6bcd2e389f2b)
+)
 
