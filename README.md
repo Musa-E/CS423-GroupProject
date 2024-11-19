@@ -1,42 +1,14 @@
-# From Polly:
-### Quick Note:
+## To Get This Application Up and Running
 
-I had to integrate the SDK in order to actually get the API calls, so sorry...
+### Step one: Download Android Studio.
+  - If it asks you to choose an API version, please choose Android 14.0 ("UpsideDownCake")
+### Step two: Clone this repo into Android Studio
+  - This is done by linking your GitHub account to Android Studio, then pressing "Git" on the toolbar, then "clone". Then, all you have to do is copy and paste the URL :).
+### Step three: Adding a Device.
+  - A vertical taskbar is on the right side of the application. Click the "Device Manager", then click the "+" sign (when hovered over, it should say 'Add a new device'), then click 'Create Virtual Device'.
+  - A page will pop up labeled "Virtual Device Configuration", and you are going to want to select "Pixel 5" (with a little bit of scrolling). Click 'Next'. This will lead you to something called "System Image". Make sure you click "UpsideDownCake" (also called API 34). (If it is not downloaded, that is completely okay! Just allow it to do so.) Then, click 'Next'. This will help you verify the configuration. Top to bottom, it should read: "pixel 5", "UpsideDownCake", "Preferred ABI: Optimal", "Startup orientation: Portrait", "Emulated Performace: Software", "Device Frame is enabled." Then, click 'Finish'.
+  - When you click "Device Manager" again, it should show your new phone "Pixel 5 API 34". Click play! (represented by the arrow).
 
-## To get git and this repo set up
+### Step Four: Run our App
+- Now that the Pixel device is running, we need to actually run our program! In the top of the page, you will see the following: ![image](https://github.com/user-attachments/assets/9e8730c7-8917-499a-930d-d60a1fff3807)
 
-First, open any project window. Then, click VCS on the top task bar, then "Enable Version Control Integration". "Git" is what you want, and click okay.
-
-Now, click Git in the taskbar, clone, and paste our group github URL (you can also sign in here; hint: you should do that). When you click clone, it will open our project.
-
-You can create new branches and add and merge and pull or whatever from the git tab whenever.
-
-# From myScript: 
-## Building your own integration
-
-This repository provides you with a ready-to-use reference implementation of the Android integration part, covering aspects like ink capture and rendering. It is located in `UIReferenceImplementation` directory and can be simply added to your project by referencing it in your `settings.gradle`.
-
-## Documentation
-
-A complete guide is available on [MyScript Developer website](https://developer.myscript.com/docs/interactive-ink/latest/android/).
-
-The API Reference is available directly in Android Studio once the dependencies are downloaded.
-
-## Getting support
-
-You can get some support from the dedicated section on [MyScript Developer website](https://developer.myscript.com/support/).
-
-## Troubleshoot
-
-If you encounter build errors of the form `No version of NDK matched the requested version`, please install the requested NDK version or update the one referenced in `build.gradle` to match your installed NDK version. You can follow [these instructions](https://developer.android.com/studio/projects/install-ndk#specific-version).
-
-## Sharing your feedback ?
-
-Made a cool app with Interactive Ink? Ready to cross join our marketing efforts? We would love to hear about you!
-We’re planning to showcase apps using it so let us know by sending a quick mail to [myapp@myscript.com](mailto://myapp@myscript.com).
-
-## Contributing
-
-We welcome your contributions:
-If you would like to extend those examples for your needs, feel free to fork it!
-Please sign our [Contributor License Agreement](CONTRIBUTING.md) before submitting your pull request.
