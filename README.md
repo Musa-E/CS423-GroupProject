@@ -22,7 +22,7 @@ The first thing you need to do is clone the following repository into a folder o
 
 <img width="269" alt="The Code button's dropdown menu" src="https://github.com/user-attachments/assets/685254a9-567d-4732-bb40-1c9adeff33b1">
 
-As a side note, for users for familiar with Git Bash [(<img width="14" alt="The Code button's dropdown menu" src="https://github.com/user-attachments/assets/a3006632-779e-447d-83e1-5f7adbcde4f4">)](https://git-scm.com/downloads), the repository can also be cloned using the https link *(also found in the "<> Code" button's menu)*, as shown in the above image.
+As a side note, for users familiar with Git Bash [(<img width="14" alt="The Code button's dropdown menu" src="https://github.com/user-attachments/assets/a3006632-779e-447d-83e1-5f7adbcde4f4">)](https://git-scm.com/downloads), the repository can also be cloned using the https link *(also found in the "<> Code" button's menu)*, as shown in the above image.
 
 ---
 
@@ -36,11 +36,11 @@ Click on the "Download Sources" button in the top left of this menu, as shown be
 ---
 
 ## Step 3:
-Once the files have been downloaded, you can proceed with one of two options.  Option 1 involves using an emulator device and option 2 involves deploying the project to a connected and
-compatible android device.
+Once the files have been downloaded, you can proceed with one of two options.  !!!Option 1 involves using an emulator device and option 2 involves deploying the project to a connected and
+compatible Android device.
 
 ### Step 3.1 (Option 1):
-Navigate to the "Device Manager" menu.  Looking at the closest above image, it is the button directly below the Gradle menu.  From this menu, click on the plus sign in the top left, as shown here and select "Create Virtual Device".  Do not worry about **Step 3.2** if you are using this option.
+Navigate to the "Device Manager" menu.  Looking at the closest above image, it is the button directly below the Gradle menu.  From this menu, click on the plus sign in the top left, as shown here, and select "Create Virtual Device".  Do not worry about **Step 3.2** if you are using this option.
 
 
 <img width="164" alt="Device Manager menu with the Create Virtual Device button highlighted" src="https://github.com/user-attachments/assets/760b505d-61c0-4242-8be4-5530fa175cde">
@@ -62,8 +62,35 @@ Lastly, you can name the device if you wish, but it won't effect the actual prog
 
 ---
 
-### Step 3.2 (Option 2):
-Connect a compatible Android device to your device, and make sure it's recognized.  Do not worry about **Step 3.1** if you are using this option.
+### Step 3.2 (Option 2): 
+Use a cable with a USBC on one side to plug into the hardware Android device and use the other end to plug into your laptop. Do not worry about) **Step 3.1** if you are using this option
+
+#### Step 3.2.1 (If the phone is not recognized by Android SDK)
+
+These steps are taken from Android's official website (just incase you recognize them and raise an eyebrow at the similarity): [Android Website](https://developer.android.com/codelabs/basic-android-kotlin-compose-connect-device#2)
+
+To let Android Studio communicate with your Android device, you must enable USB debugging in the Developer options settings of the device.
+
+To show developer options and enable USB debugging:
+
+On your Android device, tap Settings > About phone.
+Tap the Build number seven times.
+If prompted, enter your device password or pin. You know you succeeded when you see a You are now a developer! message. 
+![image](https://github.com/user-attachments/assets/38419904-f82a-472f-8982-961fdb2da649)
+
+Return to Settings and then tap System > Developer options.
+If you don't see Developer options, tap Advanced options.
+![image](https://github.com/user-attachments/assets/5c42de5c-1f81-49b0-b419-224ee6745e6b)
+
+Tap Developer options and then tap the USB debugging toggle to turn it on.
+
+Now, when you plug the phone into the USBC again, it will ask if you wish to debug on the hardware device. Click allow!
+
+
+
+#### Step 3.2.2 (If the phone is recognized)
+
+Continue onto [Step 4](## Step 4) :)
 
 ---
 
