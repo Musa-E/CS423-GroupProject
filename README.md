@@ -36,7 +36,7 @@ Click on the "Download Sources" button in the top left of this menu, as shown be
 ---
 
 ## Step 3:
-Once the files have been downloaded, you can proceed with one of two options.  !!!Option 1 involves using an emulator device and option 2 involves deploying the project to a connected and
+Once the files have been downloaded, you can proceed with one of two options.  Option **3.1** involves using an emulator device and option **3.2** involves deploying the project to a connected and
 compatible Android device.
 
 ### Step 3.1 (Option 1):
@@ -63,9 +63,9 @@ Lastly, you can name the device if you wish, but it won't effect the actual prog
 ---
 
 ### Step 3.2 (Option 2): 
-Use a cable with a USBC on one side to plug into the hardware Android device and use the other end to plug into your laptop. Do not worry about) **Step 3.1** if you are using this option
+Use a cable with a USBC on one side to plug into the hardware Android device and use the other end to plug into your laptop. Do not worry about **Step 3.1** if you are using this option
 
-#### Step 3.2.1 (If the phone is not recognized by Android SDK)
+#### Step 3.2.1 - (If the phone is not recognized by Android SDK)
 
 These steps are taken from Android's official website (just incase you recognize them and raise an eyebrow at the similarity): [Android Website](https://developer.android.com/codelabs/basic-android-kotlin-compose-connect-device#2)
 
@@ -75,7 +75,7 @@ To show developer options and enable USB debugging:
 
 On your Android device, tap Settings > About phone.
 Tap the Build number seven times.
-If prompted, enter your device password or pin. You know you succeeded when you see a You are now a developer! message. 
+If prompted, enter your device password or pin. You know you succeeded when you see a "You are now a developer!" message, as shown here. 
 ![image](https://github.com/user-attachments/assets/38419904-f82a-472f-8982-961fdb2da649)
 
 Return to Settings and then tap System > Developer options.
@@ -88,13 +88,13 @@ Now, when you plug the phone into the USBC again, it will ask if you wish to deb
 
 
 
-#### Step 3.2.2 (If the phone is recognized)
+#### Step 3.2.2 - (If the phone is recognized)
 
-Continue onto [Step 4](## Step 4) :)
+Continue onto [Step 4](step-4) :)
 
 ---
 
-## Step 4:
+# [Step 4]
 Regardless of which option you chose, all that's left is for you to press the green play button near the top right of Android Studio.  You may need to select a project first, as shown here:
 
 <img width="194" alt="Changing the Run Configuration and the Play Button" src="https://github.com/user-attachments/assets/e7d59019-b524-4c83-be02-ef4312a1c5a3">
