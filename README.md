@@ -90,7 +90,7 @@ Now, when you plug the phone into the USBC again, it will ask if you wish to deb
 
 #### Step 3.2.2 - (If the phone is recognized)
 
-Continue onto [Step 4](#step-4) :)
+Continue to Step 4 :)
 
 ---
 
