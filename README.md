@@ -162,5 +162,6 @@ After using the application for a little while, you could have your task list sc
 
 ---
 ---
+This project uses a lot of the myScript SDK, available [here](https://www.myscript.com/).
 
 *If you or someone you know have any suggestions or requests, please contact the team about it.  While we can't guarantee that it'll be implemented, we will do our best to consider it.  Thank you!*
