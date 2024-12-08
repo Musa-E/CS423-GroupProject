@@ -71,20 +71,26 @@ These steps are taken from Android's official website (just incase you recognize
 
 To let Android Studio communicate with your Android device, you must enable USB debugging in the Developer options settings of the device.
 
-To show developer options and enable USB debugging:
 
-On your Android device, tap Settings > About phone.
-Tap the Build number seven times.
-If prompted, enter your device password or pin. You know you succeeded when you see a "You are now a developer!" message, as shown here. 
-![image](https://github.com/user-attachments/assets/38419904-f82a-472f-8982-961fdb2da649)
-
-Return to Settings and then tap System > Developer options.
-If you don't see Developer options, tap Advanced options.
-![image](https://github.com/user-attachments/assets/5c42de5c-1f81-49b0-b419-224ee6745e6b)
-
-Tap Developer options and then tap the USB debugging toggle to turn it on.
-
-Now, when you plug the phone into the USBC again, it will ask if you wish to debug on the hardware device. Click allow!
+> To show developer options and enable USB debugging:
+> 
+> On your Android device, tap Settings > About phone.
+> Tap the Build number seven times.
+> If prompted, enter your device password or pin. You know you succeeded when you see a "You are now a developer!" message, as shown here. 
+> 
+> <img width="489" alt="'You are now a developer!' message" src="https://github.com/user-attachments/assets/38419904-f82a-472f-8982-961fdb2da649">
+> 
+> ----
+> 
+> Return to Settings and then tap System > Developer options.
+> If you don't see Developer options, tap Advanced options.
+> 
+> 
+> <img width="489" alt="Advanced options in the menu" src="https://github.com/user-attachments/assets/5c42de5c-1f81-49b0-b419-224ee6745e6b">
+> 
+> 
+> Tap Developer options and then tap the USB debugging toggle to turn it on.
+> Now, when you plug the phone into the USBC again, it will ask if you wish to debug on the hardware device. Click allow!
 
 
 
@@ -94,7 +100,7 @@ Continue to Step 4 :)
 
 ---
 
-# [Step 4]
+# Step 4
 Regardless of which option you chose, all that's left is for you to press the green play button near the top right of Android Studio.  You may need to select a project first, as shown here:
 
 <img width="194" alt="Changing the Run Configuration and the Play Button" src="https://github.com/user-attachments/assets/e7d59019-b524-4c83-be02-ef4312a1c5a3">
